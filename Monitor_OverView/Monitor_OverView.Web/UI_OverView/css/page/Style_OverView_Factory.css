@@ -1,0 +1,584 @@
+﻿body {
+    padding: 0px;
+    margin: 0px;
+    background-color: #cccccc;
+    overflow: auto;
+}
+
+#GlobalBackGroundDiv {
+    position: absolute;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    left: 0px;
+    top: 0px;
+}
+
+tr, td {
+    border: none;
+    margin: 0px;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    padding: 0px;
+}
+
+ul, li, div {
+    list-style-type: none;
+}
+
+#MainTable {
+    width: 1100px;
+    table-layout: fixed;
+}
+
+#MainTablePosizionLeft {
+    width: 120px;
+}
+
+.MainTableLeft {
+    width: 420px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.MainTableMiddle {
+    width: 420px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.MainTableRight {
+    width: 260px;
+    background-color: #f3f6fd;
+    vertical-align: top;
+}
+
+.LeftTableTd {
+    width: 414px;
+    padding-bottom: 5px;
+    text-align: left;
+    vertical-align: top;
+    padding-bottom: 5px;
+}
+
+.MiddleTableTd {
+    width: 414px;
+    padding-bottom: 5px;
+    text-align: left;
+    vertical-align: top;
+    padding-bottom: 5px;
+}
+/*左边和中间能源标题*/
+.LeftMiddleZoneTitleText {
+    width: 60px;
+    height: 25px;
+    text-align: center;
+    vertical-align: middle;
+    color: #1e64eb;
+    font-size: 12pt;
+    font-family: SimHei;
+    font-weight: bold;
+    border-bottom: 2px solid #cc0000;
+    background-image: url('../../images/page/tag_blue.png');
+    background-repeat: no-repeat;
+}
+
+.LeftMiddleZoneTitleLine {
+    width: 354px;
+    color: #1e64eb;
+    font-size: 8pt;
+    font-family: serif;
+    text-align: right;
+    font-weight: bold;
+    border-bottom: 2px solid #1e64eb;
+}
+
+.ExtendPageDetail:hover {
+    cursor: pointer;
+    color: #cc0000;
+}
+/*左边chart部分*/
+#ChartDataTabs {
+    width: 414px;
+}
+
+.DataChartContent {
+    width: 404px;
+    height: 186px;
+    background-color: #f3f6fd;
+    padding-right: 8px;
+}
+.DataChartLegend {
+    width: 404px;
+    height: 24px;
+    background-color: #f3f6fd;
+    padding-top:6px;
+    padding-left:8px;
+    vertical-align: middle;
+}
+
+
+/*左边能源部分*/
+.ElectricFirstTableTitleTd {
+    width: 67px;
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: #cc0000;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.ElectricTableTitleTd {
+    width: 70px;
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.ElectricPercentageTitleTd {
+    width: 207px;
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.ElectricPercentageColumnTd {
+    width: 207px;
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px dashed #cccccc;
+}
+
+.ElectricPercentageTd {
+    background-color: #f3f6fd;
+    border-left: 1px dashed #cccccc;
+    border-right: 1px dashed #cccccc;
+    border-bottom: 1px solid #cccccc;
+}
+
+.ElectricTableColumnTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px dashed #cccccc;
+}
+
+.ElectricTableForcusColumnTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+    .ElectricTableForcusColumnTd:hover {
+        background-color: #f3f6fd;
+        cursor: pointer;
+        color: #cc0000;
+    }
+
+.ElectricTableTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.ElectricTableForcusTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+    .ElectricTableForcusTd:hover {
+        background-color: #f3f6fd;
+        cursor: pointer;
+        color: #cc0000;
+    }
+
+.ElectricTableLastRowTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #cccccc;
+}
+
+.ElectricTableLastRowForcusTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #cccccc;
+}
+
+    .ElectricTableLastRowForcusTd:hover {
+        background-color: #f3f6fd;
+        cursor: pointer;
+        color: #cc0000;
+    }
+
+.ElectricTableLastRowFirstColumnTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #cccccc;
+}
+
+.ElectricTableLastRowForcusColumnTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #cccccc;
+}
+
+    .ElectricTableLastRowForcusColumnTd:hover {
+        background-color: #f3f6fd;
+        cursor: pointer;
+        color: #cc0000;
+    }
+
+.ElectricComprehensiveFirstTableTitleTd {
+    width: 84px;
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: #cc0000;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.ElectricComprehensiveTableTitleTd {
+    width: 110px;
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.ElectricComprehensiveTableColumnTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px dashed #cccccc;
+}
+
+.ElectricComprehensiveTableTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.ElectricComprehensiveTableForcusTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+    .ElectricComprehensiveTableForcusTd:hover {
+        background-color: #f3f6fd;
+        cursor: pointer;
+        color: #cc0000;
+    }
+
+.ElectricComprehensiveTableLastRowTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #cccccc;
+}
+
+.ElectricComprehensiveTableLastRowForcusTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #cccccc;
+}
+
+    .ElectricComprehensiveTableLastRowForcusTd:hover {
+        background-color: #f3f6fd;
+        cursor: pointer;
+        color: #cc0000;
+    }
+
+.ElectricComprehensiveTableLastRowTd {
+    height: 18px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #cccccc;
+}
+/*中间部分*/
+.MaterialWeightFirstTitleRowTd {
+    width: 64px;
+    height: 22px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: #cc0000;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.MaterialWeightTitleRowTd {
+    width: 70px;
+    height: 22px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: #cc0000;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.MaterialWeightTitleRowForcusTd {
+    width: 70px;
+    height: 22px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: #cc0000;
+    text-align: center;
+    vertical-align: middle;
+}
+
+    .MaterialWeightTitleRowForcusTd:hover {
+        background-color: #f3f6fd;
+        cursor: pointer;
+        color: #cc0000;
+    }
+
+.MaterialWeightFristRowTd {
+    height: 22px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.MaterialWeightForcusRowTd {
+    height: 22px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: left;
+    vertical-align: middle;
+}
+
+    .MaterialWeightForcusRowTd:hover {
+        background-color: #f3f6fd;
+        cursor: pointer;
+        color: #cc0000;
+    }
+
+.MaterialWeightFristLastRowTd {
+    height: 22px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #cccccc;
+}
+
+.MaterialWeightForcusLastRowTd {
+    height: 22px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #cccccc;
+}
+
+    .MaterialWeightForcusLastRowTd:hover {
+        background-color: #f3f6fd;
+        cursor: pointer;
+        color: #cc0000;
+    }
+
+.MaterialWeightRowTd {
+    height: 22px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.MaterialWeightLastRowTd {
+    height: 22px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #cccccc;
+}
+
+.MachineHaltStatisticalRangeFirstRowTd {
+    width: 67px;
+    height: 25px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: center;
+    vertical-align: middle;
+    border-left: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    background-color: #c9c9ff;
+}
+
+.MachineHaltStatisticalRangeRowTd1 {
+    width: 140px;
+    height: 25px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: right;
+    vertical-align: middle;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    background-color: #f3f6fd;
+}
+
+.MachineHaltStatisticalRangeRowTd2 {
+    width: 70px;
+    height: 25px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: left;
+    vertical-align: middle;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    background-color: #f3f6fd;
+}
+
+.MachineHaltStatisticalRangeRowRightTd {
+    width: 70px;
+    height: 25px;
+    font-size: 9pt;
+    font-family: SimSun;
+    color: black;
+    text-align: left;
+    vertical-align: middle;
+    border-right: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    background-color: #f3f6fd;
+}
+
+/*右边部分*/
+.RightSelectStationTd {
+    width: 255px;
+    height: 30px;
+    text-align: left;
+    vertical-align: bottom;
+}
+
+.RightAccordionTd {
+    width: 255px;
+    text-align: center;
+    vertical-align: top;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+/*交接班日志*/
+#dlg_WorkingTeamShiftLogDetail {
+    padding-left: 2px;
+}
+
+.WorkingTeamShiftLogDetailTable {
+    width: 480px;
+}
+
+.WorkingTeamShiftNameTd {
+    width: 140px;
+    height: 50px;
+    text-align: left;
+}
+
+#input_WorkingTeamShiftName {
+    width: 80px;
+}
+
+.WorkingTeamShiftMonitorTd {
+    width: 140px;
+    height: 50px;
+    text-align: left;
+}
+
+#input_WorkingTeamShiftMonitor {
+    width: 80px;
+}
+
+.WorkingTeamShiftUpdateTimeTd {
+    width: 200px;
+    height: 50px;
+    text-align: left;
+}
+
+#input_WorkingTeamShiftUpdateTime {
+    width: 110px;
+}
+
+.WorkingTeamShiftLogTd {
+    height: 310px;
+    text-align: center;
+}
+
+#TextArea_WorkingTeamShiftLog {
+    width: 460px;
+    height: 280px;
+    text-align: left;
+    padding: 5px;
+}

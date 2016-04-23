@@ -1,0 +1,114 @@
+﻿body {
+    padding: 0px;
+    margin: 0px;
+    background-color: black;
+    overflow: auto;
+}
+tr, td {
+    border: none;
+    margin: 0px;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    padding: 0px;
+    overflow:hidden;
+    color:black;
+    /*border: 1px solid black;*/
+}
+ul, li, div {
+    list-style-type: none;
+}
+#StatusMainTable {
+    /*width:1000px;*/
+    font-size:9pt;
+    font-family:SimSun;
+    background-color: #f3f6fd;
+}
+.FactoryServerBlank {
+    height:50px;
+}
+.GroupTitle {
+    width:30px;
+    text-align:center;
+    vertical-align:middle;
+    font-size:12pt;
+}
+.GroupNetwork {
+    width:20px;
+    background-color:#226cfd;
+    text-align:center;
+    vertical-align:middle;
+}
+.Network {
+    width: 50px;
+    height: 50px;
+}
+.FactoryServer {
+    width:100px;
+    height:50px;
+    background-image: url("../../images/page/Server.png");
+    background-repeat:no-repeat;
+    font-size:8pt;
+    text-align:center;
+    line-height: 11px;
+    vertical-align:bottom;
+}
+.DataComputer {
+    width:150px;
+    height:50px;
+    background-image: url("../../images/page/DataComputer.png");
+    background-repeat:no-repeat;
+    font-size:8pt;
+    text-align:center;
+    line-height: 11px;
+    vertical-align:bottom;
+}
+.DataComputer_S {
+    width:50px;
+    height:50px;
+    background-image: url("../../images/page/DataComputer_S.png");
+    background-repeat:no-repeat;
+    font-size:8pt;
+    text-align:center;
+    line-height: 11px;
+    vertical-align:bottom;
+}
+.Switch {
+    width:50px;
+    height:50px;
+    background-image: url("../../images/page/Switch.png");
+    background-repeat:no-repeat;
+    font-size:8pt;
+    text-align:center;
+    line-height: 11px;
+    vertical-align:bottom;
+}
+.OPC {
+    width:50px;
+    height:50px;
+    background-image: url("../../images/page/DCS.png");
+    background-repeat:no-repeat;
+    font-size:8pt;
+    text-align:center;
+    line-height: 11px;
+    vertical-align:bottom;
+}
+.Ammeter {
+    width:50px;
+    height:50px;
+    background-image: url("../../images/page/Ammeter.png");
+    background-repeat:no-repeat;
+    font-size:8pt;
+    text-align:center;
+    line-height: 11px;
+    vertical-align:bottom;
+}
+.DLQ {
+    width:50px;
+    height:50px;
+    background-image: url("../../images/page/DLQ.png");
+    background-repeat:no-repeat;
+    font-size:8pt;
+    text-align:center;
+    line-height: 11px;
+    vertical-align:bottom;
+}

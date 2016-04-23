@@ -1,0 +1,46 @@
+﻿tr, td {
+    border: none;
+    margin: 0px;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    padding: 0px;
+}
+
+ul, li, div {
+    list-style-type: none;
+}
+
+#SelectButtonDiv {
+    position:absolute;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    left:1px;
+    top:1px;
+}
+#LeftBlankWidth {
+    height:18px;
+}
+.SelectButtonTd {
+    width:100px;
+    height:18px;
+    border:1px solid black;
+    text-align:center;
+    vertical-align:middle;
+    font-size:9pt;
+    color:black;
+    background-color:white;
+    cursor:pointer;
+}
+.SelectedButtonTd {
+    width:100px;
+    height:18px;
+    border:1px solid black;
+    text-align:center;
+    vertical-align:middle;
+    font-size:9pt;
+    color:white;
+    background-color:#0486ff;
+    cursor:pointer;
+}
+
