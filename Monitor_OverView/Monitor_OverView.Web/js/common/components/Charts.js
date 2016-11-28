@@ -469,6 +469,13 @@ function GetBarChart(myChartObjId, myData, myTitle) {
                 shadowOffset: 2, //同grid相同属性设置
                 shadowDepth: 1, //同grid相同属性设置
                 shadowAlpha: 0.3, //同grid相同属性设置
+            },
+            pointLabels: {
+                show: true,
+                location:'s',//数据标签显示在数据点附近的方位 
+                ypadding: 2, //数据标签距数据点在纵轴方向上的距离 
+                edgeTolerance: -5,
+                formatString: '%.2f'
             }
         },
         title: {

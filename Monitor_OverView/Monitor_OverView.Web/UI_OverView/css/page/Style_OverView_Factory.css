@@ -104,14 +104,15 @@ ul, li, div {
 
 .DataChartContent {
     width: 404px;
-    height: 186px;
-    background-color: #f3f6fd;
+    height: 177px;
+    background-color: #ffffff;
     padding-right: 8px;
+    margin-top:15px;
 }
 .DataChartLegend {
     width: 404px;
     height: 24px;
-    background-color: #f3f6fd;
+    background-color: #ffffff;
     padding-top:6px;
     padding-left:8px;
     vertical-align: middle;
@@ -520,7 +521,7 @@ ul, li, div {
 /*右边部分*/
 .RightSelectStationTd {
     width: 255px;
-    height: 30px;
+    height: 24px;
     text-align: left;
     vertical-align: bottom;
 }

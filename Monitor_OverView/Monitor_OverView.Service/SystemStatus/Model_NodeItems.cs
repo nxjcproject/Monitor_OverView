@@ -15,6 +15,7 @@ namespace Monitor_OverView.Service.SystemStatus
         private bool _NetworkStatus;
         private bool _SynchronizationStatus;
         private bool _NodeSoftwareStatus;
+        private DateTime _UpdateDateTime;
         private List<Model_DataComputer> _DataComputer;
         public Model_FactoryServer()
         {
@@ -26,6 +27,7 @@ namespace Monitor_OverView.Service.SystemStatus
             _NetworkStatus = false;
             _SynchronizationStatus = false;
             _NodeSoftwareStatus = false;
+            _UpdateDateTime = DateTime.Now;
             _DataComputer = new List<Model_DataComputer>();
         }
         public string Id
@@ -111,6 +113,17 @@ namespace Monitor_OverView.Service.SystemStatus
             set
             {
                 _NodeSoftwareStatus = value;
+            }
+        }
+        public DateTime UpdateDateTime
+        {
+            get
+            {
+                return _UpdateDateTime;
+            }
+            set
+            {
+                _UpdateDateTime = value;
             }
         }
         public List<Model_DataComputer> DataComputer

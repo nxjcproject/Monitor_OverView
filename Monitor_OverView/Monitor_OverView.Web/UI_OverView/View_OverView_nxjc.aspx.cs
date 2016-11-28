@@ -29,10 +29,10 @@ namespace Monitor_OverView.Web.UI_OverView
             }
         }
         [WebMethod]
-        public static string GetRealTimeData(string myStartTime, string myEndTime)
+        public static string GetRealTimeData(string myDateTime)
         {
             string m_JsonString = "";
-            m_JsonString = Monitor_OverView.Service.OverView.OverView_Nxjc.GetRealTimeData(myStartTime, myEndTime);
+            m_JsonString = Monitor_OverView.Service.OverView.OverView_Nxjc.GetRealTimeData(myDateTime);
             return m_JsonString;
         }
     }

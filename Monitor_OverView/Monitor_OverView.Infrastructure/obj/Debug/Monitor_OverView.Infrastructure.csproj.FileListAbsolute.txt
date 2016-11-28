@@ -7,4 +7,7 @@ C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Infrastructure\bin\Debug\Monitor_OverView.Infrastructure.pdb
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Infrastructure\obj\Debug\Monitor_OverView.Infrastructure.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Infrastructure\obj\Debug\Monitor_OverView.Infrastructure.pdb
-C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Infrastructure\obj\Debug\Monitor_OverView.Infrastructure.csprojResolveAssemblyReference.cache
+C:\工作\编程\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Infrastructure\bin\Debug\Monitor_OverView.Infrastructure.dll
+C:\工作\编程\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Infrastructure\bin\Debug\Monitor_OverView.Infrastructure.pdb
+C:\工作\编程\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Infrastructure\obj\Debug\Monitor_OverView.Infrastructure.dll
+C:\工作\编程\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Infrastructure\obj\Debug\Monitor_OverView.Infrastructure.pdb

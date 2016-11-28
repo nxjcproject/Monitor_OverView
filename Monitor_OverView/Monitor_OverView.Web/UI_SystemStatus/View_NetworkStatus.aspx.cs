@@ -18,7 +18,7 @@ namespace Monitor_OverView.Web.UI_SystemStatus
             if (!IsPostBack)
             {
 #if DEBUG
-                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx", "zc_nxjc_byc" };
+                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx", "zc_nxjc_byc", "zc_nxjc_klq","zc_nxjc_tsc" };
                 AddDataValidIdGroup("ProductionOrganization", m_DataValidIdItems);
 #endif
             }

@@ -10,13 +10,14 @@ namespace Monitor_OverView.Web.UI_OverView
 {
     public partial class View_ProductionData : WebStyleBaseForEnergy.webToolsStyleBase
     {
+        private const string StandardType = "Production";
         protected void Page_Load(object sender, EventArgs e)
         {
             base.InitComponts();
             if (!IsPostBack)
             {
 #if DEBUG
-                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx_efc", "zc_nxjc_byc_byf" };
+                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_ychc", "zc_nxjc_tsc" };
                 AddDataValidIdGroup("ProductionOrganization", m_DataValidIdItems);
 #endif
             }
@@ -45,6 +46,31 @@ namespace Monitor_OverView.Web.UI_OverView
                 m_JsonString = Monitor_OverView.Service.OverView.View_ProductionData.GetCompanyComplete(myDate, myLevelCode);
             }
             return m_JsonString;
+        }
+        [WebMethod]
+        public static string GetIndicatorItems()
+        {
+            string myValueJson = Monitor_OverView.Service.OverView.View_ProductionData.GetIndicatorItems();
+            return myValueJson;
+        }
+        [WebMethod]
+        public static string GetEquipmentCommonInfo()
+        {
+            string m_ReturnValue = Monitor_OverView.Service.OverView.View_ProductionData.GetEquipmentCommonInfo();
+            return m_ReturnValue;
+        }
+        [WebMethod]
+        public static string GetSpecificationsInfo(string myEquipmentCommonId)
+        {
+            string m_ReturnValue = Monitor_OverView.Service.OverView.View_ProductionData.GetSpecificationsInfo(myEquipmentCommonId);
+            return m_ReturnValue;
+        }
+        [WebMethod]
+        public static string GetPlanAndCompleteChart(string myDate, string myIndicatorId, string myEquipmentCommonId, string mySpecifications)
+        {
+            List<string> m_OganizationIds = WebStyleBaseForEnergy.webStyleBase.GetDataValidIdGroup("ProductionOrganization");
+            string m_ReturnValue = Monitor_OverView.Service.OverView.View_ProductionData.GetProductionPlanAndComplete(myDate, myIndicatorId, myEquipmentCommonId, mySpecifications, m_OganizationIds);
+            return m_ReturnValue;
         }
     }
 }

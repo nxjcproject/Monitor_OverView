@@ -1,5 +1,6 @@
 ﻿var NetworkNodeArray = [];           //需要初始化的连接线
 var TableRowArray;
+var StatusArray = [];
 $(document).ready(function () {
     loadDialog();
     InitAmmeterStatusDataGrid();
@@ -76,11 +77,11 @@ function InitializeNetworkStructure(myData) {
         //ResizeNetworkStructure();
     }
     $('#StatusMainTable').html(m_HtmlString);
-
+    NetworkNodeArray = [];
     var m_MaxSubTableWidth = 0;
     for (var i = 0; i < myData.length; i++) {          //多个服务器
         TableRowArray = [];
-        NetworkNodeArray = [];
+
         var m_TableColumnCount = GetServerAllCollectorCount(myData[i]);
         var m_TableRowCount = GetServerDepth(myData[i]);
         for (var m = 0; m < m_TableRowCount; m++) {                 //生成等行等列的表格
@@ -138,7 +139,13 @@ function GetServerInfoInsertTable(myServer, myFirstNodeRowIndex, myFirstNodeColu
             "X": m_NodeColumnIndex + i, "Y": myFirstNodeRowIndex
         };
     }
-    NetworkNodeArray.push(myServer["Id"]);          //设置默认状态线
+    var m_ServerNetworkTemp = [];
+    m_ServerNetworkTemp["Id"] = myServer["Id"];
+    m_ServerNetworkTemp["SynchronizationStatus"] = "true";
+    m_ServerNetworkTemp["SoftwareStatus"] = "true";
+    m_ServerNetworkTemp["NetworkStatus"] = "true";
+    NetworkNodeArray.push(m_ServerNetworkTemp);          //设置默认状态线
+
 
     if (myServer["DataComputer"] != null && myServer["DataComputer"] != undefined) {                //找下级数采计算机
         var m_FirstNodeColumnIndex = 0;
@@ -169,17 +176,55 @@ function GetServerInfoInsertTable(myServer, myFirstNodeRowIndex, myFirstNodeColu
                 }
 
                 if (i != 0) {
-                    for (var j = m_LastDataComputerNodexColumnIndex + 1; j < m_DataComputerNodexColumnIndex; j++) {
-                        if (j != m_NodeColumnIndex) {
-                            TableRowArray[myFirstNodeRowIndex + 1][j] = { "NodeName": myServer["DataComputer"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "1", "X": j, "Y": myFirstNodeRowIndex + 1 };
-                        }
-                        else {
-                            TableRowArray[myFirstNodeRowIndex + 1][j] = { "NodeName": myServer["DataComputer"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "4", "X": j, "Y": myFirstNodeRowIndex + 1 };
+                    if (m_DataComputerNodexColumnIndex <= m_NodeColumnIndex)    //两个节点都在左边的情况
+                    {
+                        for (var j = m_LastDataComputerNodexColumnIndex + 1; j < m_DataComputerNodexColumnIndex; j++) {
+                            if (j != m_NodeColumnIndex) {
+                                TableRowArray[myFirstNodeRowIndex + 1][j] = { "NodeName": myServer["DataComputer"][i - 1]["Id"], "NodeType": "Network", "CrossPointStyle": "1", "X": j, "Y": myFirstNodeRowIndex + 1 };
+                            }
+                            else {
+                                TableRowArray[myFirstNodeRowIndex + 1][j] = { "NodeName": myServer["DataComputer"][i - 1]["Id"], "NodeType": "Network", "CrossPointStyle": "4", "X": j, "Y": myFirstNodeRowIndex + 1 };
+                            }
                         }
                     }
+                    else if (m_LastDataComputerNodexColumnIndex >= m_NodeColumnIndex)    //两个节点都在右边的情况
+                    {
+                        for (var j = m_LastDataComputerNodexColumnIndex + 1; j < m_DataComputerNodexColumnIndex; j++) {
+                            if (j != m_NodeColumnIndex) {
+                                TableRowArray[myFirstNodeRowIndex + 1][j] = { "NodeName": myServer["DataComputer"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "1", "X": j, "Y": myFirstNodeRowIndex + 1 };
+                            }
+                            else {
+                                TableRowArray[myFirstNodeRowIndex + 1][j] = { "NodeName": myServer["DataComputer"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "4", "X": j, "Y": myFirstNodeRowIndex + 1 };
+                            }
+                        }
+                    }
+                    else {                                                      //一左一右的情况
+                        for (var j = m_LastDataComputerNodexColumnIndex + 1; j < m_NodeColumnIndex; j++) {
+                            if (j != m_NodeColumnIndex) {
+                                TableRowArray[myFirstNodeRowIndex + 1][j] = { "NodeName": myServer["DataComputer"][i - 1]["Id"], "NodeType": "Network", "CrossPointStyle": "1", "X": j, "Y": myFirstNodeRowIndex + 1 };
+                            }
+                            else {
+                                TableRowArray[myFirstNodeRowIndex + 1][j] = { "NodeName": myServer["DataComputer"][i - 1]["Id"], "NodeType": "Network", "CrossPointStyle": "4", "X": j, "Y": myFirstNodeRowIndex + 1 };
+                            }
+                        }
+                        for (var j = m_NodeColumnIndex; j < m_DataComputerNodexColumnIndex; j++) {
+                            if (j != m_NodeColumnIndex) {
+                                TableRowArray[myFirstNodeRowIndex + 1][j] = { "NodeName": myServer["DataComputer"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "1", "X": j, "Y": myFirstNodeRowIndex + 1 };
+                            }
+                            else {
+                                TableRowArray[myFirstNodeRowIndex + 1][j] = { "NodeName": myServer["DataComputer"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "4", "X": j, "Y": myFirstNodeRowIndex + 1 };
+                            }
+                        }
+                    }
+
                 }
                 m_LastDataComputerNodexColumnIndex = m_DataComputerNodexColumnIndex;
-                NetworkNodeArray.push(myServer["DataComputer"][i]["Id"]);          //设置默认状态线
+
+                var m_DataComputerNetworkTemp = [];
+                m_DataComputerNetworkTemp["Id"] = myServer["DataComputer"][i]["Id"];
+                m_DataComputerNetworkTemp["SoftwareStatus"] = "true";
+                m_DataComputerNetworkTemp["NetworkStatus"] = "true";
+                NetworkNodeArray.push(m_DataComputerNetworkTemp);          //设置默认状态线
             }
 
 
@@ -211,7 +256,12 @@ function GetDataComputerInfoInsertTable(myDataComputer, myFirstNodeRowIndex, myF
    '", "PropertyName": "' + myDataComputer["PropertyName"] + '"}',
         "X": m_NodeColumnIndex, "Y": myFirstNodeRowIndex + 2
     };
-    NetworkNodeArray.push(myDataComputer["Switch"]["Id"]);          //设置默认状态线
+
+    var m_SwitchNetworkTemp = [];
+    m_SwitchNetworkTemp["Id"] = myDataComputer["Switch"]["Id"];
+    m_SwitchNetworkTemp["SoftwareStatus"] = "true";
+    m_SwitchNetworkTemp["NetworkStatus"] = "true";
+    NetworkNodeArray.push(m_SwitchNetworkTemp);          //设置默认状态线
 
 
     var m_SubNodeArray = GetSubNodeInfo(myDataComputer["Switch"], myFirstNodeRowIndex + 3, myFirstNodeColumnIndex, m_NodeColumnIndex);    //获得下级节点
@@ -262,8 +312,12 @@ function GetSubNodeInfo(mySwitch, myFirstNodeRowIndex, myFirstNodeColumnIndex, m
             });
 
 
-
-            NetworkNodeArray.push(mySwitch["Collector"][i]["Id"]);          //设置默认状态线
+            var m_CollectorNetworkTemp = [];
+            m_CollectorNetworkTemp["Id"] = mySwitch["Collector"][i]["Id"];
+            m_CollectorNetworkTemp["SoftwareStatus"] = "true";
+            m_CollectorNetworkTemp["NetworkStatus"] = "true";
+            m_CollectorNetworkTemp["SubNodeStatus"] = "true";
+            NetworkNodeArray.push(m_CollectorNetworkTemp);          //设置默认状态线
             m_CurrentNodeColumnIndex = m_CurrentNodeColumnIndex + 1;
         }
     }
@@ -324,7 +378,12 @@ function GetSubNodeInfo(mySwitch, myFirstNodeRowIndex, myFirstNodeColumnIndex, m
                     }
                 }
             }
-            NetworkNodeArray.push(mySwitch["Switch"][i]["Id"]);          //设置默认状态线
+
+            var m_SubSwitchNetworkTemp = [];
+            m_SubSwitchNetworkTemp["Id"] = mySwitch["Switch"][i]["Id"];
+            m_SubSwitchNetworkTemp["SoftwareStatus"] = "true";
+            m_SubSwitchNetworkTemp["NetworkStatus"] = "true";
+            NetworkNodeArray.push(m_SubSwitchNetworkTemp);          //设置默认状态线
 
             var m_SubNodeArray = GetSubNodeInfo(mySwitch["Switch"][i], m_CurrentNodeRowIndex + 2, m_CurrentNodeColumnIndex, m_CurrentNodeColumnIndex + m_SwitchNodeOffsetX);
             if (m_SubNodeArray != null && m_SubNodeArray != undefined) {
@@ -436,7 +495,7 @@ function GetStructHtml(myOrganizationId) {
         m_ColumnCount = 50 * TableRowArray[0].length;
     }
     $('#Table_' + myOrganizationId).css('width', m_ColumnCount);
-    LoadStatusDefaultColor(NetworkNodeArray);
+    SetStatusColor();             //显示状态颜色
     return m_ColumnCount;
 }
 
@@ -455,9 +514,14 @@ function FactoryInfo(myFactoryId) {
     var m_FactoryServerInfoObj = $('#' + myFactoryId).data("options");
     $('#TextBox_FactoryName').textbox('setValue', m_FactoryServerInfoObj.Name);
     $('#TextBox_FactoryAddress').textbox('setValue', m_FactoryServerInfoObj.IpAddress);
-    //$('#Text_FactoryNetworkStatus').textbox('setValue', NodeArray[myFactoryId]["NetStatus"] == true ? "正常" : "不正常");
-    //$('#Text_SynchronizationStatus').textbox('setValue', NodeArray[myFactoryId]["SynchronizationStatus"] == true ? "正常" : "不正常");
-    //$('#Text_FactoryCollectionSoftStatus').textbox('setValue', NodeArray[myFactoryId]["NodeSoftStatus"] == true ? "正常" : "不正常");
+    for (var i = 0; i < NetworkNodeArray.length; i++) {
+        if (NetworkNodeArray[i]["Id"] == myFactoryId) {
+            $('#Text_FactoryNetworkStatus').textbox('setValue', NetworkNodeArray[i]["NetworkStatus"].toLowerCase() == "true" ? "正常" : "不正常");
+            $('#Text_SynchronizationStatus').textbox('setValue', NetworkNodeArray[i]["SynchronizationStatus"].toLowerCase() == "true" ? "正常" : "不正常");
+            $('#Text_FactoryCollectionSoftStatus').textbox('setValue', NetworkNodeArray[i]["SoftwareStatus"].toLowerCase() == "true" ? "正常" : "不正常");
+        }
+    }
+
     $('#dlg_FactoryServer').dialog('open');
     //alert(myFactoryId);
 }
@@ -465,27 +529,41 @@ function DataComputerInfo(myCollectionComputerId) {
     var m_DataComputerInfoObj = $('#' + myCollectionComputerId).data("options");
     $('#Text_CollectionComputer').textbox('setValue', m_DataComputerInfoObj.Name);
     $('#Text_CollectionComputerAddress').textbox('setValue', m_DataComputerInfoObj.IpAddress);
-    //$('#Text_CollectionComputerNetworkStatus').textbox('setValue', NodeArray[myFactoryId][myCollectionComputerId]["NetStatus"] == true ? "正常" : "不正常");
-    //$('#Text_CollectionComputerSoftStatus').textbox('setValue', NodeArray[myFactoryId][myCollectionComputerId]["NodeSoftStatus"] == true ? "正常" : "不正常");
+    for (var i = 0; i < NetworkNodeArray.length; i++) {
+        if (NetworkNodeArray[i]["Id"] == myCollectionComputerId) {
+            $('#Text_CollectionComputerNetworkStatus').textbox('setValue', NetworkNodeArray[i]["NetworkStatus"].toLowerCase() == "true" ? "正常" : "不正常");
+            $('#Text_CollectionComputerSoftStatus').textbox('setValue', NetworkNodeArray[i]["SoftwareStatus"].toLowerCase() == "true" ? "正常" : "不正常");
+        }
+    }
     $('#dlg_CollectionComputerServer').dialog('open');
 }
 function CollectorInfo(myCollectorId, myOrganizationId) {
     var m_CollectorInfoObj = $('#' + myCollectorId).data("options");
     var m_CollectorType = m_CollectorInfoObj.Type;
 
+
+
     if (m_CollectorType == "Ammeter") {
         $('#Text_CollectorName').textbox('setValue', m_CollectorInfoObj.Name);
         $('#Text_CollectorIpAddress').textbox('setValue', m_CollectorInfoObj.IpAddress);
         $('#Text_CollectorType').textbox('setValue', m_CollectorInfoObj.Type);
-        //$('#Text_CollectorNetworkStatus').textbox('setValue', m_NetStatus);
         SetAmmterStatus(myOrganizationId, m_CollectorInfoObj.Name, m_CollectorInfoObj.IpAddress);
+        for (var i = 0; i < NetworkNodeArray.length; i++) {
+            if (NetworkNodeArray[i]["Id"] == myCollectorId) {
+                $('#Text_CollectorNetworkStatus').textbox('setValue', NetworkNodeArray[i]["NetworkStatus"].toLowerCase() == "true" ? "正常" : "不正常");
+            }
+        }
         $('#dlg_AmmeterStatus').dialog('open');
     }
     else if (m_CollectorType == "OPC") {
         $('#Text_OPCName').textbox('setValue', m_CollectorInfoObj.Name);
         $('#Text_OPCIpAddress').textbox('setValue', m_CollectorInfoObj.IpAddress);
         $('#Text_OPCCollectorType').textbox('setValue', m_CollectorInfoObj.Type);       
-        //$('#Text_OPCStatus').textbox('setValue', myNetStatus);
+        for (var i = 0; i < NetworkNodeArray.length; i++) {
+            if (NetworkNodeArray[i]["Id"] == myCollectorId) {
+                $('#Text_OPCStatus').textbox('setValue', NetworkNodeArray[i]["NetworkStatus"].toLowerCase() == "true" ? "正常" : "不正常");
+            }
+        }
         $('#dlg_OPCStatus').dialog('open');
     }
     //alert(myFactoryId + "||||" + myCollectionComputerId + "||||" + myCollectorId);
@@ -527,58 +605,98 @@ function GetStatusValue() {
         }
     });
 }
-function SetStatus(myNetworkNodeArray) {
+function SetStatus(myAlarmArray) {
     var m_Status = 0;
-    $.each(myNetworkNodeArray, function (myNodeKey, myNodeValue) {
-        //画网络线
-        var m_DomObjList = $('td[name="' + myNodeKey + '"]');
-        if (m_DomObjList != null && m_DomObjList != undefined) {
-            for (var j = 0; j < m_DomObjList.length; j++) {           //查找相同名字的每一个dom
-                if (myNodeValue["NetworkStatus"].toLowerCase() == "true") {
-                    m_Status = 1;
-                }
-                var m_BackBackgroudImage = GetBackgroudImage(m_Status, $(m_DomObjList[j]).data("options").CrossPointStyle);
-                $(m_DomObjList[j]).css('background-image', m_BackBackgroudImage);
-                //$(m_DomObjList[j]).css('background-color', 'red');
-            }
-        }
-        //画结点状态
-        var m_NodeDomObj = $('#' + myNodeKey);
-        if (m_NodeDomObj != null && m_NodeDomObj != undefined) {
-            if (myNodeValue["SoftwareStatus"] != null && myNodeValue["SynchronizationStatus"] != undefined)  //是否有同步信息
+    for (var i = 0; i < NetworkNodeArray.length; i++) {
+        var m_NodeObjTemp = NetworkNodeArray[i];
+        if (m_NodeObjTemp["NetworkStatus"] != null && m_NodeObjTemp["NetworkStatus"] != undefined) {      //网络状态
+            if (myAlarmArray[m_NodeObjTemp["Id"]] != null && myAlarmArray[m_NodeObjTemp["Id"]] != undefined &&
+                myAlarmArray[m_NodeObjTemp["Id"]]["NetworkStatus"] != null && myAlarmArray[m_NodeObjTemp["Id"]]["NetworkStatus"] != undefined)   //如果有该节点信息
             {
-                if (myNodeValue["SoftwareStatus"].toLowerCase() == "true" && myNodeValue["SynchronizationStatus"].toLowerCase() == "true") {
-                    $(m_NodeDomObj).css('background-color', "transparent");
-                    $(m_NodeDomObj).css('border', "0px");
-                }
-                else {
-                    $(m_NodeDomObj).css('background-color', "yellow");
-                    $(m_NodeDomObj).css('border', "1px solid black");
-                }
+                m_NodeObjTemp["NetworkStatus"] = myAlarmArray[m_NodeObjTemp["Id"]]["NetworkStatus"];
             }
             else {
-                if (myNodeValue["SoftwareStatus"].toLowerCase() == "true") {
-                    $(m_NodeDomObj).css('background-color', "transparent");
-                    $(m_NodeDomObj).css('border', "0px");
-                }
-                else {
-                    $(m_NodeDomObj).css('background-color', "yellow");
-                    $(m_NodeDomObj).css('border', "1px solid black");
-                }
+                NetworkNodeArray[i]["NetworkStatus"] = "true";
             }
         }
-    });
-
+        if (m_NodeObjTemp["SynchronizationStatus"] != null && m_NodeObjTemp["SynchronizationStatus"] != undefined) {      //同步状态
+            if (myAlarmArray[m_NodeObjTemp["Id"]] != null && myAlarmArray[m_NodeObjTemp["Id"]] != undefined &&
+                myAlarmArray[m_NodeObjTemp["Id"]]["SynchronizationStatus"] != null && myAlarmArray[m_NodeObjTemp["Id"]]["SynchronizationStatus"] != undefined)   //如果有该节点信息
+            {
+                m_NodeObjTemp["SynchronizationStatus"] = myAlarmArray[m_NodeObjTemp["Id"]]["SynchronizationStatus"];
+            }
+            else {
+                NetworkNodeArray[i]["SynchronizationStatus"] = "true";
+            }
+        }
+        if (m_NodeObjTemp["SubNodeStatus"] != null && m_NodeObjTemp["SubNodeStatus"] != undefined) {      //下级设备状态,针对电表采集
+            if (myAlarmArray[m_NodeObjTemp["Id"]] != null && myAlarmArray[m_NodeObjTemp["Id"]] != undefined &&
+                myAlarmArray[m_NodeObjTemp["Id"]]["SubNodeStatus"] != null && myAlarmArray[m_NodeObjTemp["Id"]]["SubNodeStatus"] != undefined)   //如果有该节点信息
+            {
+                m_NodeObjTemp["SubNodeStatus"] = myAlarmArray[m_NodeObjTemp["Id"]]["SubNodeStatus"];
+            }
+            else {
+                NetworkNodeArray[i]["SubNodeStatus"] = "true";
+            }
+        }
+        if (m_NodeObjTemp["SoftwareStatus"] != null && m_NodeObjTemp["SoftwareStatus"] != undefined) {      //软件自身
+            if (myAlarmArray[m_NodeObjTemp["Id"]] != null && myAlarmArray[m_NodeObjTemp["Id"]] != undefined &&
+                myAlarmArray[m_NodeObjTemp["Id"]]["SoftwareStatus"] != null && myAlarmArray[m_NodeObjTemp["Id"]]["SoftwareStatus"] != undefined)   //如果有该节点信息
+            {
+                m_NodeObjTemp["SoftwareStatus"] = myAlarmArray[m_NodeObjTemp["Id"]]["SoftwareStatus"];
+            }
+            else {
+                NetworkNodeArray[i]["SoftwareStatus"] = "true";
+            }
+        }
+    }
+    SetStatusColor();
 }
-function LoadStatusDefaultColor(myNetworkNodeArray) {
-    for (var i = 0; i < myNetworkNodeArray.length; i++) {
-        var m_DomObjList = $('td[name="' + myNetworkNodeArray[i] + '"]');
+function SetStatusColor() {
+    for (var i = 0; i < NetworkNodeArray.length; i++) {
+        var m_NodeObjTemp = NetworkNodeArray[i];
+        //画网络线
+        var m_DomObjList = $('td[name="' + m_NodeObjTemp["Id"] + '"]');
         if (m_DomObjList != null && m_DomObjList != undefined) {
             for (var j = 0; j < m_DomObjList.length; j++) {           //查找相同名字的每一个dom
                 //var m_BackBackgroudImage = GetBackgroudImage(1, $(m_DomObjList[j]).data("options").CrossPointStyle)
-                $(m_DomObjList[j]).css('background-image', GetBackgroudImage(1, $(m_DomObjList[j]).data("options").CrossPointStyle));
+                if (m_NodeObjTemp["NetworkStatus"].toLowerCase() == "true") {
+                    $(m_DomObjList[j]).css('background-image', GetBackgroudImage(1, $(m_DomObjList[j]).data("options").CrossPointStyle));
+                }
+                else {
+                    $(m_DomObjList[j]).css('background-image', GetBackgroudImage(0, $(m_DomObjList[j]).data("options").CrossPointStyle));
+                }
                 //$(m_DomObjList[j]).css('background-color', 'red');
             }
+        }
+
+        //画结点状态
+        var m_NodeDomObj = $('#' + m_NodeObjTemp["Id"]);
+        if (m_NodeDomObj != null && m_NodeDomObj != undefined) {
+            var m_BackgroundColor = "transparent";
+            if (m_NodeObjTemp["SynchronizationStatus"] != null && m_NodeObjTemp["SynchronizationStatus"] != undefined ) {   //同步
+                if (m_NodeObjTemp["SynchronizationStatus"].toLowerCase() != "true") {
+                    m_BackgroundColor = "yellow";
+                }
+            }
+            if (m_NodeObjTemp["SubNodeStatus"] != null && m_NodeObjTemp["SubNodeStatus"] != undefined) {        //下级节点,主要针对电表
+                if (m_NodeObjTemp["SubNodeStatus"].toLowerCase() != "true") {
+                    m_BackgroundColor = "yellow";
+                }
+            }
+            if (m_NodeObjTemp["SoftwareStatus"] != null && m_NodeObjTemp["SoftwareStatus"] != undefined ) {             //软件运行,优先级大的放在后面
+                if (m_NodeObjTemp["SoftwareStatus"].toLowerCase() != "true") {
+                    m_BackgroundColor = "red";
+                }
+            }
+            $(m_NodeDomObj).css('background-color', m_BackgroundColor);
+            if (m_BackgroundColor != "transparent") {
+                $(m_NodeDomObj).css('border', "1px solid #666666");
+            }
+            else {
+                $(m_NodeDomObj).css('border', "none");
+            }
+
         }
     }
 }
@@ -598,7 +716,7 @@ function loadDialog() {
     $('#dlg_FactoryServer').dialog({
         title: '网络信息',
         width: 450,
-        height: 200,
+        height: 220,
         closed: true,
         cache: false,
         modal: true,

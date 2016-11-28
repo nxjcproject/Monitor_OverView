@@ -17,8 +17,9 @@ namespace Monitor_OverView.Web.UI_OverView
             if (!IsPostBack)
             {
 #if DEBUG
-                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx", "zc_nxjc_byc" };
+                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx", "zc_nxjc_byc" ,"zc_nxjc_klqc","zc_nxjc_znc","zc_nxjc_tsc"};
                 AddDataValidIdGroup("ProductionOrganization", m_DataValidIdItems);
+
 #endif
                 string m_OrganizationId = Request.QueryString["id"] != null ? Request.QueryString["id"].ToString() : "";
                 if (m_OrganizationId == "")
@@ -38,38 +39,65 @@ namespace Monitor_OverView.Web.UI_OverView
             HiddenField_StationOrganizationIds.Value = Monitor_OverView.Service.OverView.OverView_Factory.GetFactoryStationList(myOrganizationId, GetDataValidIdGroup("ProductionOrganization"));
         }
         [WebMethod]
-        public static string GetElectricityQuantitiyDetail(string myVariableId, string myOrganizationId, string myOrganizationType)
+        public static string GetElectricityQuantitiyDetail(string myVariableId, string myOrganizationId, string myOrganizationType, string myDatetime)
         {
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
             string m_ReturnJson = "{\"rows\":[],\"total\":0}";
             if (myOrganizationId != "")
             {
                 DataTable m_ElectricityQuantityTable = null;
-                m_ReturnJson = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
+                m_ReturnJson = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
             }
             return m_ReturnJson;
         }
         [WebMethod]
-        public static string GetElectricityQuantitiy(string myVariableIdList, string myOrganizationId, string myOrganizationType)
+        public static string GetElectricityQuantitiy(string myVariableIdList, string myOrganizationId, string myOrganizationType, string myDatetime)
         {
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
             string m_ReturnJson = "{\"rows\":[],\"total\":0}";
             if (myOrganizationId != "")
             {
                 DataTable m_ElectricityQuantityTable = null;
-                m_ReturnJson = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiy(myVariableIdList, myOrganizationId, myOrganizationType, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
+                m_ReturnJson = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiy(myVariableIdList, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
             }
             return m_ReturnJson;
         }
 
         [WebMethod]
-        public static string GetElectricityConsumptionDetail(string myVariableId, string myOutputVariableId, string myOrganizationId, string myOrganizationType)
+        public static string GetElectricityConsumptionDetail(string myVariableId, string myOutputVariableId, string myOrganizationId, string myOrganizationType, string myDatetime)
         {
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
             string m_ReturnJson = "{\"rows\":[],\"total\":0}";
             if (myOrganizationId != "")
             {
                 DataTable m_ElectricityQuantityTable = null;
                 DataTable m_MartieialWeightTable = null;
-                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
-                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myOutputVariableId, myOrganizationId, myOrganizationType, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myOutputVariableId, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
                 if (m_ElectricityQuantityTable != null && m_MartieialWeightTable != null)
                 {
                     m_ElectricityQuantityTable.Columns.Add(m_MartieialWeightTable.Columns["DayMaterialWeight"].ToString(), m_MartieialWeightTable.Columns["DayMaterialWeight"].DataType);
@@ -107,16 +135,25 @@ namespace Monitor_OverView.Web.UI_OverView
         /// <param name="myOrganizationType"></param>
         /// <returns></returns>
         [WebMethod]
-        public static string GetElectricityConsumptionDetailYR(string myVariableId, string myOutputVariableId, string myOrganizationId, string myOrganizationType)
+        public static string GetElectricityConsumptionDetailYR(string myVariableId, string myOutputVariableId, string myOrganizationId, string myOrganizationType, string myDatetime)
         {
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
             string m_ReturnJson = "{\"rows\":[],\"total\":0}";
             if (myOrganizationId != "")
             {
                 DataTable m_OrganizationIdYR = Monitor_OverView.Service.OverView.OverView_Factory.GetOrganizationIdByClinckerContrast(myOrganizationId, myOrganizationType);
                 DataTable m_ElectricityQuantityTable = null;
                 DataTable m_MartieialWeightTable = null;
-                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
-                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myOutputVariableId, myOrganizationId, "熟料", DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myOutputVariableId, myOrganizationId, "熟料", m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
 
 
                 if (m_ElectricityQuantityTable != null && m_MartieialWeightTable != null && m_OrganizationIdYR != null)
@@ -168,8 +205,17 @@ namespace Monitor_OverView.Web.UI_OverView
             return m_ReturnJson;
         }
         [WebMethod]
-        public static string GetElectricityConsumption(string myVariableIdList, string myOutputVariableIdList, string myOrganizationId, string myOrganizationType)
+        public static string GetElectricityConsumption(string myVariableIdList, string myOutputVariableIdList, string myOrganizationId, string myOrganizationType, string myDatetime)
         {
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
             string m_ReturnJson = "{\"rows\":[],\"total\":0}";
             if (myOrganizationId != "")
             {
@@ -180,8 +226,8 @@ namespace Monitor_OverView.Web.UI_OverView
 
                 DataTable m_ElectricityQuantityTable = null;
                 DataTable m_MartieialWeightTable = null;
-                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiy(myVariableIdList, myOrganizationId, myOrganizationType, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
-                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeight(myOutputVariableIdList, myOrganizationId, myOrganizationType, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiy(myVariableIdList, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeight(myOutputVariableIdList, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
                 if (m_ElectricityQuantityTable != null && m_MartieialWeightTable != null)
                 {
 
@@ -219,30 +265,129 @@ namespace Monitor_OverView.Web.UI_OverView
             return m_ReturnJson;
         }
         [WebMethod]
-        public static string GetEnergyConsumptionComprehensiveDetail(string myOrganizationId, string myOrganizationType)
+        public static string GetEnergyConsumptionComprehensiveDetail(string myOrganizationId, string myOrganizationType, string myDatetime)
         {
-            string m_GetEnergyConsumptionComprehensiveValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEnergyConsumptionComprehensiveDetail(myOrganizationId, myOrganizationType, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"));
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_GetEnergyConsumptionComprehensiveValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEnergyConsumptionComprehensiveDetail(myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_GetEnergyConsumptionComprehensiveValue;
         }
         [WebMethod]
-        public static string GetEnergyConsumptionComprehensive(string myOrganizationId)
+        public static string GetEnergyConsumptionComprehensive(string myOrganizationId, string myDatetime)
         {
-            string m_GetEnergyConsumptionComprehensiveValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEnergyConsumptionComprehensive(myOrganizationId, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"));
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_GetEnergyConsumptionComprehensiveValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEnergyConsumptionComprehensive(myOrganizationId, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_GetEnergyConsumptionComprehensiveValue;
         }
         [WebMethod]
-        public static string GetMaterialWeightDetail(string myVariableId, string myOrganizationId, string myOrganizationType)
+        public static string GetMaterialWeightDetail(string myVariableId, string myOrganizationId, string myOrganizationType, string myDatetime)
         {
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
             DataTable m_MartieialWeightTable = null;
-            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myVariableId, myOrganizationId, myOrganizationType, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
+            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myVariableId, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
             return m_OrganizationInfoValue;
         }
         [WebMethod]
-        public static string GetMaterialWeightData(string myVariableIdList, string myOrganizationId, string myOrganizationType)
+        public static string GetMaterialWeightData(string myVariableIdList, string myOrganizationId, string myOrganizationType, string myDatetime)
         {
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
             DataTable m_MartieialWeightTable = null;
-            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeight(myVariableIdList, myOrganizationId, myOrganizationType, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
+            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeight(myVariableIdList, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
             return m_OrganizationInfoValue;
+        }
+        [WebMethod]
+        public static string GetInventoryData(string myMaterialList, string myOrganizationId, string myDatetime)
+        {
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 00:00:00");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_ReturnValue = "";
+            List<string> m_InventoryDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetInventoryData(myMaterialList, myOrganizationId, m_TodayDateTime);
+            List<string> m_WareHousingValue = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHousingData(myMaterialList, myOrganizationId, m_TodayDateTime);
+            for (int i = 0; i < m_InventoryDataValue.Count; i++)
+            {
+                if(m_ReturnValue == "")
+                {
+                    m_ReturnValue = m_InventoryDataValue[i];
+                }
+                else
+                {
+                    m_ReturnValue = m_ReturnValue + "," + m_InventoryDataValue[i];
+                }
+            }
+            for (int i = 0; i < m_WareHousingValue.Count; i++)
+            {
+                if (m_ReturnValue == "")
+                {
+                    m_ReturnValue = m_WareHousingValue[i];
+                }
+                else
+                {
+                    m_ReturnValue = m_ReturnValue + "," + m_WareHousingValue[i];
+                }
+            }
+            if (m_ReturnValue == "")
+            {
+                m_ReturnValue = "[]";
+            }
+            else
+            {
+                m_ReturnValue = "{" + m_ReturnValue + "}";
+            }
+
+            return m_ReturnValue;
+        }
+        [WebMethod]
+        public static string GetProductSaleData(string myOrganizationId, string myMaterialIds, string myDatetime)
+        {
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_ProductSaleDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetProductSaleData(myOrganizationId, myMaterialIds, m_TodayDateTime);
+            return m_ProductSaleDataValue;
         }
         [WebMethod]
         public static string GetEquipmentHaltAlarm(string myOrganizationId)
@@ -251,33 +396,78 @@ namespace Monitor_OverView.Web.UI_OverView
             return m_OrganizationInfoValue;
         }
         [WebMethod]
-        public static string GetRunIndictorsDetail(string myEquipmentCommonId, string myFactoryOrganizationId, string myRunIndictorsList)
+        public static string GetRunIndictorsDetail(string myEquipmentCommonId, string myFactoryOrganizationId, string myRunIndictorsList, string myDatetime)
         {
-            string m_RunIndictorsDetailValue = Monitor_OverView.Service.OverView.OverView_Factory.GetRunIndictorsDetail(myEquipmentCommonId, myFactoryOrganizationId, myRunIndictorsList, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"));
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_RunIndictorsDetailValue = Monitor_OverView.Service.OverView.OverView_Factory.GetRunIndictorsDetail(myEquipmentCommonId, myFactoryOrganizationId, myRunIndictorsList, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_RunIndictorsDetailValue;
         }
         [WebMethod]
-        public static string GetRunIndictors(string myRunIndictorsList, string myEquipmentCommonIdList, string myFactoryOrganizationId)
+        public static string GetRunIndictors(string myRunIndictorsList, string myEquipmentCommonIdList, string myFactoryOrganizationId, string myDatetime)
         {
-            string m_RunIndictorsValue = Monitor_OverView.Service.OverView.OverView_Factory.GetRunIndictors(myRunIndictorsList, myEquipmentCommonIdList, myFactoryOrganizationId, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"));
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_RunIndictorsValue = Monitor_OverView.Service.OverView.OverView_Factory.GetRunIndictors(myRunIndictorsList, myEquipmentCommonIdList, myFactoryOrganizationId, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_RunIndictorsValue;
         }
         [WebMethod]
-        public static string GetEquipmentHaltDetail(string myEquipmentCommonId, string myFactoryOrganizationId, string myStatisticalRange)
+        public static string GetEquipmentHaltDetail(string myEquipmentCommonId, string myFactoryOrganizationId, string myStatisticalRange, string myDatetime)
         {
-            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEquipmentHaltDetail(myEquipmentCommonId, myFactoryOrganizationId, myStatisticalRange, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"));
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEquipmentHaltDetail(myEquipmentCommonId, myFactoryOrganizationId, myStatisticalRange, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_OrganizationInfoValue;
         }
         [WebMethod]
-        public static string GetEquipmentHalt(string myEquipmentCommonIdList, string myFactoryOrganizationId, string myStatisticalRange)
+        public static string GetEquipmentHalt(string myEquipmentCommonIdList, string myFactoryOrganizationId, string myStatisticalRange, string myDatetime)
         {
-            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEquipmentHalt(myEquipmentCommonIdList, myFactoryOrganizationId, DateTime.Now.AddDays(-1).ToString("yyyy-MM") + "-01", DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), myStatisticalRange);
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEquipmentHalt(myEquipmentCommonIdList, myFactoryOrganizationId, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), myStatisticalRange);
             return m_OrganizationInfoValue;
         }
         [WebMethod]
-        public static string GetWorkingTeamShiftLog(string myOrganizationId)
+        public static string GetWorkingTeamShiftLog(string myOrganizationId, string myDatetime)
         {
-            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetWorkingTeamShiftLog(myOrganizationId);
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetWorkingTeamShiftLog(myOrganizationId, m_TodayDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
             return m_OrganizationInfoValue;
         }
         [WebMethod]
@@ -288,15 +478,33 @@ namespace Monitor_OverView.Web.UI_OverView
         }
 
         [WebMethod]
-        public static string GetMonthLineChartData(string myRunIndictors, string myEquipmentCommonIdList, string myOrganizationId)
+        public static string GetMonthLineChartData(string myRunIndictors, string myEquipmentCommonIdList, string myOrganizationId, string myDatetime)
         {
-            string m_MonthLineChartDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMonthLineChartData(myRunIndictors, myEquipmentCommonIdList, myOrganizationId, DateTime.Now.AddDays(-1).AddMonths(-6).ToString("yyyy-MM-01"), DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"));
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_MonthLineChartDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMonthLineChartData(myRunIndictors, myEquipmentCommonIdList, myOrganizationId, m_TodayDateTime.AddMonths(-6).ToString("yyyy-MM-01"), m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_MonthLineChartDataValue;
         }
         [WebMethod]
-        public static string GetElectricitiyConsumptionChartData(string myVariableIdList, string myOrganizationId, string myOrganizationTypeList)
+        public static string GetElectricitiyConsumptionChartData(string myVariableIdList, string myOrganizationId, string myOrganizationTypeList, string myDatetime)
         {
-            string m_MonthElectricitiyConsumptionChartDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricitiyConsumptionChartData(myVariableIdList, myOrganizationId, myOrganizationTypeList, DateTime.Now.AddDays(-1).AddMonths(-6).ToString("yyyy-MM"), DateTime.Now.AddDays(-1).ToString("yyyy-MM"));
+            DateTime m_TodayDateTime;
+            if (myDatetime != "")
+            {
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+            }
+            else
+            {
+                m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_MonthElectricitiyConsumptionChartDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricitiyConsumptionChartData(myVariableIdList, myOrganizationId, myOrganizationTypeList, m_TodayDateTime.AddMonths(-6).ToString("yyyy-MM"), m_TodayDateTime.ToString("yyyy-MM"));
             return m_MonthElectricitiyConsumptionChartDataValue;
         }
         //private static DataTable GetFactoryByCompany(string myCompanyOrganizationId)
@@ -313,5 +521,11 @@ namespace Monitor_OverView.Web.UI_OverView
         //    }
         //    return "1111";
         //}
+        [WebMethod]
+        public static string GetQuickContent(string myGroupKey)
+        {
+            string m_QuickContentValue = Monitor_OverView.Service.OverView.OverView_Factory.GetQuickContent(myGroupKey, mUserId, mRoleId);
+            return m_QuickContentValue;
+        }
     }
 }

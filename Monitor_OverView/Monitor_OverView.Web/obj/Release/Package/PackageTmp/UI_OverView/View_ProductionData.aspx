@@ -83,14 +83,37 @@
                     </table>
                 </div>
                 <div data-options="region:'south',border:false" style="height: 270px;">
-                    <table>
-                        <tr>
-                            <th>选择指标</th>
-                            <td>
-                                <input id="ComboTree_StandardF" class="easyui-combotree" style="width: 160px" />
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="easyui-layout" data-options="fit:true,border:false">
+                        <div class="easyui-panel" data-options="region:'north', border:false, collapsible:false, split:false" style="height: 27px;">
+                            <table>
+                                <tr>
+                                    <th style="width: 60px;">选择指标</th>
+                                    <td  style="width: 145px;">
+                                        <select id="ComboTree_StandardF" class="easyui-combotree" name="ValueType" data-options="panelHeight:'auto'" style="width: 135px;">
+                                        </select>
+                                    </td>
+                                    <th style="width: 60px;">主要设备</th>
+                                    <td style="width: 80px;">
+                                        <select id="Combobox_EquipmentCommonF" class="easyui-combobox" name="Combobox_EquipmentCommonF" data-options="panelHeight:'auto', editable:false, valueField: 'EquipmentCommonId',textField: 'Name', onSelect:function(myRecord){LoadSpecifications(myRecord.EquipmentCommonId);}" style="width: 70px;"></select>
+                                    </td>
+                                    <th style="width: 60px;">规格型号</th>
+                                    <td style="width: 110px;">
+                                        <select id="Combobox_SpecificationsF" class="easyui-combobox" name="Combobox_SpecificationsF" data-options="panelHeight:'auto', editable:false, valueField: 'id',textField: 'text'" style="width: 100px;"></select>
+                                    </td>
+                                    <td style="width: 60px;">
+                                        <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+                                            onclick="LoadPlanAndCompleteChart();">查询</a>
+                                    </td>
+                                    <th id="Th_ChartPageIndexF" style="visibility:hidden;">页码</th>
+                                    <td id="Td_ChartPageIndexF" style="visibility:hidden;">
+                                        <select id="Combobox_PageIndexF" class="easyui-combobox" name="Combobox_PageIndexF" data-options="panelHeight:'auto', editable:false, valueField: 'id',textField: 'text',onSelect:function(myRecord){ChangeChartPageIndex(myRecord);}" style="width: 50px;"></select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="Windows_Container" class="easyui-panel" data-options="region:'center', border:false, collapsible:false, split:false">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,10 +138,10 @@
         <div data-options="region:'south',border:false" style="height: 20px; text-align: center; vertical-align: middle;">
             <table>
                 <tr>
-                <td id ="LeftBlankWidth"></td>
-                <td id="ComprehensiveDailyTd" class ="SelectButtonTd" onclick ="ChageOtherPage('View_OverView_nxjc');">综合日报</td>
-                <td id="ProductionDataTd" class ="SelectedButtonTd" onclick = "ChageOtherPage('View_ProductionData');">生产数据</td>
-                <td id="EnergyDataTd" class ="SelectButtonTd" onclick = "ChageOtherPage('View_EnergyData');">能源数据</td>
+                    <td id="LeftBlankWidth"></td>
+                    <td id="ComprehensiveDailyTd" class="SelectButtonTd" onclick="ChageOtherPage('View_OverView_nxjc');">综合日报</td>
+                    <td id="ProductionDataTd" class="SelectedButtonTd" onclick="ChageOtherPage('View_ProductionData');">生产数据</td>
+                    <td id="EnergyDataTd" class="SelectButtonTd" onclick="ChageOtherPage('View_EnergyData');">能源数据</td>
                 </tr>
             </table>
         </div>

@@ -80,6 +80,10 @@ function InitializeGlobalGrid(myData) {
 }
 
 function onRowDblClick(rowData, myLoadType) {
+    $.messager.progress({
+        title: 'Please waiting',
+        msg: 'Loading data...'
+    });
     date = $('#dateTime').datebox('getValue');
     var m_LevelCode = (rowData["LevelCode"]);
     var companyName = rowData["Name"];
@@ -94,17 +98,14 @@ function onRowDblClick(rowData, myLoadType) {
             var m_MsgData = jQuery.parseJSON(msg.d);
             if (m_MsgData != null && m_MsgData != undefined) {
                 if (myLoadType == "first") {
-                    InitializeCompanyGrid(m_MsgData, 'CompanyComprehensiveCompleteGridId');
+                    InitializeCompanyGrid(m_MsgData, 'CompanyComprehensiveCompleteGridId','公司');
                 }
                 else {
-                    InitializeCompanyGrid(m_MsgData, 'CompanyComprehensiveCompleteGridId');
-                    //$('#CompanyComprehensiveCompleteGridId').datagrid('loadData', m_MsgData);
+                    //InitializeCompanyGrid(m_MsgData, 'CompanyComprehensiveCompleteGridId');
+                    $('#CompanyComprehensiveCompleteGridId').datagrid('loadData', m_MsgData);
                 }
 
-                $('#CompanyComprehensiveCompleteGridId').datagrid({
-                    title: companyName
-                });
-
+                $('#CompanyComprehensiveCompleteGridId').datagrid("getPanel").panel("setTitle", companyName);
                 var m_Index = 0;
                 var m_Name = "";
                 for (var i = 0; i < m_MsgData.rows.length; i++) {
@@ -132,6 +133,7 @@ function onRowDblClick(rowData, myLoadType) {
                     
                 }
             }
+            $.messager.progress('close');
         },
         error: handleError
     });
@@ -146,7 +148,7 @@ function onRowDblClick(rowData, myLoadType) {
             var m_MsgData = jQuery.parseJSON(msg.d);
             if (m_MsgData != null && m_MsgData != undefined) {
                 if (myLoadType == "first") {
-                    InitializeCompanyGrid(m_MsgData, 'CompanyProcessCompleteGridId');
+                    InitializeCompanyGrid(m_MsgData, 'CompanyProcessCompleteGridId','');
                 }
                 else {
                     $('#CompanyProcessCompleteGridId').datagrid('loadData', m_MsgData);
@@ -182,10 +184,10 @@ function onRowDblClick(rowData, myLoadType) {
         error: handleError
     });
 }
-function InitializeCompanyGrid(myData, myObjectId) {
+function InitializeCompanyGrid(myData, myObjectId, myTitle) {
     //data-options="idField:'id',treeField:'Name',rownumbers:true,singleSelect:true,fit:true,onDblClickRow:onRowDblClick"
     $('#' + myObjectId).datagrid({
-        title: '',
+        title: myTitle,
         data: myData,
         dataType: "json",
         striped: true,
@@ -198,6 +200,7 @@ function InitializeCompanyGrid(myData, myObjectId) {
 function handleError() {
     $('#gridMain_ReportTemplate').datagrid('loadData', []);
     $.messager.alert('失败', '获取数据失败');
+    $.messager.progress('close');
 }
 
 function InitPlanItems(myData) {

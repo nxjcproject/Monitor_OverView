@@ -102,12 +102,11 @@ function SetGlobalSize(myDocumentWidth, myDocumentHeight) {
 
 //////////////////////////获得后台数据//////////////////////
 function GetRealTimeData() {
-    var m_StartTime = "";  //$('#Datebox_StartTimeF').datebox('getValue');
-    var m_EndTime = "";   //$('#Datebox_EndTimeF').datebox('getValue');
+    var m_DateTime = "";  //$('#Datebox_StartTimeF').datebox('getValue');
     $.ajax({
         type: "POST",
         url: "View_OverView_nxjc.aspx/GetRealTimeData",
-        data: "{myStartTime:'" + m_StartTime + "',myEndTime:'" + m_EndTime + "'}",
+        data: "{myDateTime:'" + m_DateTime + "'}",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {

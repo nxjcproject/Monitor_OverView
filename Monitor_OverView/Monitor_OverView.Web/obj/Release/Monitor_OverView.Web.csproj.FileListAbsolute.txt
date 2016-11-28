@@ -24,3 +24,6 @@ C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Web\bin\AutoSetParameters.pdb
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Web\bin\Standard_GB16780-2012.pdb
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Web\bin\mDbDataAdaper.pdb
+C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Web\bin\SqlServerDataAdapter.pdb
+C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Web\bin\DataCompression.dll
+C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Web\bin\DataCompression.pdb

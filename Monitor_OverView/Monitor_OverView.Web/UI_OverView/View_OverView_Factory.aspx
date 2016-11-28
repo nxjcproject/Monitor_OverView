@@ -48,6 +48,7 @@
     <script type="text/javascript" src="/lib/pllib/themes/jjquery.jqplot.min.js"></script>--%>
     <!--[if lt IE 8 ]><script type="text/javascript" src="/js/common/json2.min.js"></script><![endif]-->
 
+    <script type="text/javascript" src="/js/common/format/DateTimeFormat.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/common/components/Charts.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/common/components/DataGrid.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/common/components/WindowsDialog.js" charset="utf-8"></script>
@@ -163,8 +164,13 @@
                         <table>
                             <tr>
                                 <td class="RightSelectStationTd">
-                                    &nbsp;&nbsp;选择生产区域&nbsp;<select id="Select_SelectStation" class="easyui-combobox" name="SelectStation" data-options="panelHeight:'auto', editable:true, valueField: 'OrganizationId',textField: 'Name',onSelect:function(myRecord){RefreshFactoryOrganiztion(myRecord['OrganizationId']);}" style="width: 90px;"></select>
+                                    &nbsp;&nbsp;选择生产区域&nbsp;<select id="Select_SelectStation" class="easyui-combobox" name="SelectStation" data-options="panelHeight:'auto', editable:true, valueField: 'OrganizationId',textField: 'Name',onSelect:function(myRecord){RefreshFactoryOrganiztion(myRecord['OrganizationId']);}" style="width: 100px;"></select>
                                     &nbsp;&nbsp;<a id ="button_BackToGlobalPage" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'ext-icon-application_go',plain:true" onclick="ChangeDisplayStation();">返回</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="RightSelectStationTd">
+                                    &nbsp;&nbsp;选择查询时间&nbsp;<input id="dateTime" type="text" class="easyui-datebox" required="required" data-options ="onSelect:function(date){QueryDataFun(date);}" style ="width:100px;"/>
                                 </td>
                             </tr>
                             <tr>
@@ -175,37 +181,15 @@
                                                 <thead>
                                                     <tr>
                                                         <th data-options="field:'Name',width:78">名称</th>
-                                                        <th data-options="field:'Clincker',width:85">熟料</th>
-                                                        <th data-options="field:'Cementmill',width:85">水泥磨</th>
+                                                        <th data-options="field:'Clinker',width:85">熟料</th>
+                                                        <th data-options="field:'Cement',width:85">水泥</th>
                                                     </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>日销售量(t)</td>
-                                                        <td>0000000</td>
-                                                        <td>0000</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>月销售量(t)</td>
-                                                        <td>0000000</td>
-                                                        <td>0000000</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>年销售量(t)</td>
-                                                        <td>0000000</td>
-                                                        <td>0000000</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>完成率(%)</td>
-                                                        <td>0000000</td>
-                                                        <td>0000000</td>
-                                                    </tr>
-                                                </tbody>
+                                                </thead>  
                                             </table>
                                         </div>
                                     </div>
                                     <div class="easyui-accordion" style="width: 250px;">
-                                        <div title="停机/能耗报警" data-options="iconCls:'ext-icon-error',selected:true" style="height: 320px;">
+                                        <div title="停机/能耗报警" data-options="iconCls:'ext-icon-error',selected:true" style="height: 246px;">
                                             <table id="datagrid_EquipmentHaltAlarm" class="easyui-datagrid" data-options="fit:true,striped:true, singleSelect:true, border:false">
                                                 <thead>
                                                     <tr>
@@ -377,14 +361,14 @@
     </div>
     <!--快捷菜单-->
     <div id="dlg_QuickMenuDetail" class="easyui-dialog">
-        <table id="grid_QuickMenuDetail" class="easyui-treegrid" data-options="fit:true, rownumbers: true,striped:true, idField: 'id', treeField: 'text', singleSelect:true, border:false">
+        <table id="grid_QuickMenuDetail" class="easyui-datagrid" data-options="fit:true, rownumbers: true,striped:true, singleSelect:true, border:false, onDblClickRow:function(rowIndex, rowData){AddNewPage(rowIndex, rowData);}">
             <thead>
                 <tr>     
-                    <th data-options="field:'Id',width:60, hidden:true">页面ID</th>
-                    <th data-options="field:'Name',width:170">页面名称</th>
-                    <th data-options="field:'Description',width:290">描述</th>
-                    <th data-options="field:'PageId',width:110, hidden:true">页面名称</th>
-                    <th data-options="field:'Address',width:60, hidden:true">地址</th>
+                    <th data-options="field:'PageId',width:60, hidden:true">页面ID</th>
+                    <th data-options="field:'Name',width:150">页面名称</th>
+                    <th data-options="field:'Description',width:190">描述</th>
+                    <th data-options="field:'NodePath',width:110, hidden:true">页面</th>
+                    <th data-options="field:'NavigateUrl',width:60, hidden:true">地址</th>
                 </tr>
             </thead>
         </table>

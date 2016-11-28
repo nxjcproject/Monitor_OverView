@@ -20,12 +20,8 @@ namespace Monitor_OverView.Web.UI_SystemStatus
     [System.Web.Script.Services.ScriptService]
     public class NetworkMonitor : System.Web.Services.WebService
     {
-
-        private static Dictionary<string, bool> GroupNetworkStatus = new Dictionary<string, bool>();         //分厂到集团网络
-        private static Dictionary<string, DataTable> DataComputerNetworkStatus = new Dictionary<string, DataTable>();           //采集计算机网络状况
-
-        private static Dictionary<string, DateTime> FactorySoftwareUpdateTime = new Dictionary<string, DateTime>();      //记录分厂汇总软件状态
-        private static Dictionary<string, DateTime> RealtimeDatetime = new Dictionary<string, DateTime>();               //实时表记录的时间
+        private static Dictionary<string, List<string>> m_StatusBuffer;
+        private static Dictionary<string, string> m_TimeStampBuffer;
 
         [WebMethod]
         public string HelloWorld()
@@ -40,121 +36,157 @@ namespace Monitor_OverView.Web.UI_SystemStatus
              */
         }
         [WebMethod]
-        public void SetNetworkStatus(string myOrganizationId, bool myGroupNetworkStatus, DateTime myFactorySoftwareUpdateTime, DateTime myRealtimeDatetime, DataTable myDataComputerNetworkStatus)
+        public void SetNetworkStatus(string myOrganizationId, string myTimeStamp, byte[] myStatusBuffer)
         {
-            if (GroupNetworkStatus.ContainsKey(myOrganizationId))
+            if (m_StatusBuffer == null)
             {
-                GroupNetworkStatus[myOrganizationId] = myGroupNetworkStatus;
-                FactorySoftwareUpdateTime[myOrganizationId] = myFactorySoftwareUpdateTime;
-                RealtimeDatetime[myOrganizationId] = myRealtimeDatetime;
-                DataComputerNetworkStatus[myOrganizationId] = myDataComputerNetworkStatus;
+                m_StatusBuffer = new Dictionary<string, List<string>>();
             }
-            else       //如果没有则增加
+            if (myStatusBuffer != null)
             {
-                GroupNetworkStatus.Add(myOrganizationId, myGroupNetworkStatus);
-                FactorySoftwareUpdateTime.Add(myOrganizationId, myFactorySoftwareUpdateTime);
-                RealtimeDatetime.Add(myOrganizationId, myRealtimeDatetime);
-                DataComputerNetworkStatus.Add(myOrganizationId, myDataComputerNetworkStatus);
+                string[] m_StatusArray = Monitor_OverView.Service.SystemStatus.NetworkStatus.GetStatusString(myStatusBuffer);
+                if (m_StatusArray != null)
+                {
+                    if (!m_StatusBuffer.ContainsKey(myOrganizationId))            //如果不包括该组织机构
+                    {
+                        List<string> m_StatusArrayTemp = new List<string>();
+                        for (int i = 0; i < m_StatusArray.Length; i++)
+                        {
+                            m_StatusArrayTemp.Add(m_StatusArray[i]);
+                        }
+                        m_StatusBuffer.Add(myOrganizationId, m_StatusArrayTemp);
+                    }
+                    else
+                    {
+                        if (m_StatusBuffer[myOrganizationId] != null)
+                        {
+                            m_StatusBuffer[myOrganizationId].Clear();
+                            for (int i = 0; i < m_StatusArray.Length; i++)
+                            {
+                                m_StatusBuffer[myOrganizationId].Add(m_StatusArray[i]);
+                            }
+                        }
+                        else
+                        {
+                            List<string> m_StatusArrayTemp = new List<string>();
+                            for (int i = 0; i < m_StatusArray.Length; i++)
+                            {
+                                m_StatusArrayTemp.Add(m_StatusArray[i]);
+                            }
+                            m_StatusBuffer[myOrganizationId] = m_StatusArrayTemp;
+                        }
+
+                    }
+
+                }
+            }
+            else
+            {
+                if (!m_StatusBuffer.ContainsKey(myOrganizationId))            //如果不包括该组织机构
+                {
+                    List<string> m_StatusArrayTemp = new List<string>();
+                    m_StatusBuffer.Add(myOrganizationId, m_StatusArrayTemp);
+                }
+                else
+                {
+                    if (m_StatusBuffer[myOrganizationId] != null)
+                    {
+                        m_StatusBuffer[myOrganizationId].Clear();
+                    }
+                    else
+                    {
+                        List<string> m_StatusArrayTemp = new List<string>();
+                        m_StatusBuffer[myOrganizationId] = m_StatusArrayTemp;
+                    }
+
+                }
+
+            }
+
+            ////////////////////////更新上传时间
+            if (m_TimeStampBuffer == null)
+            {
+                m_TimeStampBuffer = new Dictionary<string, string>();
+            }
+            if (!m_TimeStampBuffer.ContainsKey(myOrganizationId))            //如果不包括该组织机构
+            {
+                m_TimeStampBuffer.Add(myOrganizationId, myTimeStamp);
+            }
+            else
+            {
+                m_TimeStampBuffer[myOrganizationId] = myTimeStamp;
             }
         }
         [WebMethod]
         public string GetNetworkStatus()
         {
-            string m_StationId = Monitor_OverView.Service.OverView.OverView_Nxjc.GetStationId();
-            DataTable m_FactoryServerInfoTable = Monitor_OverView.Service.SystemStatus.NetworkStatus.GetFactoryServerInfo(m_StationId);
-            if (m_FactoryServerInfoTable != null)
-            {
-                string[] m_FactoryDataBaseName = new string[m_FactoryServerInfoTable.Rows.Count];
-                string[] m_OrganzationId = new string[m_FactoryServerInfoTable.Rows.Count];
-                for (int i = 0; i < m_FactoryServerInfoTable.Rows.Count; i++)
-                {
-                    m_FactoryDataBaseName[i] = m_FactoryServerInfoTable.Rows[i]["MeterDatabase"].ToString();
-                    m_OrganzationId[i] = m_FactoryServerInfoTable.Rows[i]["OrganizationId"].ToString();
-                }
-                DataTable m_DataCollectionNetValueTable = Monitor_OverView.Service.SystemStatus.NetworkStatus.GetDataCollectionNetInfo(m_OrganzationId);
-                Monitor_OverView.Service.SystemStatus.NetworkStatus.GetDataComputerAndOPCValue(ref m_DataCollectionNetValueTable);        //根据网络的对照表查找每个实时表的时间,并返回是否正常
-                Monitor_OverView.Service.SystemStatus.NetworkStatus.GetAmmeterValue(m_FactoryDataBaseName, ref m_DataCollectionNetValueTable);        //根据网络的对照表查找每个实时表的时间,并返回是否正常
-                DataTable m_FactoryServerStatusTable = Monitor_OverView.Service.SystemStatus.NetworkStatus.GetFactoryNetworkStatus(m_OrganzationId, m_FactoryDataBaseName, GroupNetworkStatus, FactorySoftwareUpdateTime, RealtimeDatetime);
-                DataTable m_DataComputerStatusTable = Monitor_OverView.Service.SystemStatus.NetworkStatus.GetDataComputerNetworkStatus(m_DataCollectionNetValueTable, DataComputerNetworkStatus);
-                DataTable m_OPCStatusTable = Monitor_OverView.Service.SystemStatus.NetworkStatus.GetOPCStatus(m_DataCollectionNetValueTable);
-                DataTable m_AmmeterNetworkStatusTable = Monitor_OverView.Service.SystemStatus.NetworkStatus.GetAmmeterNetworkStatus(m_DataCollectionNetValueTable);
+            /////////////////////////测试用/////////////////////
+            //m_StatusBuffer = new Dictionary<string, List<string>>();
+            //List<string> m_TestList = new List<string>();
+            //m_TestList.Add("zc_nxjc_byc_byf_zc_nxjc_byc_byf_ELCCollector1;AmmeterS;0");
+            //m_TestList.Add("zc_nxjc_byc_byf_zc_nxjc_byc_byf_ELCCollector1;Network;0");
+            //m_TestList.Add("zc_nxjc_byc_byf_zc_nxjc_byc_byf_OPCCollector1;Network;0");
+            //m_TestList.Add("zc_nxjc_byc_byf_zc_nxjc_byc_byf_OPCCollector1;OPC;0");
+            //m_TestList.Add("zc_nxjc_byc_byf_zc_nxjc_byc_byf_FactoryServer;Network;0");
+            //m_StatusBuffer.Add("zc_nxjc_byc_byf", m_TestList);
 
-                string m_ReturnString = "";
-                m_ReturnString = m_ReturnString + GetStatusString(m_FactoryServerStatusTable, true);
-                if (m_ReturnString != "")
+
+            //m_TimeStampBuffer = new Dictionary<string, string>();
+            //m_TimeStampBuffer.Add("zc_nxjc_byc_byf", "2016-07-29 21:10:20");
+
+            ////////////////////////////////////////////////////
+
+            DataSet m_FactoryServerStatusDataSet = Monitor_OverView.Service.SystemStatus.NetworkStatus.GetStatusDataSet(m_StatusBuffer, m_TimeStampBuffer);
+
+            string m_ReturnString = "";
+            m_ReturnString = m_ReturnString + GetStatusString(m_FactoryServerStatusDataSet.Tables["FactoryNodeStatus"]);
+            if (m_ReturnString != "")
+            {
+                string m_StringTemp = GetStatusString(m_FactoryServerStatusDataSet.Tables["NormalNodeStatusStatus"]);
+                if (m_StringTemp != "")
                 {
-                    string m_StringTemp = GetStatusString(m_DataComputerStatusTable, false);
-                    if (m_StringTemp != "")
-                    {
-                        m_ReturnString = m_ReturnString + "," + m_StringTemp;
-                    }
+                    m_ReturnString = m_ReturnString + "," + m_StringTemp;
                 }
-                else
-                {
-                    m_ReturnString = GetStatusString(m_DataComputerStatusTable, false);
-                }
-                if (m_ReturnString != "")
-                {
-                    string m_StringTemp = GetStatusString(m_OPCStatusTable, false);
-                    if (m_StringTemp != "")
-                    {
-                        m_ReturnString = m_ReturnString + "," + m_StringTemp;
-                    }
-                }
-                else
-                {
-                    m_ReturnString = GetStatusString(m_OPCStatusTable, false);
-                }
-                if (m_ReturnString != "")
-                {
-                    string m_StringTemp = GetStatusString(m_AmmeterNetworkStatusTable, false);
-                    if (m_StringTemp != "")
-                    {
-                        m_ReturnString = m_ReturnString + "," + m_StringTemp;
-                    }
-                }
-                else
-                {
-                    m_ReturnString = GetStatusString(m_AmmeterNetworkStatusTable, false);
-                }
-                return "{" + m_ReturnString + "}";
             }
             else
             {
-                return "[]";
+                m_ReturnString = GetStatusString(m_FactoryServerStatusDataSet.Tables["NormalNodeStatusStatus"]);
             }
+            
+            return "{" + m_ReturnString + "}";
         }
-        private string GetStatusString(DataTable myStatusDataTable, bool myIsSynchronization)
+
+        private string GetStatusString(DataTable myStatusDataTable)
         {
             string m_ReturnString = "";
             if (myStatusDataTable != null)
             {
                 for (int i = 0; i < myStatusDataTable.Rows.Count; i++)
                 {
-                    if (i == 0)
+                    string m_RowDataString = "";
+                    for (int j = 1; j < myStatusDataTable.Columns.Count; j++)
                     {
-                        m_ReturnString = "\"" + myStatusDataTable.Rows[i]["Id"].ToString() + "\":{\"NetworkStatus\":\"" + myStatusDataTable.Rows[i]["NetworkStatus"].ToString() +
-                                         "\",\"SoftwareStatus\":\"" + myStatusDataTable.Rows[i]["SoftwareStatus"].ToString() + "\"";
-                        if (myIsSynchronization == true)
+                        if (j == 1)
                         {
-                            m_ReturnString = m_ReturnString + ",\"SynchronizationStatus\":\"" + myStatusDataTable.Rows[i]["SynchronizationStatus"].ToString() + "\"}";
+                            m_RowDataString = "\"" + myStatusDataTable.Rows[i][0].ToString() + "\":{\"" + myStatusDataTable.Columns[j].ColumnName + "\":\"" + myStatusDataTable.Rows[i][j].ToString() + "\"";
                         }
                         else
                         {
-                            m_ReturnString = m_ReturnString + "}";
+                            m_RowDataString = m_RowDataString + ",\"" + myStatusDataTable.Columns[j].ColumnName + "\":\"" + myStatusDataTable.Rows[i][j].ToString() + "\"";
+                        }
+                    }
+                    if (i == 0)
+                    {
+                        if (m_RowDataString != "")
+                        {
+                            m_ReturnString = m_RowDataString + "}";
                         }
                     }
                     else
                     {
-                        m_ReturnString = m_ReturnString + ",\"" + myStatusDataTable.Rows[i]["Id"].ToString() + "\":{\"NetworkStatus\":\"" + myStatusDataTable.Rows[i]["NetworkStatus"].ToString() +
-                                                           "\",\"SoftwareStatus\":\"" + myStatusDataTable.Rows[i]["SoftwareStatus"].ToString() + "\"";
-                        if (myIsSynchronization == true)
+                        if (m_RowDataString != "")
                         {
-                            m_ReturnString = m_ReturnString + ",\"SynchronizationStatus\":\"" + myStatusDataTable.Rows[i]["SynchronizationStatus"].ToString() + "\"}";
-                        }
-                        else
-                        {
-                            m_ReturnString = m_ReturnString + "}";
+                            m_ReturnString = m_ReturnString + "," + m_RowDataString + "}";
                         }
                     }
                 }
@@ -179,7 +211,7 @@ namespace Monitor_OverView.Web.UI_SystemStatus
                     m_OrganzationId[i] = m_FactoryServerInfoTable.Rows[i]["OrganizationId"].ToString();
                     m_StationIpAddress = Monitor_OverView.Service.SystemStatus.NetworkStatus.GetStationIpAddress(m_OrganzationId[i], m_FactoryServerInfoTable);    //获取站点IP地址
                     Monitor_OverView.Service.SystemStatus.Model_FactoryServer m_FactoryServerTemp = new Service.SystemStatus.Model_FactoryServer();
-                    m_FactoryServerTemp.Id = m_OrganzationId[i];
+                    m_FactoryServerTemp.Id = m_OrganzationId[i] + "_" + m_FactoryServerInfoTable.Rows[i]["NodeId"].ToString();
                     m_FactoryServerTemp.OrganizationId = m_OrganzationId[i];
                     m_FactoryServerTemp.Name = m_FactoryServerInfoTable.Rows[i]["Name"].ToString();
                     m_FactoryServerTemp.IpAddress = m_StationIpAddress;

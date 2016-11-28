@@ -112,7 +112,6 @@ namespace Monitor_OverView.Service.OverView
                                 and M.BalanceVariableId = N.BalanceVariableId
                                 and M.OrganizationID = W.OrganizationID
                                 and W.KeyID = Z.KeyID
-                                and W.Type = 2
                                 and W.State = 0
                                 and W.ENABLE = 1
                                 and M.VariableId = Z.VariableId";
@@ -147,7 +146,7 @@ namespace Monitor_OverView.Service.OverView
             }
             if (m_OrganizationType != "")
             {
-                m_OrganizationType = string.Format(" and C.Type in ({0}) ", m_OrganizationType);
+                m_OrganizationType = string.Format(" and (C.Type in ({0}) or B.VariableId in ('cementPacking_ElectricityQuantity')) ", m_OrganizationType);
             }
             for (int i = 0; i < m_VariableIdList.Length; i++)
             {
@@ -524,7 +523,480 @@ namespace Monitor_OverView.Service.OverView
             string m_ReturnString = EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_RunIndictorsDetailTable);
             return m_ReturnString;
         }
+        public static List<string> GetInventoryData(string myMaterialList, string myOrganizationId, DateTime myTodayTime)
+        {
+            List<string> m_ReturnString = new List<string>();
+            if (myMaterialList != "")
+            {
+                string[] m_MaterialArray = myMaterialList.Split(',');
+                DataTable m_CheckWarehouseTable = GetCheckWarehouseInfo(m_MaterialArray, myOrganizationId, myTodayTime);
+                DataTable m_WareHousingContrastTable = GetWareHousingContrast(m_MaterialArray,myOrganizationId);
+                if (m_CheckWarehouseTable != null && m_WareHousingContrastTable != null)
+                {
+                    DataTable m_InventoryDataTable = GetInventoryDataByContrast(myOrganizationId, m_CheckWarehouseTable, m_WareHousingContrastTable);
+                    if (m_InventoryDataTable != null)
+                    {
+                        for (int i = 0; i < m_CheckWarehouseTable.Rows.Count; i++)
+                        {
+                            string m_ValueTemp = GetInventory(m_CheckWarehouseTable.Rows[i], m_InventoryDataTable);
+                            if (m_ValueTemp != "")
+                            {
+                                string m_ElementTempString = string.Format("\"{0}\":{1}", m_CheckWarehouseTable.Rows[i]["ElementId"].ToString(), m_ValueTemp);
+                                m_ReturnString.Add(m_ElementTempString);
+                            }
+                            // ;
+                        }
+                    }
+                }
+            }
+
+            return m_ReturnString;
+        }
+        public static List<string> GetWareHousingData(string myMaterialList, string myOrganizationId, DateTime myTodayTime)
+        {
+
+            List<string> m_ReturnString = new List<string>();
+            if (myMaterialList != "")
+            {
+                string[] m_MaterialArray = myMaterialList.Split(',');
+                DataTable m_WareHouseInfoTable = GetWareHouseInfo(m_MaterialArray, myOrganizationId, myTodayTime.ToString("yyyy-MM-dd 00:00:00"), myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"));
+                DataTable m_WareHousingContrastTable = GetWareHousingContrast(m_MaterialArray, myOrganizationId);
+                if (m_WareHouseInfoTable != null && m_WareHousingContrastTable != null)
+                {
+                    DataTable m_InventoryDataTable = GetInventoryDataByContrast(myOrganizationId, m_WareHouseInfoTable, m_WareHousingContrastTable);
+                    if (m_InventoryDataTable != null)
+                    {
+                        for (int i = 0; i < m_WareHouseInfoTable.Rows.Count; i++)
+                        {
+                            string m_ValueTemp = GetWareHousing(m_WareHouseInfoTable.Rows[i], m_InventoryDataTable, "Input");
+                            if (m_ValueTemp != "")
+                            {
+                                string m_ElementTempString = string.Format("\"{0}\":{1}", m_WareHouseInfoTable.Rows[i]["MaterialId"].ToString() + "_" + "Input_Day", m_ValueTemp);
+                                m_ReturnString.Add(m_ElementTempString);
+                            }
+                            m_ValueTemp = "";
+                            m_ValueTemp = GetWareHousing(m_WareHouseInfoTable.Rows[i], m_InventoryDataTable, "Output");
+                            if (m_ValueTemp != "")
+                            {
+                                string m_ElementTempString = string.Format("\"{0}\":{1}", m_WareHouseInfoTable.Rows[i]["MaterialId"].ToString() + "_" + "Output_Day", m_ValueTemp);
+                                m_ReturnString.Add(m_ElementTempString);
+                            }
+                            // ;
+                        }
+                    }
+                }
+            }
+            return m_ReturnString;
+        }
+        private static DataTable GetWareHouseInfo(string[] myMaterialArray, string myOrganizationId, string myStartTime, string myEndTime)
+        {
+            string m_Sql = @"SELECT A.Id as WarehouseId
+                                  ,A.Code
+                                  ,A.Name
+                                  ,A.Type
+                                  ,A.OrganizationID
+                                  ,A.MaterialId
+                                  ,A.Spec
+                                  ,A.LevelCode
+                                  ,convert(datetime,'{2}') as StartTime
+                                  ,convert(datetime,'{3}') as EndTime
+                              FROM inventory_Warehouse A
+                              where A.Enabled = 1
+                              and A.OrganizationID = '{0}'
+                              and A.MaterialId in ({1})";
+            string m_MaterialIdArray = "";
+            for (int i = 0; i < myMaterialArray.Length; i++)
+            {
+                if (i == 0)
+                {
+                    m_MaterialIdArray = "'" + myMaterialArray[i] + "'";
+                }
+                else
+                {
+                    m_MaterialIdArray = m_MaterialIdArray + ",'" + myMaterialArray[i] + "'";
+                }
+            }
+            m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray, myStartTime, myEndTime);
+            try
+            {
+                DataTable m_WareHouseInfoTable = _dataFactory.Query(m_Sql);
+                return m_WareHouseInfoTable;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        private static DataTable GetCheckWarehouseInfo(string[] myMaterialArray, string myOrganizationId, DateTime myTodayTime)
+        {
+            string m_Sql = @"Select M.OrganizationID as OrganizationId, 
+                                M.WarehouseId,
+	                            M.MaterialId,
+	                            M.ElementId + '_' + M.Type as ElementId,
+	                            M.Type,
+	                            M.Value,
+	                            M.StartTime,
+                                M.EndTime
+                            from 
+	                            (Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId, C.MaterialId, 'DayF' as Type,  D.Value, C.TimeStamp as StartTime, convert(datetime,'{2}') as EndTime
+	                            from
+	                                (Select B.OrganizationID, A.WarehouseId, MAX(A.TimeStamp) as TimeStamp, B.MaterialId from inventory_CheckWarehouse A, inventory_Warehouse B
+	                                    where A.TimeStamp < '{2}'
+			                            and A.WarehouseId = B.Id
+			                            and B.MaterialId in ({1})
+			                            and B.OrganizationID = '{0}'
+	                                    group by B.OrganizationID, A.WarehouseId, B.MaterialId) C, inventory_CheckWarehouse D
+	                                 where C.WarehouseId = D.WarehouseId
+	                                    and C.TimeStamp = D.TimeStamp
+	                            union all
+	                            Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId,C.MaterialId, 'DayL' as Type, D.Value, C.TimeStamp as StartTime, convert(datetime,'{3}') as EndTime
+	                            from
+	                                (Select B.OrganizationID, A.WarehouseId, MAX(A.TimeStamp) as TimeStamp, B.MaterialId from inventory_CheckWarehouse A, inventory_Warehouse B
+	                                    where A.TimeStamp < '{3}'
+			                            and A.WarehouseId = B.Id
+			                            and B.MaterialId in ({1})
+			                            and B.OrganizationID = '{0}'
+	                                    group by B.OrganizationID, A.WarehouseId, B.MaterialId) C, inventory_CheckWarehouse D
+	                                 where C.WarehouseId = D.WarehouseId
+	                                    and C.TimeStamp = D.TimeStamp 
+                                union all
+                                Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId, C.MaterialId, 'MonthF' as Type, D.Value, C.TimeStamp as StartTime, convert(datetime,'{4}') as EndTime
+	                            from
+	                                (Select B.OrganizationID, A.WarehouseId, MAX(A.TimeStamp) as TimeStamp, B.MaterialId from inventory_CheckWarehouse A, inventory_Warehouse B
+	                                    where A.TimeStamp < '{4}'
+			                            and A.WarehouseId = B.Id
+			                            and B.MaterialId in ({1})
+			                            and B.OrganizationID = '{0}'
+	                                    group by B.OrganizationID, A.WarehouseId, B.MaterialId) C, inventory_CheckWarehouse D
+	                                 where C.WarehouseId = D.WarehouseId
+	                                    and C.TimeStamp = D.TimeStamp) M
+                            order by M.OrganizationID, M.WarehouseId, M.MaterialId, M.Type, M.StartTime";
+            string m_MaterialIdArray = "";
+            for (int i = 0; i < myMaterialArray.Length; i++)
+            {
+                if (i == 0)
+                {
+                    m_MaterialIdArray = "'" + myMaterialArray[i] + "'";
+                }
+                else
+                {
+                    m_MaterialIdArray = m_MaterialIdArray + ",'" + myMaterialArray[i] + "'";
+                }
+            }
+            m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray, myTodayTime.ToString("yyyy-MM-dd 00:00:00"), myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"), myTodayTime.ToString("yyyy-MM-01 00:00:00"));
+            try
+            {
+                DataTable m_WareHousingContrastTable = _dataFactory.Query(m_Sql);
+                return m_WareHousingContrastTable;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        private static DataTable GetWareHousingContrast(string[] myMaterialArray, string myOrganizationId)
+        {
+            string m_Sql = @"SELECT A.ItemId
+                                ,A.WarehouseId
+	                            ,B.OrganizationID as OrganizationId
+                                ,A.VariableId
+                                ,A.Specs
+                                ,A.DataBaseName + '.dbo.' + A.DataTableName as DataTableName
+                                ,A.WarehousingType
+                                ,A.Multiple
+                                ,A.Offset
+                                ,A.Editor
+                                ,A.EditTime
+                                ,A.Remark
+                            FROM inventory_WareHousingContrast A, inventory_Warehouse B
+                            where A.WarehouseId = B.Id
+                            and B.OrganizationID = '{0}'
+                            and B.MaterialId in ({1})
+                            order by B.OrganizationID, B.Id, A.DataBaseName + '.dbo.' + A.DataTableName, A.WarehousingType";
+            string m_MaterialIdArray = "";
+            for (int i = 0; i < myMaterialArray.Length; i++)
+            {
+                if (i == 0)
+                {
+                    m_MaterialIdArray = "'" + myMaterialArray[i] + "'";
+                }
+                else
+                {
+                    m_MaterialIdArray = m_MaterialIdArray + ",'" + myMaterialArray[i] + "'";
+                }
+            }
+            m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray);
+            try
+            {
+                DataTable m_WareHousingContrastTable = _dataFactory.Query(m_Sql);
+                return m_WareHousingContrastTable;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        private static DataTable GetInventoryDataByContrast(string myOrganizationId, DataTable myCheckWarehouseTable, DataTable myWareHousingContrastTable)
+        {
+            string m_Sql = "";
+            Dictionary<string, List<string>> m_SqlDictionary = new Dictionary<string, List<string>>();
+            for (int i = 0; i < myCheckWarehouseTable.Rows.Count; i++)
+            {
+                DataRow[] m_WareHousingContrastRows = myWareHousingContrastTable.Select(string.Format("OrganizationId = '{0}' and WarehouseId = '{1}'", myOrganizationId, myCheckWarehouseTable.Rows[i]["WarehouseId"].ToString()));
+                for (int j = 0; j < m_WareHousingContrastRows.Length; j++)
+                {
+                    string m_SqlTemp = @"Select M.OrganizationID as OrganizationId, 
+                                               N.WarehouseId as WarehouseId,
+	                                           Q.Name as Name,
+                                               M.Value * N.Multiple + N.Offset as Value,
+                                               N.WarehousingType, 
+                                               M.VariableId,
+                                               '{1}' as StartTime,
+                                               '{2}' as EndTime
+                                        from
+		                                        (Select A.OrganizationID,
+		                                                A.VariableId,
+		                                                sum(A.Value) as Value
+			                                        from {3} A
+			                                        where A.EndTime >= '{1}'
+				                                        and A.EndTime < '{2}'
+				                                        and A.OrganizationID = '{0}'
+				                                        and A.VariableId in ({4}) 
+			                                        group by A.OrganizationID, A.VariableId) M, inventory_WareHousingContrast N, inventory_Warehouse Q
+			                                        where M.OrganizationID = Q.OrganizationID
+			                                        and N.WarehouseId = Q.Id
+			                                        and M.VariableId = N.VariableId";
+                    m_SqlTemp = m_SqlTemp.Replace("{0}",myCheckWarehouseTable.Rows[i]["OrganizationId"].ToString());
+                    m_SqlTemp = m_SqlTemp.Replace("{1}",((DateTime)myCheckWarehouseTable.Rows[i]["StartTime"]).ToString("yyyy-MM-dd HH:mm:ss"));
+                    m_SqlTemp = m_SqlTemp.Replace("{2}", ((DateTime)myCheckWarehouseTable.Rows[i]["EndTime"]).ToString("yyyy-MM-dd HH:mm:ss"));
+                    m_SqlTemp = m_SqlTemp.Replace("{3}", m_WareHousingContrastRows[j]["DataTableName"].ToString());
+                    if (m_SqlDictionary.ContainsKey(m_SqlTemp))   //如果有相同的Sql语句
+                    {
+                        m_SqlDictionary[m_SqlTemp].Add(m_WareHousingContrastRows[j]["VariableId"].ToString());
+                    }
+                    else
+                    {
+                        List<string> m_VariableListTemp = new List<string>();
+                        m_VariableListTemp.Add(m_WareHousingContrastRows[j]["VariableId"].ToString());
+                        m_SqlDictionary.Add(m_SqlTemp, m_VariableListTemp);
+                    }
+                }
+            }
+            foreach (KeyValuePair<string, List<string>> kv in m_SqlDictionary)
+            {
+                string m_VariableString = "";
+                for (int i = 0; i < kv.Value.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        m_VariableString = "'" + kv.Value[i] + "'";
+                    }
+                    else
+                    {
+                        m_VariableString = m_VariableString + ",'" + kv.Value[i] + "'";
+                    }
+                }
+                if (m_Sql == "")
+                {
+                    m_Sql = kv.Key.Replace("{4}", m_VariableString);
+                }
+                else
+                {
+                    m_Sql = m_Sql + @"
+                                    union all
+                                    " + kv.Key.Replace("{4}", m_VariableString);
+                }
+            }
+            try
+            {
+                DataTable m_InventoryDataTable = _dataFactory.Query(m_Sql);
+                return m_InventoryDataTable;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        private static string GetInventory(DataRow myCheckWarehouseTableRow, DataTable myInventoryDataTable)
+        {
+            object m_InputValue = myInventoryDataTable.Compute("sum(Value)", string.Format("OrganizationId = '{0}' and WarehouseId = '{1}' and WarehousingType = '{2}' and StartTime = '{3}' and EndTime = '{4}'",
+                                                     myCheckWarehouseTableRow["OrganizationId"].ToString()
+                                                     , myCheckWarehouseTableRow["WarehouseId"].ToString()
+                                                     ,"Input"
+                                                     ,((DateTime)myCheckWarehouseTableRow["StartTime"]).ToString("yyyy-MM-dd HH:mm:ss")
+                                                     , ((DateTime)myCheckWarehouseTableRow["EndTime"]).ToString("yyyy-MM-dd HH:mm:ss")));
+            object m_OutputValue = myInventoryDataTable.Compute("sum(Value)", string.Format("OrganizationId = '{0}' and WarehouseId = '{1}' and WarehousingType = '{2}' and StartTime = '{3}' and EndTime = '{4}'",
+                                                     myCheckWarehouseTableRow["OrganizationId"].ToString()
+                                                     , myCheckWarehouseTableRow["WarehouseId"].ToString()
+                                                     , "Output"
+                                                     , ((DateTime)myCheckWarehouseTableRow["StartTime"]).ToString("yyyy-MM-dd HH:mm:ss")
+                                                     , ((DateTime)myCheckWarehouseTableRow["EndTime"]).ToString("yyyy-MM-dd HH:mm:ss")));
+            decimal m_ReturnValue = (decimal)myCheckWarehouseTableRow["Value"] + (m_InputValue != DBNull.Value ? (decimal)m_InputValue : 0.0m) - (m_OutputValue != DBNull.Value ? (decimal)m_OutputValue : 0.0m);
+            string m_ReturnString = m_ReturnValue.ToString("0.00");
+
+            return m_ReturnString;
+        }
+        private static string GetWareHousing(DataRow myWareHouseInfoTableRow, DataTable myInventoryDataTable, string myType)
+        {
+            object m_ObjectValue = myInventoryDataTable.Compute("sum(Value)", string.Format("OrganizationId = '{0}' and WarehouseId = '{1}' and WarehousingType = '{2}' and StartTime = '{3}' and EndTime = '{4}'",
+                                                     myWareHouseInfoTableRow["OrganizationId"].ToString()
+                                                     , myWareHouseInfoTableRow["WarehouseId"].ToString()
+                                                     , myType
+                                                     , ((DateTime)myWareHouseInfoTableRow["StartTime"]).ToString("yyyy-MM-dd HH:mm:ss")
+                                                     , ((DateTime)myWareHouseInfoTableRow["EndTime"]).ToString("yyyy-MM-dd HH:mm:ss")));
+            decimal m_ReturnValue = m_ObjectValue != DBNull.Value ? (decimal)m_ObjectValue : 0.0m;
+            string m_ReturnString = m_ReturnValue.ToString("0.00");
+
+            return m_ReturnString;
+        }
         //右边区域的数据查询
+        public static string GetProductSaleData(string myOrganizationId, string myMaterialIds, DateTime myDatetime)
+        {
+            if (myMaterialIds != "" && myOrganizationId != "")
+            {
+                string[] m_MaterialIds = myMaterialIds.Split(',');
+                string[] m_RowNameArray = new string[] { "日销售量(t)", "月销售量(t)", "年销售量(t)", "月计划完成率", "年计划完成率" };
+                string[] m_MonthName = new string[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+                string m_ValueVariable = "";
+                string m_PlanVariable = "";
+
+                string m_Sql = @"Select C.VariableId, 
+                                    A.DayValue, 
+                                    B.MonthValue, 
+                                    C.YearValue, 
+                                    case when D.MonthPlanValue > 0 then B.MonthValue / D.MonthPlanValue else D.MonthPlanValue end as MonthCompletionRate,
+                                    case when D.YearPlanValue > 0 then C.YearValue / D.YearPlanValue else D.YearPlanValue end as YearCompletionRate
+                                from
+                                    (Select M.VariableId, sum(M.Value) as YearValue from 
+                                        (SELECT A.BillNO, A.Suttle, A.OrganizationID, B.VariableId, B.VariableSpecs, A.ggxh AS Specs, 
+                                                CASE WHEN [weightdate] > [lightdate] THEN [lightdate] ELSE [weightdate] END AS StartTime, 
+                                                CASE WHEN [weightdate] > [lightdate] THEN [weightdate] ELSE [lightdate] END AS EndTime, 
+                                                CASE WHEN A.[sales_gblx] = 'DE' THEN A.Suttle
+				                                        WHEN A.[sales_gblx] = 'RD' THEN -A.Suttle 
+			                                    ELSE NULL END AS Value
+                                                FROM extern_interface.dbo.WB_WeightNYGL A, dbo.inventory_MaterialContrast B 
+                                                where A.Material = B.MaterialID
+                                                and A.Type = 3
+                                                and B.VariableId in ({0})
+                                                and A.OrganizationID = '{2}') M
+                                        where M.EndTime >= '{8}'
+                                        and M.EndTime < '{9}'
+                                        and M.VariableId in ({0})
+                                        and M.OrganizationID = '{2}'
+                                    group by M.VariableId) C
+                                    left join 
+                                    (Select substring(N.QuotasID,1, len(N.QuotasID) - 5) as VariableId, N.{10} as MonthPlanValue, N.Totals as YearPlanValue from tz_Plan M, plan_PurchaseSalesYearlyPlan N
+                                        where M.OrganizationID = '{2}' and M.Date = '{3}' and M.PlanType = '{11}' and M.KeyID = N.KeyID and N.QuotasID in ({1})) D on C.VariableId = D.VariableId
+                                    left join 
+                                    (Select M.VariableId, sum(M.Value) as DayValue from 
+                                        (SELECT A.BillNO, A.Suttle, A.OrganizationID, B.VariableId, B.VariableSpecs, A.ggxh AS Specs, 
+                                                CASE WHEN [weightdate] > [lightdate] THEN [lightdate] ELSE [weightdate] END AS StartTime, 
+                                                CASE WHEN [weightdate] > [lightdate] THEN [weightdate] ELSE [lightdate] END AS EndTime, 
+                                                CASE WHEN A.[sales_gblx] = 'DE' THEN A.Suttle
+				                                        WHEN A.[sales_gblx] = 'RD' THEN -A.Suttle 
+			                                    ELSE NULL END AS Value
+                                                FROM extern_interface.dbo.WB_WeightNYGL A, dbo.inventory_MaterialContrast B 
+                                                where A.Material = B.MaterialID
+                                                and A.Type = 3
+                                                and B.VariableId in ({0})
+                                                and A.OrganizationID = '{2}') M
+                                        where M.EndTime >= '{4}'
+                                        and M.EndTime < '{5}'
+                                        and M.VariableId in ({0})
+                                        and M.OrganizationID = '{2}'
+                                    group by M.VariableId) A on A.VariableId = C.VariableId
+                                    left join
+                                    (Select M.VariableId, sum(M.Value) as MonthValue from 
+                                         (SELECT A.BillNO, A.Suttle, A.OrganizationID, B.VariableId, B.VariableSpecs, A.ggxh AS Specs, 
+                                                CASE WHEN [weightdate] > [lightdate] THEN [lightdate] ELSE [weightdate] END AS StartTime, 
+                                                CASE WHEN [weightdate] > [lightdate] THEN [weightdate] ELSE [lightdate] END AS EndTime, 
+                                                CASE WHEN A.[sales_gblx] = 'DE' THEN A.Suttle
+				                                        WHEN A.[sales_gblx] = 'RD' THEN -A.Suttle 
+			                                    ELSE NULL END AS Value
+                                                FROM extern_interface.dbo.WB_WeightNYGL A, dbo.inventory_MaterialContrast B 
+                                                where A.Material = B.MaterialID
+                                                and A.Type = 3
+                                                and B.VariableId in ({0})
+                                                and A.OrganizationID = '{2}') M
+                                        where M.EndTime >= '{6}'
+                                        and M.EndTime < '{7}'
+                                        and M.VariableId in ({0})
+                                        and M.OrganizationID = '{2}'
+                                    group by M.VariableId) B on B.VariableId = C.VariableId";
+                for (int i = 0; i < m_MaterialIds.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        m_ValueVariable = "'" + m_MaterialIds[i] + "'";
+                        m_PlanVariable = "'" + m_MaterialIds[i] + "Sales'";
+                    }
+                    else
+                    {
+                        m_ValueVariable = m_ValueVariable + ",'" + m_MaterialIds[i] + "'";
+                        m_PlanVariable = m_PlanVariable + ",'" + m_MaterialIds[i] + "Sales'";
+                    }
+                }
+                m_Sql = m_Sql.Replace("{0}", m_ValueVariable);
+                m_Sql = m_Sql.Replace("{1}", m_PlanVariable);
+                m_Sql = m_Sql.Replace("{2}", myOrganizationId);
+                m_Sql = m_Sql.Replace("{3}", myDatetime.Year.ToString());
+                m_Sql = m_Sql.Replace("{4}", myDatetime.ToString("yyyy-MM-dd 00:00:00"));
+                m_Sql = m_Sql.Replace("{5}", myDatetime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"));
+                m_Sql = m_Sql.Replace("{6}", myDatetime.ToString("yyyy-MM-01 00:00:00"));
+                m_Sql = m_Sql.Replace("{7}", myDatetime.AddMonths(1).ToString("yyyy-MM-01 00:00:00"));
+                m_Sql = m_Sql.Replace("{8}", myDatetime.ToString("yyyy-01-01 00:00:00"));
+                m_Sql = m_Sql.Replace("{9}", myDatetime.AddYears(1).ToString("yyyy-01-01 00:00:00"));
+                m_Sql = m_Sql.Replace("{10}", m_MonthName[myDatetime.Month - 1]);
+                m_Sql = m_Sql.Replace("{11}", "PurchaseSales");
+                //string m_DayStartTime = myDatetime.ToString("yyyy-MM-dd 00:00:00");
+                //string m_DayEndTime = myDatetime.AddDays(1).ToString("yyyy-MM-dd 00:00:00");
+                //string m_MonthStartTime = myDatetime.ToString("yyyy-MM-01 00:00:00");
+                //string m_MonthEndTime = myDatetime.AddMonths(1).ToString("yyyy-MM-01 00:00:00");
+                //string m_YearStartTime = myDatetime.ToString("yyyy-01-01 00:00:00");
+                //string m_YearEndTime = myDatetime.AddYears(1).ToString("yyyy-01-01 00:00:00");
+                try
+                {
+                    DataTable m_ProductSaleDataTable = _dataFactory.Query(m_Sql);
+                    if (m_ProductSaleDataTable != null)
+                    {
+                        DataTable m_ResultTable = new DataTable();
+                        m_ResultTable.Columns.Add("Name", typeof(string));
+                        for (int i = 0; i < m_MaterialIds.Length; i++)
+                        {
+                            m_ResultTable.Columns.Add(m_MaterialIds[i], typeof(decimal));
+                        }
+                        for (int i = 1; i < m_ProductSaleDataTable.Columns.Count - 1; i++)
+                        {
+                            DataRow m_NewDataRowTemp = m_ResultTable.NewRow();
+                            m_NewDataRowTemp["Name"] = m_RowNameArray[i - 1];
+                            for (int j = 0; j < m_MaterialIds.Length; j++)
+                            {
+                                m_NewDataRowTemp[m_MaterialIds[j]] = 0.0m;
+                            }
+                            for (int j = 0; j < m_ProductSaleDataTable.Rows.Count; j++)
+                            {
+                                m_NewDataRowTemp[m_ProductSaleDataTable.Rows[j]["VariableId"].ToString()] = m_ProductSaleDataTable.Rows[j][i] != DBNull.Value ? m_ProductSaleDataTable.Rows[j][i] : 0.0m;
+                            }
+                            m_ResultTable.Rows.Add(m_NewDataRowTemp);
+                        }
+                        string m_ReturnString = EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_ResultTable);
+                        return m_ReturnString;
+                    }
+                    else
+                    {
+                        return "{\"rows\":[],\"total\"0}";
+                    }
+                }
+                catch
+                {
+                    return "{\"rows\":[],\"total\"0}";
+                }
+            }
+            else
+            {
+                return "{\"rows\":[],\"total\"0}";
+            }
+        }
         public static string GetEquipmentHaltAlarm(string myOrganizationId)
         {
             string m_Sql = @"SELECT A.AlarmItemId
@@ -549,7 +1021,7 @@ namespace Monitor_OverView.Service.OverView
                 return "{\"rows\":[],\"total\"0}";
             }
         }
-        public static string GetWorkingTeamShiftLog(string myOrganizationId)
+        public static string GetWorkingTeamShiftLog(string myOrganizationId, string myStartTime)
         {
             string m_Sql = @"SELECT top 6 A.WorkingTeamShiftLogID as WorkingTeamShiftLogId
                                   ,A.UpdateDate
@@ -560,8 +1032,9 @@ namespace Monitor_OverView.Service.OverView
                               where A.OrganizationID = '{0}'
                               and A.OrganizationID = B.OrganizationID
                               and A.ChargeManID = B.StaffInfoId
+                              and A.ShiftDate <= '{1}'
                               order by A.ShiftDate desc";
-            m_Sql = string.Format(m_Sql, myOrganizationId);
+            m_Sql = string.Format(m_Sql, myOrganizationId, myStartTime);
             try
             {
                 DataTable m_WorkingTeamShiftLogTable = _dataFactory.Query(m_Sql);
@@ -613,7 +1086,54 @@ namespace Monitor_OverView.Service.OverView
 
         public static string GetElectricitiyConsumptionChartData(string myVariableIdList, string myOrganizationId, string myOrganizationTypeList, string myStartMonth, string myEndMonth)
         {        
+
             DataTable m_SourceData = GetElectricitiyConsumptionChartSourceData(myVariableIdList, myOrganizationId, myOrganizationTypeList, myStartMonth, myEndMonth);
+            DataTable m_auxiliaryProductionElectricitiyQuantity = GetAuxiliaryProductionElectricitiyQuantity(myOrganizationId, myOrganizationTypeList, myStartMonth, myEndMonth);
+            if (m_auxiliaryProductionElectricitiyQuantity != null)  //分步电耗均摊辅助用电
+            {
+                for (int i = 0; i < m_auxiliaryProductionElectricitiyQuantity.Rows.Count; i++)
+                {
+                    string m_QueryCondition = string.Format("ValueType = '{0}' and TimeStamp = '{1}'", m_auxiliaryProductionElectricitiyQuantity.Rows[i]["ValueType"].ToString(), m_auxiliaryProductionElectricitiyQuantity.Rows[i]["TimeStamp"].ToString());
+                    DataRow[] m_ShareProcessRow = m_SourceData.Select(m_QueryCondition);
+                    decimal m_auxiliaryProductionElectricitiyQuantityData = m_auxiliaryProductionElectricitiyQuantity.Rows[i]["Value"] != DBNull.Value ? (decimal)m_auxiliaryProductionElectricitiyQuantity.Rows[i]["Value"] : 0.0m;
+                    decimal m_TotalElectricityQuantity = 0.0m;
+                    decimal m_SharedElectricityQuantity = 0.0m;
+                    for (int j = 0; j < m_ShareProcessRow.Length; j++)          //计算电量总和
+                    {
+                        decimal m_ElectricityTemp = 0.0m;
+                        if (m_ShareProcessRow[j]["Value"] == DBNull.Value)
+                        {
+                            m_ShareProcessRow[j]["Value"] = 0.0m;
+                        }
+                        else
+                        {
+                            m_ElectricityTemp = (decimal)m_ShareProcessRow[j]["Value"];
+                        }
+                        m_TotalElectricityQuantity = m_TotalElectricityQuantity + m_ElectricityTemp;
+                    }
+                    for (int j = 0; j < m_ShareProcessRow.Length; j++)          //计算电量总和
+                    {
+                        if (j < m_ShareProcessRow.Length - 1)
+                        {
+                            if (m_TotalElectricityQuantity > 0.0m)          //当用电总和大于0,按比例均摊辅助电量
+                            {
+                                m_SharedElectricityQuantity = m_SharedElectricityQuantity + m_auxiliaryProductionElectricitiyQuantityData * (decimal)m_ShareProcessRow[j]["Value"] / m_TotalElectricityQuantity;
+                                m_ShareProcessRow[j]["Value"] = (decimal)m_ShareProcessRow[j]["Value"] + m_auxiliaryProductionElectricitiyQuantityData * (decimal)m_ShareProcessRow[j]["Value"] / m_TotalElectricityQuantity;                             
+                            }
+                            else                                            //当用电总和等于0,平分辅助电量
+                            {
+                                m_SharedElectricityQuantity = m_SharedElectricityQuantity + m_auxiliaryProductionElectricitiyQuantityData / m_ShareProcessRow.Length;
+                                m_ShareProcessRow[j]["Value"] = m_auxiliaryProductionElectricitiyQuantityData / m_ShareProcessRow.Length;
+                            }
+                            
+                        }
+                        else            //当最后一行时,应该是总量减去已分配的量
+                        {
+                            m_ShareProcessRow[j]["Value"] = (decimal)m_ShareProcessRow[j]["Value"] + m_auxiliaryProductionElectricitiyQuantityData - m_SharedElectricityQuantity;
+                        }
+                    }
+                }
+            }
             DataTable m_CaculateTemplate = GetCaculateTemplate(myVariableIdList, myOrganizationTypeList);
             if (m_SourceData != null && m_CaculateTemplate != null)
             {
@@ -670,6 +1190,64 @@ namespace Monitor_OverView.Service.OverView
                 return "{\"rows\":[],\"total\"0}";
             }
 
+        }
+        private static DataTable GetAuxiliaryProductionElectricitiyQuantity(string myOrganizationId, string myOrganizationTypeList, string myStartMonth, string myEndMonth)
+        {
+            DateTime m_LastMonth = DateTime.Parse(myEndMonth + "-01").AddMonths(-1);
+            DateTime m_EndTime = DateTime.Parse(myEndMonth + "-01").AddMonths(1).AddDays(-1);
+            string[] m_OrganizationTypeList = myOrganizationTypeList.Split(',');
+            string m_OrganizationType = "";
+            for (int i = 0; i < m_OrganizationTypeList.Length; i++)
+            {
+                if (i == 0)
+                {
+                    m_OrganizationType = "'" + m_OrganizationTypeList[i] + "'";
+                }
+                else
+                {
+                    m_OrganizationType = m_OrganizationType + ",'" + m_OrganizationTypeList[i] + "'";
+                }
+            }
+            string m_Sql = @"Select M.TimeStamp, M.VariableId, M.Value, M.ValueType from
+                                (Select substring('{0}',0, 8) as TimeStamp, B.VariableId, B.ValueType, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
+                                where A.TimeStamp >='{0}'
+                                and A.TimeStamp <='{1}'
+                                and A.StaticsCycle = 'day'
+                                and A.OrganizationID = '{4}'
+                                and A.BalanceId = B.KeyId
+                                and B.ValueType = 'ElectricityQuantity'
+                                and B.VariableId = '{6}'
+                                and D.OrganizationID = A.OrganizationID
+                                and C.LevelCode like D.LevelCode + '%'
+                                and C.Type in ({5})
+                                and B.OrganizationID = C.OrganizationID
+                                group by B.VariableId, B.ValueType
+                             union all
+                                Select A.TimeStamp, B.VariableId, B.ValueType, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
+                                where A.TimeStamp >='{2}'
+                                and A.TimeStamp <='{3}'
+                                and A.StaticsCycle = 'month'
+                                and A.OrganizationID = '{4}'
+                                and A.BalanceId = B.KeyId
+                                and B.ValueType = 'ElectricityQuantity'
+                                and B.VariableId = '{6}'
+                                and D.OrganizationID = A.OrganizationID
+                                and C.LevelCode like D.LevelCode + '%'
+                                and C.Type in ({5})
+                                and B.OrganizationID = C.OrganizationID
+                                group by A.TimeStamp, B.VariableId, B.ValueType) M
+                                order by M.VariableId, M.TimeStamp";
+            m_Sql = string.Format(m_Sql, myEndMonth + "-01", m_EndTime.ToString("yyyy-MM-dd"), myStartMonth, m_LastMonth.ToString("yyyy-MM"), myOrganizationId, m_OrganizationType, "auxiliaryProduction_ElectricityQuantity");
+            try
+            {
+                DataTable m_ElectricityQuantityTable = _dataFactory.Query(m_Sql);
+                return m_ElectricityQuantityTable;
+
+            }
+            catch
+            {
+                return null;
+            }
         }
         private static DataTable GetCaculateTemplate(string myVariableIdList, string myOrganizationTypeList)
         {
@@ -747,8 +1325,8 @@ namespace Monitor_OverView.Service.OverView
                     m_OrganizationType = m_OrganizationType + ",'" + m_OrganizationTypeList[i] + "'";
                 }
             }
-            string m_Sql = @"Select M.TimeStamp, M.VariableId, M.Value from
-                                (Select substring('{0}',0, 8) as TimeStamp, B.VariableId, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
+            string m_Sql = @"Select M.TimeStamp, M.VariableId, M.Value,M.ValueType from
+                                (Select substring('{0}',0, 8) as TimeStamp, B.VariableId, B.ValueType, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
                                 where A.TimeStamp >='{0}'
                                 and A.TimeStamp <='{1}'
                                 and A.StaticsCycle = 'day'
@@ -760,9 +1338,9 @@ namespace Monitor_OverView.Service.OverView
                                 and C.LevelCode like D.LevelCode + '%'
                                 and C.Type in ({5})
                                 and B.OrganizationID = C.OrganizationID
-                                group by B.VariableId
+                                group by B.VariableId,B.ValueType
                              union all
-                                Select A.TimeStamp, B.VariableId, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
+                                Select A.TimeStamp, B.VariableId, B.ValueType, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
                                 where A.TimeStamp >='{2}'
                                 and A.TimeStamp <='{3}'
                                 and A.StaticsCycle = 'month'
@@ -774,8 +1352,8 @@ namespace Monitor_OverView.Service.OverView
                                 and C.LevelCode like D.LevelCode + '%'
                                 and C.Type in ({5})
                                 and B.OrganizationID = C.OrganizationID
-                                group by A.TimeStamp, B.VariableId) M
-                                order by M.VariableId";
+                                group by A.TimeStamp, B.VariableId, B.ValueType) M
+                                order by M.VariableId, M.TimeStamp";
             m_Sql = string.Format(m_Sql, myEndMonth + "-01", m_EndTime.ToString("yyyy-MM-dd"), myStartMonth, m_LastMonth.ToString("yyyy-MM"), myOrganizationId, m_OrganizationType, m_VariableId);
             try
             {
@@ -837,6 +1415,82 @@ namespace Monitor_OverView.Service.OverView
                 DataTable m_ElectricityQuantityTable = _dataFactory.Query(m_Sql);
                 return m_ElectricityQuantityTable;
 
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public static string GetQuickContent(string myGroupKey, string myUserId, string myRoleId)
+        {
+            string m_ReturnValue = "{\"rows\":[],\"total\":0}";
+            DataTable m_QuickContentTable = GetQuickContentTable(myGroupKey, myUserId, myRoleId);
+            DataTable m_AllContentTable = GetAllContentTable();
+            if (m_QuickContentTable != null && m_AllContentTable != null)
+            {
+                for (int i = 0; i < m_QuickContentTable.Rows.Count; i++)
+                {
+                    string m_NodePath = m_QuickContentTable.Rows[i]["Name"].ToString();
+                    string m_ParentNodeId = m_QuickContentTable.Rows[i]["ParentNodeId"].ToString();
+                    while (m_ParentNodeId != "0")
+                    {
+                        DataRow[] m_DataRowTemp = m_AllContentTable.Select(string.Format("NodeId = '{0}'", m_ParentNodeId));
+                        if (m_DataRowTemp.Length == 0)      //如果没有找到直接结束
+                        {
+                            m_ParentNodeId = "0";
+                        }
+                        else
+                        {
+                            m_ParentNodeId = m_DataRowTemp[0]["ParentNodeId"].ToString();
+                            m_NodePath = m_DataRowTemp[0]["NodeContext"].ToString() + ">>" + m_NodePath;
+                        }
+                    }
+                    m_QuickContentTable.Rows[i]["NodePath"] = m_NodePath;
+                }
+                m_ReturnValue = EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_QuickContentTable);
+            }
+            return m_ReturnValue;
+        }
+        private static DataTable GetQuickContentTable(string myGroupKey, string myUserId, string myRoleId)
+        {
+            string m_Sql = @"Select A.NODE_ID as PageId, 
+			                        case when A.NODE_NAME is null or A.NODE_NAME = '' then B.NODE_CONTEXT else B.NODE_CONTEXT + '(' + A.NODE_NAME + ')' end as Name,
+                                    A.REMARK as [Description],
+			                        B.NAVIGATE_URL as NavigateUrl,
+                                    B.PARENT_NODE_ID as ParentNodeId, 
+			                        case when B.ICON_PATH is null then '' else B.ICON_PATH end as IconPath,
+			                        '' as NodePath
+	                         from IndustryEnergy_SH.dbo.content_quick A, IndustryEnergy_SH.dbo.content B, IndustryEnergy_SH.dbo.page_role C
+	                         where A.NODE_ID = B.NODE_ID
+	                         and A.CONTENT_TYPE = '{0}'
+	                         and A.GROUP_KEY = '{1}'
+	                         and (A.USER_ID is null or A.USER_ID = '{2}')
+	                         and C.ROLE_ID = '{3}'
+	                         and A.NODE_ID = C.PAGE_ID
+	                         order by A.DISPLAY_INDEX";
+            m_Sql = string.Format(m_Sql, "OverView", myGroupKey, myUserId, myRoleId);
+            try
+            {
+                DataTable m_QuickContentTableTable = _dataFactory.Query(m_Sql);
+                return m_QuickContentTableTable;
+
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        private static DataTable GetAllContentTable()
+        {
+            string m_Sql = @"SELECT A.NODE_ID as NodeId,
+                                   A.NODE_CONTEXT as NodeContext,
+                                   A.PARENT_NODE_ID as ParentNodeId
+                              FROM IndustryEnergy_SH.dbo.content A
+                              order by A.PARENT_NODE_ID, A.NODE_INDEX";
+            try
+            {
+                DataTable m_AllContentTableTable = _dataFactory.Query(m_Sql);
+                return m_AllContentTableTable;
             }
             catch
             {

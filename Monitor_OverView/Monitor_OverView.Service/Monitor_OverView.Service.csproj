@@ -36,17 +36,22 @@
     <Reference Include="CommonDataFunction">
       <HintPath>..\..\..\Lib\CommonDataFunction.dll</HintPath>
     </Reference>
+    <Reference Include="DataCompression">
+      <HintPath>..\..\..\..\组件\DataCompression\DataCompression\bin\Debug\DataCompression.dll</HintPath>
+    </Reference>
     <Reference Include="EasyUIJsonParser">
       <HintPath>..\..\Lib\EasyUIJsonParser.dll</HintPath>
     </Reference>
     <Reference Include="EnergyConsumption">
       <HintPath>..\..\..\Lib\EnergyConsumption.dll</HintPath>
     </Reference>
-    <Reference Include="RunIndicators">
+    <Reference Include="RunIndicators, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\组件\RunIndicators\RunIndicators\bin\Debug\RunIndicators.dll</HintPath>
     </Reference>
-    <Reference Include="SqlServerDataAdapter">
-      <HintPath>..\..\Lib\SqlServerDataAdapter.dll</HintPath>
+    <Reference Include="SqlServerDataAdapter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\组件\DataAdapter\SqlServerDataAdapter\bin\Debug\SqlServerDataAdapter.dll</HintPath>
     </Reference>
     <Reference Include="Standard_GB16780-2012">
       <HintPath>..\..\..\..\组件\StandardCalculation\AutoSetParameters\bin\Debug\Standard_GB16780-2012.dll</HintPath>
