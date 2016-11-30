@@ -181,15 +181,15 @@
                                                 <thead>
                                                     <tr>
                                                         <th data-options="field:'Name',width:78">名称</th>
-                                                        <th data-options="field:'Clinker',width:85">熟料</th>
-                                                        <th data-options="field:'Cement',width:85">水泥</th>
+                                                        <th data-options="field:'Clinker',width:82">熟料</th>
+                                                        <th data-options="field:'Cement',fitColumns:true,width:82">水泥</th>
                                                     </tr>
                                                 </thead>  
                                             </table>
                                         </div>
                                     </div>
                                     <div class="easyui-accordion" style="width: 250px;">
-                                        <div title="停机/能耗报警" data-options="iconCls:'ext-icon-error',selected:true" style="height: 246px;">
+                                        <div title="停机/能耗报警" data-options="iconCls:'ext-icon-error',selected:true" style="height: 290px;">
                                             <table id="datagrid_EquipmentHaltAlarm" class="easyui-datagrid" data-options="fit:true,striped:true, singleSelect:true, border:false">
                                                 <thead>
                                                     <tr>
@@ -203,7 +203,7 @@
                                         </div>
                                     </div>
                                     <div class="easyui-accordion" style="width: 250px;">
-                                        <div title="交接班记录" data-options="iconCls:'ext-icon-note',selected:true" style="height: 220px;">
+                                        <div title="交接班记录" data-options="iconCls:'ext-icon-note',selected:true" style="height: 237px;">
                                             <table id="datagrid_WorkingTeamShiftLogList" class="easyui-datagrid" data-options="fit:true,striped:true, singleSelect:true, border:false, onDblClickRow:function(myRowIndex, myRowData){GetWorkingTeamShiftLogDetail(myRowData);}">
                                                 <thead>
                                                     <tr>
