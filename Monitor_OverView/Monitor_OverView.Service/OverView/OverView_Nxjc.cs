@@ -20,8 +20,9 @@ namespace Monitor_OverView.Service.OverView
         }
         public static string GetRealTimeData(string myDateTime)
         {
+            DateTime m_DateTime = DateTime.Parse(myDateTime);
             DataTable m_DisplayDataTable = GetDisplayDataTable();
-            DataTable m_ProductSaleDataTable = GetProductSaleData("Clinker,Cement", DateTime.Now);
+            DataTable m_ProductSaleDataTable = GetProductSaleData("Clinker,Cement", m_DateTime);
             string[][] m_Organizations = new string[10][];
             m_Organizations[0] = new string[]{"银川水泥","zc_nxjc_ychc"};
             m_Organizations[1] = new string[]{"石嘴山水泥","zc_nxjc_szsc"};
@@ -207,9 +208,9 @@ namespace Monitor_OverView.Service.OverView
                 m_Sql = m_Sql.Replace("{3}", myDatetime.ToString("yyyy-MM-dd 00:00:00"));
                 m_Sql = m_Sql.Replace("{4}", myDatetime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"));
                 m_Sql = m_Sql.Replace("{5}", myDatetime.ToString("yyyy-MM-01 00:00:00"));
-                m_Sql = m_Sql.Replace("{6}", myDatetime.AddMonths(1).ToString("yyyy-MM-01 00:00:00"));
+                m_Sql = m_Sql.Replace("{6}", myDatetime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"));
                 m_Sql = m_Sql.Replace("{7}", myDatetime.ToString("yyyy-01-01 00:00:00"));
-                m_Sql = m_Sql.Replace("{8}", myDatetime.AddYears(1).ToString("yyyy-01-01 00:00:00"));
+                m_Sql = m_Sql.Replace("{8}", myDatetime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"));
                 m_Sql = m_Sql.Replace("{9}", m_MonthName[myDatetime.Month - 1]);
                 m_Sql = m_Sql.Replace("{10}", "PurchaseSales");
                 //string m_DayStartTime = myDatetime.ToString("yyyy-MM-dd 00:00:00");

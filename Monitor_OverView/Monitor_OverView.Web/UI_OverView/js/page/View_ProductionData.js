@@ -1,4 +1,4 @@
-﻿var MaxChartPageItemsCount = 10;
+﻿var MaxChartPageItemsCount = 8;
 var ChartMsgData;
 $(document).ready(function () {
     var nowDate = new Date();
@@ -251,6 +251,10 @@ function LoadPlanAndCompleteChart() {
     var m_EquipmentCommonId = $('#Combobox_EquipmentCommonF').combobox("getValue");
     var m_Specifications = $('#Combobox_SpecificationsF').combobox("getValue");
     var m_MsgData;
+    $.messager.progress({
+        title: 'Please waiting',
+        msg: 'Loading data...'
+    });
     $.ajax({
         type: "POST",
         url: "View_ProductionData.aspx/GetPlanAndCompleteChart",
@@ -258,6 +262,7 @@ function LoadPlanAndCompleteChart() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
+            $.messager.progress('close');
             if (msg == "1") {
                 alert("您没有获得授权!");
             }
@@ -269,6 +274,7 @@ function LoadPlanAndCompleteChart() {
                     DisplayChart(m_ShowChartData);
                 }
             }
+
         },
         error: handleError
     });
@@ -351,13 +357,12 @@ function GetWindowPostion(myWindowIndex, myWindowContainerId) {
 }
 ///////////////////////////////////////////打开window窗口//////////////////////////////////////////
 function WindowsDialogOpen(myData, myContainerId, myIsShowGrid, myChartType, myWidth, myHeight, myLeft, myTop, myDraggable, myMaximizable, myMaximized) {
-    ;
     var m_WindowId = OpenWindows(myContainerId, '数据分析', myWidth, myHeight, myLeft, myTop, myDraggable, myMaximizable, myMaximized); //弹出windows
     var m_WindowObj = $('#' + m_WindowId);
+    CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);               //生成图表
     if (myMaximized != true) {
-        CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);               //生成图表
+        ChangeSize(m_WindowId);
     }
-
     m_WindowObj.window({
         onBeforeClose: function () {
             ///////////////////////释放图形空间///////////////
@@ -368,13 +373,13 @@ function WindowsDialogOpen(myData, myContainerId, myIsShowGrid, myChartType, myW
         onMaximize: function () {
             TopWindow(m_WindowId);
             ChangeSize(m_WindowId);
-            CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
+            //CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
 
         },
         onRestore: function () {
             //TopWindow(m_WindowId);
             ChangeSize(m_WindowId);
-            CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
+            //CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
         }
     });
 }

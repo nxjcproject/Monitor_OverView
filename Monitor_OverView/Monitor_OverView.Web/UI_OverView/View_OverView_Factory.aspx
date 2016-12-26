@@ -14,46 +14,51 @@
     <link rel="stylesheet" type="text/css" href="/lib/pllib/themes/jquery.jqplot.min.css" />
     <link type="text/css" rel="stylesheet" href="/lib/pllib/syntaxhighlighter/styles/shCoreDefault.min.css" />
     <link type="text/css" rel="stylesheet" href="/lib/pllib/syntaxhighlighter/styles/shThemejqPlot.min.css" />
-    <link type="text/css" rel="stylesheet" href="/css/common/charts.css" />
     <link type="text/css" rel="stylesheet" href="/css/common/NormalPage.css" />
-    <%--<link type="text/css" rel="stylesheet" href="/UI_ComprehensiveDailyReport/css/page/DispatchDailyReport.css" />--%>
     <link rel="stylesheet" type="text/css" href="css/page/Style_OverView_Factory.css" />
 
     <script type="text/javascript" src="/lib/ealib/jquery.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="/lib/ealib/jquery.easyui.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="/lib/ealib/easyui-lang-zh_CN.js" charset="utf-8"></script>
 
+    <!--[if gt IE 8]><script type="text/javascript" src="/lib/ealib/extend/easyUI.WindowsOverrange.js" charset="utf-8"></script>-->
+    <!--[if !IE]><!-->
+    <script type="text/javascript" src="/lib/ealib/extend/easyUI.WindowsOverrange.js" charset="utf-8"></script>
+    <!--<![endif]-->
+
     <!--[if lt IE 9]><script type="text/javascript" src="/lib/pllib/excanvas.js"></script><![endif]-->
     <script type="text/javascript" src="/lib/pllib/jquery.jqplot.min.js"></script>
-    <!--<script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shCore.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shBrushJScript.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shBrushXml.min.js"></script>-->
 
-    <!-- Additional plugins go here -->
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.trendline.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.barRenderer.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pieRenderer.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pointLabels.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.cursor.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasTextRenderer.min.js"></script>
+
+    <!-- Additional plugins go here -->
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasTextRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.dateAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pointLabels.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.enhancedLegendRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasOverlay.min.js"></script> 
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.cursor.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.highlighter.min.js"></script>
-
-    
-
+    <!--[if lt IE 8 ]><script type="text/javascript" src="/lib/pllib/plugins/jqplot.json2.min"></script><![endif]-->
 
 
-    <%--<script type="text/javascript" src="/lib/pllib/themes/jquery.jqplot.js"></script>
-    <script type="text/javascript" src="/lib/pllib/themes/jjquery.jqplot.min.js"></script>--%>
     <!--[if lt IE 8 ]><script type="text/javascript" src="/js/common/json2.min.js"></script><![endif]-->
 
-    <script type="text/javascript" src="/js/common/format/DateTimeFormat.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/common/components/Charts.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/common/components/DataGrid.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/common/components/WindowsDialog.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/common/components/GridChart.js" charset="utf-8"></script>
+
+    <script type="text/javascript" src="/js/common/format/DateTimeFormat.js" charset="utf-8"></script>
+
     <script type="text/javascript" src="js/page/View_OverView_Factory.js" charset="utf-8"></script>
+
+
 </head>
 <body>
     <div id="MainLayout" class="easyui-layout" data-options="fit:true,border:false">
@@ -72,7 +77,7 @@
                                             <div id="chartTab01_Legend" class="DataChartLegend">
                                             </div>
                                         </div>
-                                        <div title="故障率">
+                                        <div title="故障率" >
                                             <div id="chartTab02_Content" class="DataChartContent">
                                             </div>
                                             <div id="chartTab02_Legend" class="DataChartLegend">
@@ -164,25 +169,25 @@
                         <table>
                             <tr>
                                 <td class="RightSelectStationTd">
-                                    &nbsp;&nbsp;选择生产区域&nbsp;<select id="Select_SelectStation" class="easyui-combobox" name="SelectStation" data-options="panelHeight:'auto', editable:true, valueField: 'OrganizationId',textField: 'Name',onSelect:function(myRecord){RefreshFactoryOrganiztion(myRecord['OrganizationId']);}" style="width: 100px;"></select>
-                                    &nbsp;&nbsp;<a id ="button_BackToGlobalPage" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'ext-icon-application_go',plain:true" onclick="ChangeDisplayStation();">返回</a>
+                                    &nbsp;选择生产区域&nbsp;<select id="Select_SelectStation" class="easyui-combobox" name="SelectStation" data-options="panelHeight:'auto', editable:true, valueField: 'OrganizationId',textField: 'Name',onSelect:function(myRecord){RefreshFactoryOrganiztion(myRecord['OrganizationId']);}" style="width: 90px;"></select>
+                                    &nbsp;<a id ="button_BackToGlobalPage" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'ext-icon-application_go',plain:true" onclick="ChangeDisplayStation();">返回</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="RightSelectStationTd">
-                                    &nbsp;&nbsp;选择查询时间&nbsp;<input id="dateTime" type="text" class="easyui-datebox" required="required" data-options ="onSelect:function(date){QueryDataFun(date);}" style ="width:100px;"/>
+                                    &nbsp;选择查询时间&nbsp;<input id="dateTime" type="text" class="easyui-datebox" required="required" data-options ="onSelect:function(date){QueryDataFun(date);}" style ="width:90px;"/>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="RightAccordionTd">
                                     <div class="easyui-accordion" style="width: 250px;">
-                                        <div title="销售信息" data-options="iconCls:'ext-icon-medal_gold_1',selected:true" style="overflow: auto; height: 170px;">
+                                        <div title="销售信息" data-options="iconCls:'ext-icon-medal_gold_1',selected:true" style="overflow: hidden; height: 170px;">
                                             <table id="datagrid_SaleInfo" class="easyui-datagrid" data-options="fit:true,striped:true, singleSelect:true, border:false">
                                                 <thead>
                                                     <tr>
                                                         <th data-options="field:'Name',width:78">名称</th>
-                                                        <th data-options="field:'Clinker',width:82">熟料</th>
-                                                        <th data-options="field:'Cement',fitColumns:true,width:82">水泥</th>
+                                                        <th data-options="field:'Clinker',width:80">熟料</th>
+                                                        <th data-options="field:'Cement',fitColumns:true,width:80">水泥</th>
                                                     </tr>
                                                 </thead>  
                                             </table>

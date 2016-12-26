@@ -891,7 +891,7 @@ namespace Monitor_OverView.Service.OverView
                                   ,CaculateType
                                   ,Denominator
                               from plan_EnergyConsumptionPlan_Template
-                              order by DisplayIndex";
+                              order by ProductionLineType, DisplayIndex";
             try
             {
                 DataTable m_Result = _dataFactory.Query(m_Sql);
@@ -903,42 +903,128 @@ namespace Monitor_OverView.Service.OverView
                 return "{\"rows\":[],\"total\":0}";
             }
         }
+        public static string GetSpecificationsInfo(string myVariableId)
+        {
 
-        public static string GetQuntityPlanAndComplete(DateTime myDate, string myVariableId, string myValueType, string[] myOganizationIds)
+            string m_Sql = @"SELECT distinct A.Specifications as id, 
+                                  A.Specifications as text
+                                  FROM equipment_EquipmentDetail A
+                                  where A.Enabled = 1
+                                  and A.Specifications is not null
+                                  and A.Specifications <> ''
+                                  and A.VariableId = '{0}'";
+            m_Sql = string.Format(m_Sql, myVariableId);
+            try
+            {
+                DataTable m_SpecificationsInfoTable = _dataFactory.Query(m_Sql);
+                string m_ReturnString = EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_SpecificationsInfoTable);
+                return m_ReturnString;
+
+            }
+            catch
+            {
+                return "{\"rows\":[],\"total\":0}";
+            }
+        }
+        public static string GetQuntityPlanAndComplete(DateTime myDate, string myVariableId, string myValueType, string mySpecifications, string[] myOganizationIds)
         {
             DataTable m_CompleteTable = GetNormalQuantityCompleteData(myDate, myVariableId + "_" + myValueType, myValueType, myOganizationIds);
             DataTable m_PlanTable = GetQuantityPlanData(myDate, myVariableId, myValueType, myOganizationIds, "Normal");
-            string m_ReturnValue = GetChartString(m_CompleteTable, m_PlanTable);
+            DataTable m_SpecificationsTable = GetSpecificationsViariable(mySpecifications, myVariableId, myOganizationIds);
+            string m_ReturnValue = GetChartString(m_CompleteTable, m_PlanTable, m_SpecificationsTable, myValueType);
             return m_ReturnValue;
         }
-        public static string GetWeightPlanAndComplete(DateTime myDate, string myVariableId, string myValueType, string[] myOganizationIds)
+        public static string GetWeightPlanAndComplete(DateTime myDate, string myVariableId, string myValueType, string mySpecifications, string[] myOganizationIds)
         {
             DataTable m_CompleteTable = GetNormalQuantityCompleteData(myDate, myVariableId, myValueType, myOganizationIds);
             DataTable m_PlanTable = GetQuantityPlanData(myDate, myVariableId, myValueType, myOganizationIds, "Normal");
-            string m_ReturnValue = GetChartString(m_CompleteTable, m_PlanTable);
+            DataTable m_SpecificationsTable = GetSpecificationsViariable(mySpecifications, myVariableId, myOganizationIds);
+            string m_ReturnValue = GetChartString(m_CompleteTable, m_PlanTable, m_SpecificationsTable, myValueType);
             return m_ReturnValue;
         }
-        public static string GetElectricityConsumptionPlanAndComplete(DateTime myDate, string myVariableId, string myValueType, string myDenominator, string[] myOganizationIds)
+        public static string GetElectricityConsumptionPlanAndComplete(DateTime myDate, string myVariableId, string myValueType, string myDenominator, string mySpecifications, string[] myOganizationIds)
         {
             DataTable m_CompleteTable = GetNormalConsumptionCompleteData(myDate, myVariableId + "_" + myValueType, myValueType, myDenominator, myOganizationIds);
             DataTable m_PlanTable = GetConsumptionPlanData(myDate, myVariableId, myValueType, myDenominator, myOganizationIds, "Normal");
-            string m_ReturnValue = GetChartString(m_CompleteTable, m_PlanTable);
+            DataTable m_SpecificationsTable = GetSpecificationsViariable(mySpecifications, myVariableId, myOganizationIds);
+            string m_ReturnValue = GetChartString(m_CompleteTable, m_PlanTable, m_SpecificationsTable, myValueType);
             return m_ReturnValue;
         }
-        public static string GetComprehensivePlanAndComplete(DateTime myDate, string myVariableId, string myValueType, string myDenominator, string[] myOganizationIds)
+        public static string GetComprehensivePlanAndComplete(DateTime myDate, string myVariableId, string myProductionLineType, string myValueType, string myDenominator, string mySpecifications, string[] myOganizationIds)
         {
-            DataTable m_CompleteTable = GetComprehensiveCompleteData(myDate, myVariableId, myValueType, myOganizationIds);
+            DataTable m_CompleteTable = GetComprehensiveCompleteData(myDate, myVariableId, myProductionLineType, myValueType, myOganizationIds);
             DataTable m_PlanTable = GetConsumptionPlanData(myDate, myVariableId, myValueType, myDenominator, myOganizationIds, "Comprehensive");
-            string m_ReturnValue = GetChartString(m_CompleteTable, m_PlanTable);
+            DataTable m_SpecificationsTable = GetSpecificationsViariable(mySpecifications, myVariableId, myOganizationIds);
+            string m_ReturnValue = GetChartString(m_CompleteTable, m_PlanTable, m_SpecificationsTable, myValueType);
             return m_ReturnValue;
         }
-        private static DataTable GetLevelCodeByOrganizationIds(string[] myOrganizationIds)
+        private static DataTable GetSpecificationsViariable(string mySpecifications, string myVariableId, string[] myOganizationIds)
         {
-            string m_Sql = @"Select A.OrganizationID, A.Name, A.LevelCode, '' as VariableId, 0 as Value
-                                from system_Organization A
-                                where A.OrganizationID = A.OrganizationID
+            if (mySpecifications == "All")
+            {
+                return null;
+            }
+            else
+            {
+                string m_Sql = @"SELECT  A.VariableId
+                                      ,A.ProductionLineId as OrganizationID
+                                  FROM equipment_EquipmentDetail A, system_Organization B, system_Organization C
+                                  where A.VariableId = '{0}'
+                                  and A.Specifications = '{1}'
+                                  and A.Enabled = 1
+                                  {2}
+                                  and B.LevelCode like C.LevelCode + '%'
+                                  and B.LevelType ='ProductionLine'
+                                  and A.ProductionLineId = B.OrganizationID";
+                string m_OrganizationIds = "";
+                string m_OrganizationCondition = "";
+                if (myOganizationIds != null)
+                {
+                    for (int i = 0; i < myOganizationIds.Length; i++)
+                    {
+                        if (i == 0)
+                        {
+                            m_OrganizationIds = "'" + myOganizationIds[i] + "'";
+                        }
+                        else
+                        {
+                            m_OrganizationIds = m_OrganizationIds + ",'" + myOganizationIds[i] + "'";
+                        }
+                    }
+                    if (m_OrganizationIds != "")
+                    {
+                        m_OrganizationCondition = string.Format(" and C.OrganizationID in ({0}) ", m_OrganizationIds);
+                    }
+                    else
+                    {
+                        m_OrganizationCondition = "and C.OrganizationID <> C.OrganizationID ";
+                    }
+                }
+                else
+                {
+                    m_OrganizationCondition = "and C.OrganizationID <> C.OrganizationID ";
+                }
+                m_Sql = string.Format(m_Sql, myVariableId, mySpecifications, m_OrganizationCondition);
+                try
+                {
+                    DataTable m_Result = _dataFactory.Query(m_Sql);
+                    return m_Result;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
+        private static DataTable GetLevelCodeByOrganizationIds(string[] myOrganizationIds, string myProductionLineType)
+        {
+            string m_Sql = @"Select B.OrganizationID, A.Name + B.Name as Name, B.LevelCode, '' as VariableId, 0 as Value
+                                from system_Organization A, system_Organization B
+                                where B.LevelCode like A.LevelCode + '%'
+                                and B.LevelType = 'ProductionLine'
+                                and B.Type = '{1}'
                                 {0}
-                                order by A.OrganizationID";
+                                order by B.OrganizationID";
             string m_OrganizationIds = "";
             string m_OrganizationCondition = "";
             if (myOrganizationIds != null)
@@ -967,7 +1053,7 @@ namespace Monitor_OverView.Service.OverView
             {
                 m_OrganizationCondition = "and A.OrganizationID <> A.OrganizationID ";
             }
-            m_Sql = string.Format(m_Sql, m_OrganizationCondition);
+            m_Sql = string.Format(m_Sql, m_OrganizationCondition, myProductionLineType);
             try
             {
                 DataTable m_Result = _dataFactory.Query(m_Sql);
@@ -988,7 +1074,7 @@ namespace Monitor_OverView.Service.OverView
         /// <returns>数据表</returns>
         private static DataTable GetNormalQuantityCompleteData(DateTime myDate, string myVariableId, string myValueType, string[] myOganizationIds)
         {
-            string m_Sql = @"select C.OrganizationID, C.Name, B.VariableId, sum(B.TotalPeakValleyFlat) as Value
+            string m_Sql = @"select D.OrganizationID, C.Name + D.Name as Name, B.VariableId, sum(B.TotalPeakValleyFlat) as Value
                                 from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
                                 where C.LevelType = 'Company'
                                 {4}
@@ -1001,8 +1087,10 @@ namespace Monitor_OverView.Service.OverView
                                 and B.OrganizationID = D.OrganizationID
                                 and B.VariableId = '{0}'
                                 and B.ValueType = '{1}'
-                                group by C.OrganizationID, C.Name, B.VariableId
-                                order by C.OrganizationID";
+                                and D.Type <> '余热发电'
+                                group by D.OrganizationID, C.Name + D.Name, B.VariableId
+                                order by D.OrganizationID";
+            //and ((replace('{0}', '_{1}','') = 'clinkerElectricityGeneration' and D.Type = '余热发电') or (replace('{0}', '_{1}','') <> 'clinkerElectricityGeneration'))
             string m_OrganizationIds = "";
             string m_OrganizationCondition = "";
             if(myOganizationIds != null)
@@ -1046,7 +1134,7 @@ namespace Monitor_OverView.Service.OverView
         private static DataTable GetNormalConsumptionCompleteData(DateTime myDate, string myVariableId, string myValueType, string myDenominator, string[] myOganizationIds)
         {
             string m_Sql = @"Select M.OrganizationID, M.Name, M.VariableId, (case when sum(N.Value) <> 0 and sum(N.Value) is not null then sum(M.Value * N.Value) / sum(N.Value) end ) as Value from (
-                                select C.OrganizationID, C.Name, B.VariableId, '{5}' as Denominator, B.TotalPeakValleyFlat as Value
+                                select D.OrganizationID, C.Name + D.Name as Name, B.VariableId, '{5}' as Denominator, B.TotalPeakValleyFlat as Value
                                 from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
                                 where C.LevelType = 'Company'
                                 {4}
@@ -1059,7 +1147,7 @@ namespace Monitor_OverView.Service.OverView
                                 and B.OrganizationID = D.OrganizationID
                                 and B.VariableId = '{0}'
                                 and B.ValueType = '{1}') M,
-	                       (select C.OrganizationID, C.Name, B.VariableId, B.TotalPeakValleyFlat as Value
+	                       (select D.OrganizationID, C.Name + D.Name as Name, B.VariableId, B.TotalPeakValleyFlat as Value
                                 from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
                                 where C.LevelType = 'Company'
                                 {4}
@@ -1115,9 +1203,9 @@ namespace Monitor_OverView.Service.OverView
                 return null;
             }
         }
-        private static DataTable GetComprehensiveCompleteData(DateTime myDate, string myVariableId, string myValueType, string[] myOganizationIds)
+        private static DataTable GetComprehensiveCompleteData(DateTime myDate, string myVariableId, string myProductionLineType, string myValueType, string[] myOganizationIds)
         {
-            DataTable m_CompleteTable = GetLevelCodeByOrganizationIds(myOganizationIds);
+            DataTable m_CompleteTable = GetLevelCodeByOrganizationIds(myOganizationIds, myProductionLineType);
             if (m_CompleteTable != null)
             {
                 decimal ComprehensiveConsumption = 0.0m;
@@ -1152,7 +1240,7 @@ namespace Monitor_OverView.Service.OverView
 
         private static DataTable GetQuantityPlanData(DateTime myDate, string myVariableId, string myValueType, string[] myOganizationIds, string myCaculateType)
         {
-            string m_Sql = @"select D.OrganizationID, D.Name, C.VariableId, B.QuotasName, sum(B.{4}) as Value
+            string m_Sql = @"select E.OrganizationID, D.Name + E.Name as Name, C.VariableId, B.QuotasName, sum(B.{4}) as Value
                                 from tz_Plan A, plan_EnergyConsumptionYearlyPlan B, plan_EnergyConsumptionPlan_Template C, system_Organization D, system_Organization E
                                 where D.LevelType = 'Company'
                                 {3}
@@ -1166,8 +1254,10 @@ namespace Monitor_OverView.Service.OverView
                                 and C.VariableId = '{0}'
                                 and C.ValueType = '{1}'
                                 and C.CaculateType = '{5}'
-                                group by D.OrganizationID, D.Name, C.VariableId, B.QuotasName
-                                order by D.OrganizationID";
+                                and E.Type <> '余热发电'
+                                group by E.OrganizationID, D.Name + E.Name, C.VariableId, B.QuotasName
+                                order by E.OrganizationID";
+            //and (('{0}' = 'clinkerElectricityGeneration' and E.Type = '余热发电') or ('{0}' <> 'clinkerElectricityGeneration'))
             string m_OrganizationIds = "";
             string m_OrganizationCondition = "";
             if (myOganizationIds != null)
@@ -1211,7 +1301,7 @@ namespace Monitor_OverView.Service.OverView
         private static DataTable GetConsumptionPlanData(DateTime myDate, string myVariableId, string myValueType, string myDenominator, string[] myOganizationIds, string myCaculateType)
         {
             string m_Sql = @"Select M.OrganizationID, M.Name, M.VariableId, M.QuotasName, (case when sum(N.Value) <> 0  and sum(N.Value) is not null then sum(M.Value * N.Value) / sum(N.Value) else 0 end) as Value from (
-                                    select D.OrganizationID, D.Name, C.VariableId, B.{5} as Value, C.Denominator, B.QuotasName
+                                    select E.OrganizationID, D.Name + E.Name as Name, C.VariableId, B.{5} as Value, C.Denominator, B.QuotasName
                                         from tz_Plan A, plan_EnergyConsumptionYearlyPlan B, plan_EnergyConsumptionPlan_Template C, system_Organization D, system_Organization E
                                         where D.LevelType = 'Company'
                                         {4}
@@ -1225,7 +1315,7 @@ namespace Monitor_OverView.Service.OverView
                                         and C.VariableId = '{0}'
                                         and C.ValueType = '{1}'
                                         and C.CaculateType = '{6}') M,
-	                                (select D.OrganizationID, D.Name, C.VariableId, B.{5} as Value
+	                                (select E.OrganizationID, D.Name + E.Name as Name, C.VariableId, B.{5} as Value
                                         from tz_Plan A, plan_EnergyConsumptionYearlyPlan B, plan_EnergyConsumptionPlan_Template C, system_Organization D, system_Organization E
                                         where D.LevelType = 'Company'
                                         {4}
@@ -1282,7 +1372,7 @@ namespace Monitor_OverView.Service.OverView
                 return null;
             }
         }
-        private static string GetChartString(DataTable myPerfomance, DataTable myPlanData)
+        private static string GetChartString(DataTable myPerfomance, DataTable myPlanData, DataTable mySpecificationsTable, string myValueType)
         {
             DataTable m_ChartDataTableStruct = new DataTable();
             List<string> m_ColumnNameList = new List<string>();
@@ -1291,6 +1381,56 @@ namespace Monitor_OverView.Service.OverView
             string m_UnitY = "";
             if (myPerfomance != null && myPlanData != null)
             {
+                if (mySpecificationsTable != null)
+                {
+                    int m_TableRowIndex = 0;
+                    bool m_ExistVariableItem = false;
+                    while (m_TableRowIndex < myPerfomance.Rows.Count)
+                    {
+                        m_ExistVariableItem = false;
+                        for (int i = 0; i < mySpecificationsTable.Rows.Count; i++)
+                        {
+                            if (myPerfomance.Rows[m_TableRowIndex]["OrganizationID"].ToString() == mySpecificationsTable.Rows[i]["OrganizationID"].ToString()
+                                  && myPerfomance.Rows[m_TableRowIndex]["VariableId"].ToString().Replace("_" + myValueType, "") == mySpecificationsTable.Rows[i]["VariableId"].ToString())
+                            {
+                                m_ExistVariableItem = true;
+                                break;
+                            }
+                        }
+                        if (m_ExistVariableItem == false)
+                        {
+                            myPerfomance.Rows.RemoveAt(m_TableRowIndex);
+                        }
+                        else
+                        {
+                            m_TableRowIndex = m_TableRowIndex + 1;
+                        }
+                    }
+
+                    m_TableRowIndex = 0;
+                    while (m_TableRowIndex < myPlanData.Rows.Count)
+                    {
+                        m_ExistVariableItem = false;
+                        for (int i = 0; i < mySpecificationsTable.Rows.Count; i++)
+                        {
+                            if (myPlanData.Rows[m_TableRowIndex]["OrganizationID"].ToString() == mySpecificationsTable.Rows[i]["OrganizationID"].ToString()
+                                  && myPlanData.Rows[m_TableRowIndex]["VariableId"].ToString() == mySpecificationsTable.Rows[i]["VariableId"].ToString())
+                            {
+                                m_ExistVariableItem = true;
+                                break;
+                            }
+                        }
+                        if (m_ExistVariableItem == false)
+                        {
+                            myPlanData.Rows.RemoveAt(m_TableRowIndex);
+                        }
+                        else
+                        {
+                            m_TableRowIndex = m_TableRowIndex + 1;
+                        }
+                    }
+                }
+
                 if (myPlanData.Rows.Count > 0)
                 {
                     m_UnitY = myPlanData.Rows[0]["QuotasName"].ToString();
@@ -1298,7 +1438,7 @@ namespace Monitor_OverView.Service.OverView
                 for(int i=0;i<myPerfomance.Rows.Count;i++)
                 {
                     m_ChartDataTableStruct.Columns.Add(myPerfomance.Rows[i]["OrganizationID"].ToString(), typeof(decimal));
-                    m_ColumnNameList.Add(myPerfomance.Rows[i]["Name"].ToString());
+                    m_ColumnNameList.Add(myPerfomance.Rows[i]["Name"].ToString().Replace("公司",""));
                 }
                 for (int i = 0; i < myPlanData.Rows.Count; i++)
                 {

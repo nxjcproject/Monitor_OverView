@@ -149,7 +149,7 @@ function GetEnergyQuantityHtml(myRootDomId) {
     var m_EnergyQuantity = '<table>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricFirstTableTitleTd">工序电量</td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricPercentageTitleTd">单位(kWh)</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricPercentageColumnTd">工序用电比例(月)</td></tr>';
-    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'rawMaterialsHomogenize\',\'熟料\',\'工序电量\');">原料调配</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricPercentageTd" rowspan = "7"><div id = "piechart_ElectricPercentage" style ="width:207px; height:140px; padding:0px; margin:0px;"></div></td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'rawMaterialsHomogenize\',\'熟料\',\'工序电量\');">原料调配</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricPercentageTd" rowspan = "7"><div id = "piechart_ElectricPercentage" style ="width:207px; height:140px; padding:0px; margin:0px;font-size:8pt; color:black;"></div></td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'rawMaterialsGrind\',\'熟料\',\'工序电量\');">生料粉磨</td><td id = "rawMaterialsGrind_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsGrind_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'coalPreparation\',\'熟料\',\'工序电量\');">煤粉制备</td><td id = "coalPreparation_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "coalPreparation_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'clinkerBurning\',\'熟料\',\'工序电量\');">熟料烧成</td><td id = "clinkerBurning_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "clinkerBurning_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
@@ -235,7 +235,7 @@ function GetMachineHaltRecordHtml(myRootDomId) {
     m_MachineHaltRecord = m_MachineHaltRecord + '<option value="0" selected="selected">全部</option><option value="8">8小时</option><option value="24">24小时</option></select></td>';
     m_MachineHaltRecord = m_MachineHaltRecord + '<td class = "MachineHaltStatisticalRangeRowTd2"></td><td class = "MachineHaltStatisticalRangeRowTd2"></td><td class = "MachineHaltStatisticalRangeRowTd2"></td></tr>';
     m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricPercentageColumnTd" colspan = "2">故障停机比例(月)</td><td class = "ElectricTableColumnTd">设备名称</td><td class = "ElectricTableColumnTd">次数</td><td class = "ElectricTableColumnTd">累计时间</td></tr>';
-    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricPercentageTd" colspan = "2" rowspan = "6"><div id ="piechart_HaltStatisticalRange" style ="width:207px; height:126px; padding:0px; margin:0px;"></div></td>';
+    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricPercentageTd" colspan = "2" rowspan = "6"><div id ="piechart_HaltStatisticalRange" style ="width:207px; height:126px; padding:0px; margin:0px;font-size:9pt; color:black;"></div></td>';
     m_MachineHaltRecord = m_MachineHaltRecord + '<td class = "ElectricTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'MineCrusher\',\'\');">破碎机</td><td id = "MineCrusher_CountGlobal" class = "ElectricTableTd">0.00</td><td id = "MineCrusher_TimeGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'RawMaterialsGrind\',\'\');">生料磨</td><td id = "RawMaterialsGrind_CountGlobal" class = "ElectricTableTd">0.00</td><td id = "RawMaterialsGrind_TimeGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'CoalGrind\',\'\');">煤磨</td><td id = "CoalGrind_CountGlobal" class = "ElectricTableTd">0.00</td><td id = "CoalGrind_TimeGlobal" class = "ElectricTableTd">0.00</td></tr>';
@@ -335,7 +335,7 @@ function GetLineChartLegend(myTabName, mylegendData) {
     m_LegendObj.empty();
     var m_LegendHtml = '<table id="' + m_LegendObjId + '_DefinedLegendTable" style="bottom: 0px;"><tbody><tr class="jqplot-table-legend"><td id="' + m_LegendObjId + '_DefinedLegendBlankTd"></td>';
     for (var i = 0; i < mylegendData.length; i++) {
-        m_LegendHtml = m_LegendHtml + '<td style="text-align: center; padding-top: 0px;" class="jqplot-table-legend jqplot-table-legend-swatch"><div class="jqplot-table-legend-swatch-outline"><div style="background-color: ' + m_SeriesColors[i] + '; border-color:  ' + m_SeriesColors[i] + '" class="jqplot-table-legend-swatch"></div></div></td><td style="padding-top: 0px; padding-right:4px; color:#555555; font-size:8pt; font-family: SimSun;">' + mylegendData[i] + '</td>';
+        m_LegendHtml = m_LegendHtml + '<td style="text-align: center; padding-top: 0px;" class="jqplot-table-legend jqplot-table-legend-swatch"><div class="jqplot-table-legend-swatch-outline"><div style="background-color: ' + m_SeriesColors[i] + '; border-color:  ' + m_SeriesColors[i] + '" class="jqplot-table-legend-swatch"></div></div></td><td style="padding-top: 0px; padding-right:4px; color:#000000; font-size:8pt; font-family: SimSun;">' + mylegendData[i] + '</td>';
     }
     m_LegendHtml = m_LegendHtml + '</tr></tbody></table>';
     m_LegendObj.append($(m_LegendHtml));
@@ -360,20 +360,30 @@ function GetLineChart(myTabName, myData, myObjArrayIndex, myMaxValue) {
             xaxis: {
                 renderer: $.jqplot.DateAxisRenderer,
                 tickOptions: {
-                    formatString: "%Y-%m"
+                    formatString: "%Y-%m",
+                    fontFamily: 'Times New Roman',
+                    fontSize: '7pt',
+                    fontWeight: 'normal',
+                    textColor: '#000000'
                 },
                 labelOptions: {
-                    fontFamily: 'Helvetica',
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '7pt',
+                    textColor: '#000000'
                 },
             },
             yaxis: {
                 tickOptions: {
-                    formatString: "%.2f"
+                    formatString: "%.2f",
+                    fontFamily: 'Times New Roman',
+                    fontSize: '7pt',
+                    fontWeight: 'normal',
+                    textColor: '#000000'
                 },
                 labelOptions: {
-                    fontFamily: 'Helvetica',
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '7pt',
+                    textColor: '#000000'
                 },
                 min: 0,
                 max: myMaxValue,
@@ -514,27 +524,33 @@ function GetPieChart(myObjId, myObjArrayIndex, myData) {
               }
           },
           legend: {
+              renderer: $.jqplot.EnhancedLegendRenderer,
               show: true,
-              fontSize: '6pt',
-              rendererOptions: {
-                  //numberRows: 1,
-                  background: '#f3f6fd',
-                  border: '0px'
-              },
-              rowSpacing: '3px',
               location: 'e',
               placement: 'outsideGrid',
-              drawBorder: false,
-              marginTop: '0px',
-              marginLeft: '0px',
-              marginRight: '10px',
-              marginBottom: '5px',
+              disableIEFading: true,
+              seriesToggle: 'normal',
+              seriesToggleReplot: true,
+              rowSpacing: '2px',
+              rendererOptions: {
+                  numberColumns: 1
+              }
           }
 
           // markerOptions:{color: '#000'},
 
       }
 );
+    $('.jqplot-target').css('font-size', '10pt');
+
+    var labels = $('table.jqplot-table-legend');
+    labels.each(function (index) {
+        //turn the label's text color to the swatch's color  
+        $(this).css('border', '0px');
+        $(this).css('font-size', '8pt');
+        //set type name as the label's text  
+
+    });
 }
 
 function LoadElectricPercentageData() {

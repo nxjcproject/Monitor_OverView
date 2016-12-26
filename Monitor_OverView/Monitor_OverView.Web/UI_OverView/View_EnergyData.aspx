@@ -14,38 +14,50 @@
     <link rel="stylesheet" type="text/css" href="/lib/pllib/themes/jquery.jqplot.min.css" />
     <link type="text/css" rel="stylesheet" href="/lib/pllib/syntaxhighlighter/styles/shCoreDefault.min.css" />
     <link type="text/css" rel="stylesheet" href="/lib/pllib/syntaxhighlighter/styles/shThemejqPlot.min.css" />
-    <link type="text/css" rel="stylesheet" href="/css/common/charts.css" />
     <link type="text/css" rel="stylesheet" href="/css/common/NormalPage.css" />
-    <%--<link type="text/css" rel="stylesheet" href="/UI_ComprehensiveDailyReport/css/page/DispatchDailyReport.css" />--%>
+
     <link rel="stylesheet" type="text/css" href="/UI_OverView/css/page/Style_SelectButton.css" />
 
     <script type="text/javascript" src="/lib/ealib/jquery.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="/lib/ealib/jquery.easyui.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="/lib/ealib/easyui-lang-zh_CN.js" charset="utf-8"></script>
 
+    <!--[if gt IE 8]><script type="text/javascript" src="/lib/ealib/extend/easyUI.WindowsOverrange.js" charset="utf-8"></script>-->
+    <!--[if !IE]><!-->
+    <script type="text/javascript" src="/lib/ealib/extend/easyUI.WindowsOverrange.js" charset="utf-8"></script>
+    <!--<![endif]-->
+
     <!--[if lt IE 9]><script type="text/javascript" src="/lib/pllib/excanvas.js"></script><![endif]-->
     <script type="text/javascript" src="/lib/pllib/jquery.jqplot.min.js"></script>
-    <!--<script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shCore.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shBrushJScript.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shBrushXml.min.js"></script>-->
 
-    <!-- Additional plugins go here -->
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.trendline.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.barRenderer.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pieRenderer.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pointLabels.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.cursor.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasTextRenderer.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
 
-    <%--<script type="text/javascript" src="/lib/pllib/themes/jquery.jqplot.js"></script>
-    <script type="text/javascript" src="/lib/pllib/themes/jjquery.jqplot.min.js"></script>--%>
+    <!-- Additional plugins go here -->
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasTextRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.dateAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pointLabels.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.enhancedLegendRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.enhancedPieLegendRenderer.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasOverlay.min.js"></script> 
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.cursor.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.highlighter.min.js"></script>
+    <!--[if lt IE 8 ]><script type="text/javascript" src="/lib/pllib/plugins/jqplot.json2.min"></script><![endif]-->
+
+
     <!--[if lt IE 8 ]><script type="text/javascript" src="/js/common/json2.min.js"></script><![endif]-->
 
     <script type="text/javascript" src="/js/common/components/Charts.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/common/components/DataGrid.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/common/components/WindowsDialog.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/common/components/GridChart.js" charset="utf-8"></script>
+
+    <script type="text/javascript" src="/js/common/format/DateTimeFormat.js" charset="utf-8"></script>
+
     <script type="text/javascript" src="js/page/View_EnergyData.js"></script>
     <script type="text/javascript" src="js/page/View_SelectButton.js" charset="utf-8"></script>
 
@@ -83,14 +95,26 @@
                         </thead>
                     </table>
                 </div>
-                <div data-options="region:'south',border:false" style="height: 270px;">
+                <div data-options="region:'south',border:false" style="height: 280px;">
                     <div class="easyui-layout" data-options="fit:true,border:false">
-                        <div class="easyui-panel" data-options="region:'north', border:false, collapsible:false, split:false" style="height: 25px;">
+                        <div class="easyui-panel" data-options="region:'north', border:false, collapsible:false, split:false" style="height: 27px;">
                             <table>
                                 <tr>
                                     <th>选择指标</th>
                                     <td>
-                                        <input id="Combobox_StandardF" class="easyui-combobox" style="height: 23px; width: 160px" />
+                                        <input id="Combobox_StandardF" class="easyui-combobox" style="height: 23px; width: 150px" />
+                                    </td>
+                                    <th style="width: 60px;">规格型号</th>
+                                    <td style="width: 80px;">
+                                        <select id="Combobox_SpecificationsF" class="easyui-combobox" name="Combobox_SpecificationsF" data-options="panelHeight:'auto', editable:false, valueField: 'id',textField: 'text'" style="width: 70px;"></select>
+                                    </td>
+                                    <td style="width: 60px;">
+                                        <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+                                            onclick="LoadPlanAndCompleteChartButton();">查询</a>
+                                    </td>
+                                    <th id="Th_ChartPageIndexF" style="visibility:hidden;">页码</th>
+                                    <td id="Td_ChartPageIndexF" style="visibility:hidden;">
+                                        <select id="Combobox_PageIndexF" class="easyui-combobox" name="Combobox_PageIndexF" data-options="panelHeight:'auto', editable:false, valueField: 'id',textField: 'text',onSelect:function(myRecord){ChangeChartPageIndex(myRecord);}" style="width: 50px;"></select>
                                     </td>
                                 </tr>
                             </table>

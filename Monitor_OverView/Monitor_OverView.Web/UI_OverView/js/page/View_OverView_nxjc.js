@@ -1,9 +1,9 @@
 ﻿var WidthBlankSize = 20;
 var HeightBlankSize = 15;
 var MinDisplayWidth = 1320;
-var MinDisplayHeight = 585;
+var MinDisplayHeight = 600;
 var MaxFullDisplayWidth = 1366;
-var MaxFullDisplayHeight = 600;
+var MaxFullDisplayHeight = 610;
 $(document).ready(function () {
     //alert($(window).height()); //浏览器时下窗口可视区域高度
     //alert($(document).height()); //浏览器时下窗口文档的高度
@@ -25,7 +25,8 @@ $(document).ready(function () {
         SetGlobalSize(m_DocumentWidthC, m_DocumentHeightC);
     });
 
-    GetRealTimeData();
+    ///////////////初始化时间//////////////////
+    InitializationDateTime();
 
     $(".DataZoneTable").click(function (myObject) {
         ///跳转页面///
@@ -33,6 +34,40 @@ $(document).ready(function () {
     });
 
 });
+
+//////////////////时间选项///////////////////
+function InitializationDateTime() {
+
+
+    $('#Datebox_StartTimeF').datebox({
+        formatter: function (date) {
+            var years = date.getFullYear();//获取年
+            var months = date.getMonth() + 1;//获取日
+            var dates = date.getDate();//获取月
+
+            if (months < 10) {//当月份不满10的时候前面补0，例如09
+                months = '0' + months;
+            }
+
+            if (dates < 10) {//当日期不满10的时候前面补0，例如09
+                dates = '0' + dates;
+            }
+            return years + "-" + months + "-" + dates;//根据自己需求进行改动
+        },
+        parser: function (date)
+        {
+            return new Date(Date.parse(date.replace(/-/g, "/")));
+        },
+        onSelect: function (date) { GetRealTimeData(date); }
+    });
+
+
+    var nowDate = new Date();
+    nowDate.setDate(nowDate.getDate() - 1);
+    starDate = nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
+    $("#Datebox_StartTimeF").datebox('setValue', starDate);
+    GetRealTimeData(nowDate);
+}
 
 function GetGlobalWidth(myDocumentWidth) {
     if (myDocumentWidth > MinDisplayWidth) {
@@ -99,23 +134,33 @@ function SetGlobalSize(myDocumentWidth, myDocumentHeight) {
     $('#SelectButtonDiv').css('top', $('#GlobalBackGroundDiv').offset().top + m_DisplayHeight - 18);
 
 }
-
+function compareDate(d1, d2) {  // 时间比较的方法，如果d1时间比d2时间大，则返回true   
+    return Date.parse(d1.replace(/-/g, "/")) > Date.parse(d2.replace(/-/g, "/"))
+}
 //////////////////////////获得后台数据//////////////////////
-function GetRealTimeData() {
-    var m_DateTime = "";  //$('#Datebox_StartTimeF').datebox('getValue');
-    $.ajax({
-        type: "POST",
-        url: "View_OverView_nxjc.aspx/GetRealTimeData",
-        data: "{myDateTime:'" + m_DateTime + "'}",
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (msg) {
-            var m_MsgData = jQuery.parseJSON(msg.d);
-            if (m_MsgData != null && m_MsgData != undefined) {
-                SetDisplayData(m_MsgData);
+function GetRealTimeData(myDate) {
+    var m_TodayDate = new Date();
+    var m_ViladDate = compareDate(DateTimeFormat(m_TodayDate, "yyyy-MM-dd"), DateTimeFormat(myDate, "yyyy-MM-dd"));
+    if (m_ViladDate == true) {
+        var SelectedDate = myDate;
+        var SelectedDateString = DateTimeFormat(myDate, "yyyy-MM-dd");
+        $.ajax({
+            type: "POST",
+            url: "View_OverView_nxjc.aspx/GetRealTimeData",
+            data: "{myDateTime:'" + SelectedDateString + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+                var m_MsgData = jQuery.parseJSON(msg.d);
+                if (m_MsgData != null && m_MsgData != undefined) {
+                    SetDisplayData(m_MsgData);
+                }
             }
-        }
-    });
+        });
+    }
+    else {
+        alert("请选择今天以前的时间!");
+    }
 }
 function SetDisplayData(myMsgData) {
     var m_Rows = myMsgData.rows;

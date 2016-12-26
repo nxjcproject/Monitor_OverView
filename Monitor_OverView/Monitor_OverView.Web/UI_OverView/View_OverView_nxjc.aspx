@@ -7,12 +7,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>宁夏建材能源中心系统总貌</title>
 
+    <link rel="stylesheet" type="text/css" href="/lib/ealib/themes/gray/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="/lib/ealib/themes/icon.css" />
     <link rel="stylesheet" type="text/css" href="/css/common/NormalPage.css" />
     <link rel="stylesheet" type="text/css" href="/UI_OverView/css/page/Style_OverView_nxjc.css" />
     <link rel="stylesheet" type="text/css" href="/UI_OverView/css/page/Style_SelectButton.css" />
     
     <script type="text/javascript" src="/lib/ealib/jquery.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/lib/ealib/jquery.easyui.min.js" charset="utf-8"></script>
     <!--[if lt IE 8 ]><script type="text/javascript" src="/js/common/json2.min.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/js/common/format/DateTimeFormat.js" charset="utf-8"></script>
     <script type="text/javascript" src="js/page/View_OverView_nxjc.js" charset="utf-8"></script>
     
 
@@ -22,7 +27,9 @@
         <table class="MainTable">
             <tr>
                 <td class="BorderBlankTd1"></td>
-                <td class="BorderBlankTd2"></td>
+                <td class="BorderBlankTd2">
+                    <input id="Datebox_StartTimeF" type="text" class="easyui-datebox" required="required" style ="width:100px;"/>
+                </td>
                 <td class="BorderBlankTd1"></td>
                 <td class="BorderBlankTd2"></td>
                 <td class="BorderBlankTd1"></td>

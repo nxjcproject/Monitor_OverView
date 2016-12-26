@@ -20,28 +20,28 @@
       <publishTime>05/18/2016 20:30:31</publishTime>
     </File>
     <File Include="bin/EasyUIJsonParser.dll">
-      <publishTime>09/12/2015 14:36:50</publishTime>
+      <publishTime>09/12/2015 14:36:52</publishTime>
     </File>
     <File Include="bin/EnergyConsumption.dll">
       <publishTime>01/18/2016 14:08:49</publishTime>
     </File>
     <File Include="bin/InternalMemeryRestore.dll">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="bin/mDbDataAdaper.dll">
       <publishTime>04/04/2016 12:02:41</publishTime>
     </File>
     <File Include="bin/Monitor_OverView.Infrastructure.dll">
-      <publishTime>11/22/2016 16:43:04</publishTime>
+      <publishTime>11/22/2016 16:43:06</publishTime>
     </File>
     <File Include="bin/Monitor_OverView.Service.dll">
-      <publishTime>11/22/2016 16:43:04</publishTime>
+      <publishTime>12/21/2016 08:47:14</publishTime>
     </File>
     <File Include="bin/Monitor_OverView.Web.dll">
-      <publishTime>11/22/2016 16:43:05</publishTime>
+      <publishTime>12/21/2016 08:47:15</publishTime>
     </File>
     <File Include="bin/RunIndicators.dll">
-      <publishTime>10/12/2016 16:57:12</publishTime>
+      <publishTime>11/25/2016 14:51:35</publishTime>
     </File>
     <File Include="bin/SqlServerDataAdapter.dll">
       <publishTime>04/22/2016 10:02:58</publishTime>
@@ -50,61 +50,61 @@
       <publishTime>11/04/2016 12:02:26</publishTime>
     </File>
     <File Include="bin/WebStyleBaseForEnergy.dll">
-      <publishTime>01/12/2016 15:11:14</publishTime>
+      <publishTime>01/12/2016 15:11:16</publishTime>
     </File>
     <File Include="bin/WebUserContorls.Web.dll">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="bin/WebUserControls.Infrastructure.dll">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="bin/WebUserControls.Service.dll">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="css/common/charts.css">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="css/common/NormalPage.css">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="images/page/DataZoneBG.png">
       <publishTime>12/17/2015 01:33:40</publishTime>
     </File>
     <File Include="js/common/components/Charts.js">
-      <publishTime>09/22/2016 11:37:59</publishTime>
+      <publishTime>12/11/2016 01:09:28</publishTime>
     </File>
     <File Include="js/common/components/DataGrid.js">
       <publishTime>01/12/2015 19:08:54</publishTime>
     </File>
     <File Include="js/common/components/GridChart.js">
-      <publishTime>01/25/2016 23:04:50</publishTime>
+      <publishTime>12/10/2016 23:39:06</publishTime>
     </File>
     <File Include="js/common/components/WindowsDialog.js">
-      <publishTime>01/20/2015 23:53:48</publishTime>
+      <publishTime>12/10/2016 14:44:20</publishTime>
     </File>
     <File Include="js/common/format/DateTimeFormat.js">
-      <publishTime>09/09/2016 12:01:13</publishTime>
+      <publishTime>09/09/2016 12:01:14</publishTime>
     </File>
     <File Include="js/common/jquery.fullscreen.js">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="js/common/jquery.utility.js">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="js/common/json2.min.js">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="js/common/PrintFile.js">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/ealib/changelog.txt">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/ealib/easyloader.js">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/ealib/easyui-lang-zh_CN.js">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/ealib/extend/jquery.jqprint.js">
       <publishTime>03/28/2015 17:38:46</publishTime>
@@ -116,13 +116,13 @@
       <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/ealib/jquery.easyui.min.js">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/ealib/jquery.min.js">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/ealib/licence_gpl.txt">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/ealib/locale/easyui-lang-af.js">
       <publishTime>03/28/2015 17:38:46</publishTime>
@@ -314,7 +314,7 @@
       <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/ealib/readme.txt">
-      <publishTime>03/28/2015 17:38:44</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/ealib/src/easyloader.js">
       <publishTime>03/28/2015 17:38:46</publishTime>
@@ -4358,22 +4358,22 @@
       <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/extlib/themes/syExtCss.css">
-      <publishTime>03/28/2015 17:38:45</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/extlib/themes/syExtIcon.css">
-      <publishTime>03/28/2015 17:38:45</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/pllib/excanvas.js">
-      <publishTime>03/28/2015 17:38:45</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/pllib/excanvas.min.js">
-      <publishTime>03/28/2015 17:38:45</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/pllib/jquery.jqplot.js">
-      <publishTime>03/28/2015 17:38:45</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/pllib/jquery.jqplot.min.js">
-      <publishTime>03/28/2015 17:38:45</publishTime>
+      <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="lib/pllib/plugins/jqplot.barRenderer.js">
       <publishTime>03/28/2015 17:38:46</publishTime>
@@ -4616,82 +4616,82 @@
       <publishTime>03/28/2015 17:38:46</publishTime>
     </File>
     <File Include="UI_OverView/css/page/Style_OverView_Factory.css">
-      <publishTime>11/22/2016 16:38:30</publishTime>
+      <publishTime>12/12/2016 14:39:42</publishTime>
     </File>
     <File Include="UI_OverView/css/page/Style_OverView_nxjc.css">
-      <publishTime>03/12/2016 22:23:25</publishTime>
+      <publishTime>12/19/2016 10:12:14</publishTime>
     </File>
     <File Include="UI_OverView/css/page/Style_SelectButton.css">
-      <publishTime>01/24/2016 17:29:27</publishTime>
+      <publishTime>01/24/2016 17:29:28</publishTime>
     </File>
     <File Include="UI_OverView/images/page/DataZoneBG.png">
       <publishTime>12/17/2015 01:33:40</publishTime>
     </File>
     <File Include="UI_OverView/images/page/tag_blue.png">
-      <publishTime>03/12/2016 11:27:36</publishTime>
+      <publishTime>03/12/2016 11:27:38</publishTime>
     </File>
     <File Include="UI_OverView/images/page/tag_red.png">
-      <publishTime>03/12/2016 11:21:53</publishTime>
+      <publishTime>03/12/2016 11:21:54</publishTime>
     </File>
     <File Include="UI_OverView/js/page/ping.js">
       <publishTime>01/27/2016 17:42:29</publishTime>
     </File>
     <File Include="UI_OverView/js/page/View_EnergyData.js">
-      <publishTime>07/22/2016 16:46:57</publishTime>
+      <publishTime>12/19/2016 01:41:00</publishTime>
     </File>
     <File Include="UI_OverView/js/page/View_OverView_Company.js">
       <publishTime>01/27/2016 17:50:47</publishTime>
     </File>
     <File Include="UI_OverView/js/page/View_OverView_Factory.js">
-      <publishTime>11/22/2016 16:35:42</publishTime>
+      <publishTime>12/12/2016 14:38:56</publishTime>
     </File>
     <File Include="UI_OverView/js/page/View_OverView_nxjc.js">
-      <publishTime>10/27/2016 15:11:56</publishTime>
+      <publishTime>12/19/2016 10:59:24</publishTime>
     </File>
     <File Include="UI_OverView/js/page/View_ProductionData.js">
-      <publishTime>09/08/2016 11:57:22</publishTime>
+      <publishTime>12/19/2016 01:36:48</publishTime>
     </File>
     <File Include="UI_OverView/js/page/View_SelectButton.js">
-      <publishTime>01/17/2016 23:49:34</publishTime>
+      <publishTime>01/17/2016 23:49:36</publishTime>
     </File>
     <File Include="UI_OverView/View_EnergyData.aspx">
-      <publishTime>01/24/2016 19:19:04</publishTime>
+      <publishTime>12/16/2016 16:59:00</publishTime>
     </File>
     <File Include="UI_OverView/View_OverView_Company.aspx">
       <publishTime>01/27/2016 17:33:15</publishTime>
     </File>
     <File Include="UI_OverView/View_OverView_Factory.aspx">
-      <publishTime>11/22/2016 16:41:53</publishTime>
+      <publishTime>12/19/2016 10:47:54</publishTime>
     </File>
     <File Include="UI_OverView/View_OverView_nxjc.aspx">
-      <publishTime>01/26/2016 10:00:38</publishTime>
+      <publishTime>12/19/2016 10:57:20</publishTime>
     </File>
     <File Include="UI_OverView/View_ProductionData.aspx">
-      <publishTime>09/30/2016 11:16:17</publishTime>
+      <publishTime>12/20/2016 10:45:23</publishTime>
     </File>
     <File Include="UI_OverView/WebForm1.aspx">
       <publishTime>03/12/2016 21:30:00</publishTime>
     </File>
     <File Include="UI_SystemStatus/css/page/View_NetworkStatus.css">
-      <publishTime>04/14/2016 15:25:16</publishTime>
+      <publishTime>04/14/2016 15:25:18</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Ammeter.png">
-      <publishTime>04/10/2016 09:05:19</publishTime>
+      <publishTime>04/10/2016 09:05:20</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Collector.png">
-      <publishTime>04/10/2016 09:05:19</publishTime>
+      <publishTime>04/10/2016 09:05:20</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/DataComputer.png">
-      <publishTime>04/11/2016 20:02:24</publishTime>
+      <publishTime>04/11/2016 20:02:26</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/DataComputer_S.png">
-      <publishTime>04/14/2016 11:08:49</publishTime>
+      <publishTime>04/14/2016 11:08:50</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/DCS.png">
-      <publishTime>04/12/2016 08:57:37</publishTime>
+      <publishTime>04/12/2016 08:57:38</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/DLQ.png">
-      <publishTime>04/11/2016 23:14:21</publishTime>
+      <publishTime>04/11/2016 23:14:22</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/LineG1.png">
       <publishTime>03/03/2016 11:50:46</publishTime>
@@ -4724,88 +4724,88 @@
       <publishTime>03/04/2016 18:06:24</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net10_Green.png">
-      <publishTime>07/30/2016 15:11:49</publishTime>
+      <publishTime>07/30/2016 15:11:50</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net10_Red.png">
-      <publishTime>07/30/2016 15:12:24</publishTime>
+      <publishTime>07/30/2016 15:12:26</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net1_Green.png">
-      <publishTime>07/30/2016 12:23:11</publishTime>
+      <publishTime>07/30/2016 12:23:12</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net1_Red.png">
-      <publishTime>07/30/2016 12:24:05</publishTime>
+      <publishTime>07/30/2016 12:24:06</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net2_Green.png">
-      <publishTime>07/30/2016 12:24:45</publishTime>
+      <publishTime>07/30/2016 12:24:46</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net2_Red.png">
-      <publishTime>07/30/2016 12:25:54</publishTime>
+      <publishTime>07/30/2016 12:25:56</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net3_Green.png">
-      <publishTime>07/30/2016 12:26:45</publishTime>
+      <publishTime>07/30/2016 12:26:46</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net3_Red.png">
-      <publishTime>07/30/2016 12:27:44</publishTime>
+      <publishTime>07/30/2016 12:27:46</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net4_Green.png">
-      <publishTime>07/30/2016 12:28:12</publishTime>
+      <publishTime>07/30/2016 12:28:14</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net4_Red.png">
-      <publishTime>07/30/2016 12:28:54</publishTime>
+      <publishTime>07/30/2016 12:28:56</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net5_Green.png">
-      <publishTime>07/30/2016 15:01:59</publishTime>
+      <publishTime>07/30/2016 15:02:00</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net5_Red.png">
-      <publishTime>07/30/2016 15:03:06</publishTime>
+      <publishTime>07/30/2016 15:03:08</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net6_Green.png">
-      <publishTime>07/30/2016 15:04:13</publishTime>
+      <publishTime>07/30/2016 15:04:14</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net6_Red.png">
-      <publishTime>07/30/2016 15:05:42</publishTime>
+      <publishTime>07/30/2016 15:05:44</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net7_Green.png">
-      <publishTime>07/30/2016 15:06:20</publishTime>
+      <publishTime>07/30/2016 15:06:22</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net7_Red.png">
-      <publishTime>07/30/2016 15:07:16</publishTime>
+      <publishTime>07/30/2016 15:07:18</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net8_Green.png">
-      <publishTime>07/30/2016 15:08:05</publishTime>
+      <publishTime>07/30/2016 15:08:06</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net8_Red.png">
-      <publishTime>07/30/2016 15:09:04</publishTime>
+      <publishTime>07/30/2016 15:09:06</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net9_Green.png">
-      <publishTime>07/30/2016 15:09:46</publishTime>
+      <publishTime>07/30/2016 15:09:48</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Net9_Red.png">
-      <publishTime>07/30/2016 15:10:50</publishTime>
+      <publishTime>07/30/2016 15:10:52</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Server.png">
-      <publishTime>04/11/2016 20:05:56</publishTime>
+      <publishTime>04/11/2016 20:05:58</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Switch.png">
-      <publishTime>04/14/2016 11:04:57</publishTime>
+      <publishTime>04/14/2016 11:04:58</publishTime>
     </File>
     <File Include="UI_SystemStatus/images/page/Title1.png">
       <publishTime>03/03/2016 11:49:12</publishTime>
     </File>
     <File Include="UI_SystemStatus/js/page/View_NetworkStatus.js">
-      <publishTime>08/05/2016 19:47:35</publishTime>
+      <publishTime>08/05/2016 19:47:36</publishTime>
     </File>
     <File Include="UI_SystemStatus/NetworkMonitor.asmx">
-      <publishTime>03/06/2016 20:55:29</publishTime>
+      <publishTime>03/06/2016 20:55:30</publishTime>
     </File>
     <File Include="UI_SystemStatus/View_NetworkStatus.aspx">
-      <publishTime>04/14/2016 14:50:11</publishTime>
+      <publishTime>04/14/2016 14:50:12</publishTime>
     </File>
     <File Include="UI_SystemStatus/WebForm1.aspx">
       <publishTime>04/13/2016 18:41:53</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>11/22/2016 16:43:16</publishTime>
+      <publishTime>12/21/2016 08:51:45</publishTime>
     </File>
   </ItemGroup>
 </Project>

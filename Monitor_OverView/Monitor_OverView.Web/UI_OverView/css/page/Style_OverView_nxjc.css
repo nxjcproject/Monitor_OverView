@@ -43,6 +43,7 @@
     width: 240px;
     height: 15px;
     background-color: #f3f6fd;
+    vertical-align:middle;
 }
 
 .DataZoneTable {

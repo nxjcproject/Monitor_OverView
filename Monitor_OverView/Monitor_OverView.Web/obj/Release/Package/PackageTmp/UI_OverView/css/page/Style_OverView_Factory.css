@@ -103,19 +103,21 @@ ul, li, div {
 }
 
 .DataChartContent {
-    width: 404px;
+    width: 400px;
     height: 177px;
     background-color: #ffffff;
-    padding-right: 8px;
     margin-top:15px;
+    font-size:9pt; 
+    color:black;
 }
 .DataChartLegend {
-    width: 404px;
+    width: 400px;
     height: 24px;
     background-color: #ffffff;
-    padding-top:6px;
-    padding-left:8px;
+    padding-top: 6px;
     vertical-align: middle;
+    font-size: 9pt;
+    color: black;
 }
 
 
