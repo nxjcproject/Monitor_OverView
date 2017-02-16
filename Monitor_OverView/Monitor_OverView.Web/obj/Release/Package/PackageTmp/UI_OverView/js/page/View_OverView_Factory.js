@@ -147,15 +147,19 @@ function ChangeDisplayStation() {
 ////////////////////左边区域/////////////////////
 function GetEnergyQuantityHtml(myRootDomId) {
     var m_EnergyQuantity = '<table>';
-    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricFirstTableTitleTd">工序电量</td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricPercentageTitleTd">单位(kWh)</td></tr>';
-    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricPercentageColumnTd">工序用电比例(月)</td></tr>';
-    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'rawMaterialsHomogenize\',\'熟料\',\'工序电量\');">原料调配</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricPercentageTd" rowspan = "7"><div id = "piechart_ElectricPercentage" style ="width:207px; height:140px; padding:0px; margin:0px;font-size:8pt; color:black;"></div></td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricFirstTableTitleTd">工序电量</td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricPercentageTitleTd"  colspan = "3">单位(kWh)</td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricPercentageColumnTd"  colspan = "3">工序用电比例(月)</td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'limestoneMine\',\'分厂\',\'工序电量\');">矿山</td><td id = "limestoneMine_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "limestoneMine_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricPercentageTd" rowspan = "7" colspan = "3"><div id = "piechart_ElectricPercentage" style ="width:207px; height:140px; padding:0px; margin:0px;font-size:8pt; color:black;"></div></td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'rawMaterialsHomogenize\',\'熟料\',\'工序电量\');">原料调配</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'rawMaterialsGrind\',\'熟料\',\'工序电量\');">生料粉磨</td><td id = "rawMaterialsGrind_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsGrind_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'coalPreparation\',\'熟料\',\'工序电量\');">煤粉制备</td><td id = "coalPreparation_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "coalPreparation_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'clinkerBurning\',\'熟料\',\'工序电量\');">熟料烧成</td><td id = "clinkerBurning_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "clinkerBurning_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
-    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'cementGrind\',\'水泥磨\',\'工序电量\');">水泥粉磨</td><td id = "cementGrind_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "cementGrind_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
-    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'cementPacking\',\'分厂\',\'工序电量\');">水泥包装</td><td id = "cementPacking_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "cementPacking_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
-    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableLastRowForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'auxiliaryProduction\',\'分厂\',\'工序电量\');">辅助用电</td><td id = "auxiliaryProduction_ElectricityQuantity_DayGlobal" class = "ElectricTableLastRowTd">0.00</td><td id = "auxiliaryProduction_ElectricityQuantity_MonthGlobal" class = "ElectricTableLastRowTd">0.00</td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'kilnSystem\',\'熟料\',\'工序电量\');">废气处理</td><td id = "kilnSystem_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "kilnSystem_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'hybridMaterialsPreparation\',\'水泥磨\',\'工序电量\');">混合材制备</td><td id = "hybridMaterialsPreparation_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "hybridMaterialsPreparation_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'clinkerTransport\',\'水泥磨\',\'工序电量\');">熟料储送</td><td id = "clinkerTransport_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "clinkerTransport_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td>';
+    m_EnergyQuantity = m_EnergyQuantity + '<td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'cementGrind\',\'水泥磨\',\'工序电量\');">水泥粉磨</td><td id = "cementGrind_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "cementGrind_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableLastRowForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'cementPacking\',\'分厂\',\'工序电量\');">水泥包装</td><td id = "cementPacking_ElectricityQuantity_DayGlobal" class = "ElectricTableLastRowTd">0.00</td><td id = "cementPacking_ElectricityQuantity_MonthGlobal" class = "ElectricTableLastRowTd">0.00</td>';
+    m_EnergyQuantity = m_EnergyQuantity + '<td class = "ElectricTableLastRowForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'auxiliaryProduction\',\'分厂\',\'工序电量\');">辅助用电</td><td id = "auxiliaryProduction_ElectricityQuantity_DayGlobal" class = "ElectricTableLastRowTd">0.00</td><td id = "auxiliaryProduction_ElectricityQuantity_MonthGlobal" class = "ElectricTableLastRowTd">0.00</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '</table>';
     $("#" + myRootDomId).html(m_EnergyQuantity);
 }
@@ -164,8 +168,10 @@ function GetEnergyConsumptionHtml(myRootDomId) {
     var m_EnergyConsumption = '<table>';
     m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricFirstTableTitleTd">工序电耗</td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricFirstTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd">单位(kWh/t)</td></tr>';
     m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td></tr>';
-    m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'rawMaterialsHomogenize\',\'clinker_MixtureMaterialsOutput\',\'熟料\',\'工序电耗\');">原料调配</td><td id = "rawMaterialsHomogenize_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsHomogenize_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td><td  class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'rawMaterialsGrind\',\'clinker_MixtureMaterialsOutput\',\'熟料\',\'工序电耗\');">生料粉磨</td><td id = "rawMaterialsGrind_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsGrind_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
-    m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'coalPreparation\',\'clinker_PulverizedCoalOutput\',\'熟料\',\'工序电耗\');">煤粉制备</td><td id = "coalPreparation_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "coalPreparation_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td><td  class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'clinkerBurning\',\'clinker_ClinkerOutput\',\'熟料\',\'工序电耗\');">熟料烧成</td><td id = "clinkerBurning_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "clinkerBurning_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
+    m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'limestoneMine\',\'clinker_MixtureMaterialsOutput\',\'分厂\',\'工序电耗\');">矿山</td><td id = "limestoneMine_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "limestoneMine_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'rawMaterialsHomogenize\',\'clinker_MixtureMaterialsOutput\',\'熟料\',\'工序电耗\');">原料调配</td><td id = "rawMaterialsHomogenize_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsHomogenize_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
+    m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'rawMaterialsGrind\',\'clinker_MixtureMaterialsOutput\',\'熟料\',\'工序电耗\');">生料粉磨</td><td id = "rawMaterialsGrind_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsGrind_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'coalPreparation\',\'clinker_PulverizedCoalOutput\',\'熟料\',\'工序电耗\');">煤粉制备</td><td id = "coalPreparation_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "coalPreparation_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
+    m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'clinkerBurning\',\'clinker_ClinkerOutput\',\'熟料\',\'工序电耗\');">熟料烧成</td><td id = "clinkerBurning_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "clinkerBurning_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td><td  class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'kilnSystem\',\'clinker_ClinkerOutput\',\'熟料\',\'工序电耗\');">废气处理</td><td id = "kilnSystem_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "kilnSystem_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
+    m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'hybridMaterialsPreparation\',\'cement_CementOutput\',\'水泥磨\',\'工序电耗\');">混合材制备</td><td id = "hybridMaterialsPreparation_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "hybridMaterialsPreparation_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td><td  class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'clinkerTransport\',\'cement_CementOutput\',\'水泥磨\',\'工序电耗\');">熟料储送</td><td id = "clinkerTransport_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "clinkerTransport_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableLastRowForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'cementGrind\',\'cement_CementOutput\',\'水泥磨\',\'工序电耗\');">水泥粉磨</td><td id = "cementGrind_ElectricityConsumption_DayGlobal" class = "ElectricTableLastRowTd">0.00</td><td id = "cementGrind_ElectricityConsumption_MonthGlobal" class = "ElectricTableLastRowTd">0.00</td><td class = "ElectricTableLastRowForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'cementPacking\',\'cement_CementOutput\',\'分厂\',\'工序电耗\');">水泥包装</td><td id = "cementPacking_ElectricityConsumption_DayGlobal" class = "ElectricTableLastRowTd">0.00</td><td id = "cementPacking_ElectricityConsumption_MonthGlobal" class = "ElectricTableLastRowTd">0.00</td></tr>';
     m_EnergyConsumption = m_EnergyConsumption + '</table>';
     $("#" + myRootDomId).html(m_EnergyConsumption);
@@ -230,18 +236,18 @@ function GetRunIndicatorsHtml(myRootDomId) {
 }
 function GetMachineHaltRecordHtml(myRootDomId) {
     var m_MachineHaltRecord = '<table>';
-    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "MachineHaltStatisticalRangeFirstRowTd"><span style = "letter-spacing: -2px;">故障停机(月)</span></td><td id ="Select_StatisticalRangeTd" class = "MachineHaltStatisticalRangeRowTd1">选择范围&nbsp;';
+    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricComprehensiveFirstTableTitleTd"><span style = "letter-spacing: -2px;">故障停机(月)</span></td><td id ="Select_StatisticalRangeTd" class = "MachineHaltStatisticalRangeRowTd1">选择范围&nbsp;';
     m_MachineHaltRecord = m_MachineHaltRecord + '<select id="Select_StatisticalRangeF" class="easyui-combobox" name="StatisticalRange" data-options="panelHeight:\'auto\', onSelect:function(myRecord){RefreshStatisticalRange();}" style="width: 75px;">';
     m_MachineHaltRecord = m_MachineHaltRecord + '<option value="0" selected="selected">全部</option><option value="8">8小时</option><option value="24">24小时</option></select></td>';
     m_MachineHaltRecord = m_MachineHaltRecord + '<td class = "MachineHaltStatisticalRangeRowTd2"></td><td class = "MachineHaltStatisticalRangeRowTd2"></td><td class = "MachineHaltStatisticalRangeRowTd2"></td></tr>';
-    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricPercentageColumnTd" colspan = "2">故障停机比例(月)</td><td class = "ElectricTableColumnTd">设备名称</td><td class = "ElectricTableColumnTd">次数</td><td class = "ElectricTableColumnTd">累计时间</td></tr>';
+    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricComprehensiveTableColumnTd" colspan = "2">故障停机比例(月)</td><td class = "ElectricComprehensiveTableColumnTd">设备名称</td><td class = "ElectricComprehensiveTableColumnTd">次数</td><td class = "ElectricComprehensiveTableColumnTd">累计时间</td></tr>';
     m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricPercentageTd" colspan = "2" rowspan = "6"><div id ="piechart_HaltStatisticalRange" style ="width:207px; height:126px; padding:0px; margin:0px;font-size:9pt; color:black;"></div></td>';
-    m_MachineHaltRecord = m_MachineHaltRecord + '<td class = "ElectricTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'MineCrusher\',\'\');">破碎机</td><td id = "MineCrusher_CountGlobal" class = "ElectricTableTd">0.00</td><td id = "MineCrusher_TimeGlobal" class = "ElectricTableTd">0.00</td></tr>';
-    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'RawMaterialsGrind\',\'\');">生料磨</td><td id = "RawMaterialsGrind_CountGlobal" class = "ElectricTableTd">0.00</td><td id = "RawMaterialsGrind_TimeGlobal" class = "ElectricTableTd">0.00</td></tr>';
-    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'CoalGrind\',\'\');">煤磨</td><td id = "CoalGrind_CountGlobal" class = "ElectricTableTd">0.00</td><td id = "CoalGrind_TimeGlobal" class = "ElectricTableTd">0.00</td></tr>';
-    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'RotaryKiln\',\'\');">回转窑</td><td id = "RotaryKiln_CountGlobal" class = "ElectricTableTd">0.00</td><td id = "RotaryKiln_TimeGlobal" class = "ElectricTableTd">0.00</td></tr>';
-    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'CementGrind\',\'\');">水泥磨</td><td id = "CementGrind_CountGlobal" class = "ElectricTableTd">0.00</td><td id = "CementGrind_TimeGlobal" class = "ElectricTableTd">0.00</td></tr>';
-    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricTableLastRowForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'CementPacker\',\'\');">包机</td><td id = "CementPacker_CountGlobal" class = "ElectricTableLastRowTd">0.00</td><td id = "CementPacker_TimeGlobal" class = "ElectricTableLastRowTd">0.00</td></tr>';
+    m_MachineHaltRecord = m_MachineHaltRecord + '<td class = "ElectricComprehensiveTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'MineCrusher\',\'\');">破碎机</td><td id = "MineCrusher_CountGlobal" class = "ElectricComprehensiveTableTd">0.00</td><td id = "MineCrusher_TimeGlobal" class = "ElectricComprehensiveTableTd">0.00</td></tr>';
+    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricComprehensiveTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'RawMaterialsGrind\',\'\');">生料磨</td><td id = "RawMaterialsGrind_CountGlobal" class = "ElectricComprehensiveTableTd">0.00</td><td id = "RawMaterialsGrind_TimeGlobal" class = "ElectricComprehensiveTableTd">0.00</td></tr>';
+    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricComprehensiveTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'CoalGrind\',\'\');">煤磨</td><td id = "CoalGrind_CountGlobal" class = "ElectricComprehensiveTableTd">0.00</td><td id = "CoalGrind_TimeGlobal" class = "ElectricComprehensiveTableTd">0.00</td></tr>';
+    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricComprehensiveTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'RotaryKiln\',\'\');">回转窑</td><td id = "RotaryKiln_CountGlobal" class = "ElectricComprehensiveTableTd">0.00</td><td id = "RotaryKiln_TimeGlobal" class = "ElectricComprehensiveTableTd">0.00</td></tr>';
+    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricComprehensiveTableForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'CementGrind\',\'\');">水泥磨</td><td id = "CementGrind_CountGlobal" class = "ElectricComprehensiveTableTd">0.00</td><td id = "CementGrind_TimeGlobal" class = "ElectricComprehensiveTableTd">0.00</td></tr>';
+    m_MachineHaltRecord = m_MachineHaltRecord + '<tr><td class = "ElectricComprehensiveTableLastRowForcusTd" onclick ="GetMasterMachineHaltDetail(this, \'CementPacker\',\'\');">包机</td><td id = "CementPacker_CountGlobal" class = "ElectricComprehensiveTableLastRowForcusTd">0.00</td><td id = "CementPacker_TimeGlobal" class = "ElectricComprehensiveTableLastRowForcusTd">0.00</td></tr>';
     m_MachineHaltRecord = m_MachineHaltRecord + '</table>';
     $("#" + myRootDomId).html(m_MachineHaltRecord);
     $.parser.parse('#Select_StatisticalRangeTd');
@@ -320,11 +326,14 @@ function GetChartDataTabs(myTabName, myData, myObjArrayIndex, myTabTitle) {
     }
     if (PlotObjArray[myObjArrayIndex]["FirstLoadFlag"] == true) {
         GetLineChart(myTabName, m_ChartData, myObjArrayIndex, m_MaxValue);
-        PlotObjArray[myObjArrayIndex]["FirstLoadFlag"] == false;
+        PlotObjArray[myObjArrayIndex]["FirstLoadFlag"] = false;
     }
     else {
         PlotObjArray[myObjArrayIndex]["Obj"].series[0].data = m_ChartData;
-        PlotObjArray[myObjArrayIndex]["Obj"].replot();
+        PlotObjArray[myObjArrayIndex]["Obj"].replot(PlotObjArray[myObjArrayIndex]["Obj"].series[0].options);
+        //PlotObjArray[myObjArrayIndex]["Obj"].destroy();
+        //$('#' + myTabName).empty();
+        //GetLineChart(myTabName, m_ChartData, myObjArrayIndex, m_MaxValue);
     }
     GetLineChartLegend(myTabName, m_legendData);
 }
@@ -427,6 +436,7 @@ function GetRunningRateChart(myEquipmentCommonIdList) {
         success: function (msg) {
             var m_MsgData = jQuery.parseJSON(msg.d);
             if (m_MsgData != null && m_MsgData != undefined) {
+
                 GetChartDataTabs("chartTab01_Content", m_MsgData, 2, "运转率");
             }
         }
@@ -555,14 +565,21 @@ function GetPieChart(myObjId, myObjArrayIndex, myData) {
 
 function LoadElectricPercentageData() {
 
+    var m_limestoneMine = parseFloat($('#limestoneMine_ElectricityQuantity_MonthGlobal').text());
     var m_rawMaterialsHomogenize = parseFloat($('#rawMaterialsHomogenize_ElectricityQuantity_MonthGlobal').text());
     var m_rawMaterialsGrind = parseFloat($('#rawMaterialsGrind_ElectricityQuantity_MonthGlobal').text());
     var m_coalPreparation = parseFloat($('#coalPreparation_ElectricityQuantity_MonthGlobal').text());
     var m_clinkerBurning = parseFloat($('#clinkerBurning_ElectricityQuantity_MonthGlobal').text());
+    var m_kilnSystem = parseFloat($('#kilnSystem_ElectricityQuantity_MonthGlobal').text());
+    var m_hybridMaterialsPreparation = parseFloat($('#hybridMaterialsPreparation_ElectricityQuantity_MonthGlobal').text());
+    var m_clinkerTransport = parseFloat($('#clinkerTransport_ElectricityQuantity_MonthGlobal').text());
     var m_cementGrind = parseFloat($('#cementGrind_ElectricityQuantity_MonthGlobal').text());
     var m_cementPacking = parseFloat($('#cementPacking_ElectricityQuantity_MonthGlobal').text());
-    var m_ElectricPercentageData = [['原料调配', m_rawMaterialsHomogenize], ['生料粉磨', m_rawMaterialsGrind], ['煤粉制备', m_coalPreparation],   //设置数据名称和值
-                                    ['熟料烧成', m_clinkerBurning], ['水泥粉磨', m_cementGrind], ['水泥包装', m_cementPacking]];
+    var m_auxiliaryProduction = parseFloat($('#auxiliaryProduction_ElectricityQuantity_MonthGlobal').text());
+
+    var m_ElectricPercentageData = [['矿山', m_limestoneMine], ['原料调配', m_rawMaterialsHomogenize], ['生料粉磨', m_rawMaterialsGrind], ['煤粉制备', m_coalPreparation],   //设置数据名称和值
+                                    ['熟料烧成', m_clinkerBurning], ['废气处理', m_kilnSystem], ['混合材制备', m_hybridMaterialsPreparation],
+                                    ['熟料储送', m_clinkerTransport], ['水泥粉磨', m_cementGrind], ['水泥包装', m_cementPacking], ['辅助用电', m_auxiliaryProduction]];
     if (PlotObjArray[0]["FirstLoadFlag"] == true) {
         GetPieChart("piechart_ElectricPercentage", 0, m_ElectricPercentageData);
         PlotObjArray[0]["FirstLoadFlag"] = false;
@@ -1148,11 +1165,12 @@ function RefreshFactoryOrganiztion(myOrganizationId) {
     if (myOrganizationId != "" && myOrganizationId != undefined) {
         FactoryOrganizationId = $('#Select_SelectStation').combobox('getValue');
 
-        GetElectricityQuantityData("rawMaterialsHomogenize,rawMaterialsGrind,coalPreparation,clinkerBurning,cementGrind", "熟料,水泥磨", "ElectricPercentageChart");
-        GetElectricityQuantityData("auxiliaryProduction,cementPacking", "分厂", "ElectricPercentageChart");
+        GetElectricityQuantityData("rawMaterialsHomogenize,rawMaterialsGrind,coalPreparation,clinkerBurning,kilnSystem,hybridMaterialsPreparation,clinkerTransport,cementGrind", "熟料,水泥磨", "ElectricPercentageChart");
+        GetElectricityQuantityData("limestoneMine,auxiliaryProduction,cementPacking", "分厂", "ElectricPercentageChart");
         GetElectricityQuantityData("clinkerElectricityGeneration,electricityOutput,electricityOwnDemand", "余热发电");
         GetElectricityConsumptionData("clinkerElectricityGeneration", "clinker_ClinkerOutput", "熟料");       //余热发电吨熟料发电量
-        GetElectricityConsumptionData("rawMaterialsHomogenize,rawMaterialsGrind,coalPreparation,clinkerBurning,cementGrind,cementPacking", "clinker_MixtureMaterialsOutput,clinker_MixtureMaterialsOutput,clinker_PulverizedCoalOutput,clinker_ClinkerOutput,cement_CementOutput,cement_CementOutput", "熟料,水泥磨");
+        GetElectricityConsumptionData("rawMaterialsHomogenize,rawMaterialsGrind,coalPreparation,clinkerBurning,kilnSystem,hybridMaterialsPreparation,clinkerTransport,cementGrind,limestoneMine,auxiliaryProduction,cementPacking",
+                                      "clinker_MixtureMaterialsOutput,clinker_MixtureMaterialsOutput,clinker_PulverizedCoalOutput,clinker_ClinkerOutput,clinker_ClinkerOutput,cement_CementOutput,cement_CementOutput,cement_CementOutput,clinker_MixtureMaterialsOutput,cement_CementOutput,cement_CementOutput", "熟料,水泥磨");
         GetElectricityConsumptionCData();      //计算综合电耗
         GetMaterialWeightData("clinker_ClinkerOutput,cement_CementOutput,clinker_LimestoneOutput,clinker_PulverizedCoalOutput,clinker_MixtureMaterialsOutput,clinker_LimestoneInput,clinker_MixtureMaterialsInput,clinker_PulverizedCoalInput,clinker_ClinkerInput", "熟料,水泥磨");
 

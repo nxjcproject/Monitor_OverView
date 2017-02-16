@@ -58,7 +58,6 @@ ul, li, div {
     padding-bottom: 5px;
     text-align: left;
     vertical-align: top;
-    padding-bottom: 5px;
 }
 
 .MiddleTableTd {
@@ -66,7 +65,6 @@ ul, li, div {
     padding-bottom: 5px;
     text-align: left;
     vertical-align: top;
-    padding-bottom: 5px;
 }
 /*左边和中间能源标题*/
 .LeftMiddleZoneTitleText {
@@ -84,15 +82,18 @@ ul, li, div {
 }
 
 .LeftMiddleZoneTitleLine {
-    width: 354px;
-    color: #1e64eb;
-    font-size: 8pt;
-    font-family: serif;
+    width: 352px;
     text-align: right;
+    vertical-align: middle;
+    color: #1e64eb;
+    font-size: 12pt;
+    font-family: serif;
     font-weight: bold;
     border-bottom: 2px solid #1e64eb;
 }
-
+.ExtendPageDetail {
+            font-size: 10pt;
+}
 .ExtendPageDetail:hover {
     cursor: pointer;
     color: #cc0000;
@@ -104,12 +105,13 @@ ul, li, div {
 
 .DataChartContent {
     width: 400px;
-    height: 177px;
+    height: 230px;
     background-color: #ffffff;
-    margin-top:15px;
-    font-size:9pt; 
-    color:black;
+    margin-top: 15px;
+    font-size: 9pt;
+    color: black;
 }
+
 .DataChartLegend {
     width: 400px;
     height: 24px;
@@ -124,7 +126,7 @@ ul, li, div {
 /*左边能源部分*/
 .ElectricFirstTableTitleTd {
     width: 67px;
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: #cc0000;
@@ -134,7 +136,7 @@ ul, li, div {
 
 .ElectricTableTitleTd {
     width: 70px;
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -144,7 +146,7 @@ ul, li, div {
 
 .ElectricPercentageTitleTd {
     width: 207px;
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -154,7 +156,7 @@ ul, li, div {
 
 .ElectricPercentageColumnTd {
     width: 207px;
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -171,7 +173,7 @@ ul, li, div {
 }
 
 .ElectricTableColumnTd {
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -181,7 +183,7 @@ ul, li, div {
 }
 
 .ElectricTableForcusColumnTd {
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -196,7 +198,7 @@ ul, li, div {
     }
 
 .ElectricTableTd {
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -205,7 +207,7 @@ ul, li, div {
 }
 
 .ElectricTableForcusTd {
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -220,7 +222,7 @@ ul, li, div {
     }
 
 .ElectricTableLastRowTd {
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -230,7 +232,7 @@ ul, li, div {
 }
 
 .ElectricTableLastRowForcusTd {
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -246,7 +248,7 @@ ul, li, div {
     }
 
 .ElectricTableLastRowFirstColumnTd {
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -256,7 +258,7 @@ ul, li, div {
 }
 
 .ElectricTableLastRowForcusColumnTd {
-    height: 20px;
+    height: 26px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -363,7 +365,7 @@ ul, li, div {
 /*中间部分*/
 .MaterialWeightFirstTitleRowTd {
     width: 64px;
-    height: 25px;
+    height: 27px;
     font-size: 9pt;
     font-family: SimSun;
     color: #cc0000;
@@ -373,7 +375,7 @@ ul, li, div {
 
 .MaterialWeightTitleRowTd {
     width: 70px;
-    height: 25px;
+    height: 27px;
     font-size: 9pt;
     font-family: SimSun;
     color: #cc0000;
@@ -383,7 +385,7 @@ ul, li, div {
 
 .MaterialWeightTitleRowForcusTd {
     width: 70px;
-    height: 25px;
+    height: 27px;
     font-size: 9pt;
     font-family: SimSun;
     color: #cc0000;
@@ -398,7 +400,7 @@ ul, li, div {
     }
 
 .MaterialWeightFristRowTd {
-    height: 25px;
+    height: 27px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -407,7 +409,7 @@ ul, li, div {
 }
 
 .MaterialWeightForcusRowTd {
-    height: 25px;
+    height: 27px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -422,7 +424,7 @@ ul, li, div {
     }
 
 .MaterialWeightFristLastRowTd {
-    height: 25px;
+    height: 27px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -432,7 +434,7 @@ ul, li, div {
 }
 
 .MaterialWeightForcusLastRowTd {
-    height: 25px;
+    height: 27px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -448,7 +450,7 @@ ul, li, div {
     }
 
 .MaterialWeightRowTd {
-    height: 25px;
+    height: 27px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -457,7 +459,7 @@ ul, li, div {
 }
 
 .MaterialWeightLastRowTd {
-    height: 25px;
+    height: 27px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -523,7 +525,7 @@ ul, li, div {
 /*右边部分*/
 .RightSelectStationTd {
     width: 255px;
-    height: 24px;
+    height: 25px;
     text-align: left;
     vertical-align: bottom;
 }

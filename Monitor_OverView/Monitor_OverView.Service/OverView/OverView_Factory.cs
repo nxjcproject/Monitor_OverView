@@ -203,12 +203,14 @@ namespace Monitor_OverView.Service.OverView
         }
         public static string GetMaterialWeightDetail(string myVariableId, string myOrganizationId, string myOrganizationType, string myStartTime, string myEndTime, ref DataTable myDataTable)
         {
-            string m_Sql = @"Select M.OrganizationID, W.Name + Z.Name as MaterialName, M.VariableId, M.Value as DayMaterialWeight, N.Value as MonthMaterialWeight from 
+            string m_Type = "";
+            string m_OrganizationID = "'" + myOrganizationId + "' as OrganizationID";
+            string m_Sql = @"Select {5}, W.Name + Z.Name as MaterialName, M.VariableId, M.Value as DayMaterialWeight, N.Value as MonthMaterialWeight from 
                                 (SELECT C.OrganizationID, B.VariableId, sum(B.TotalPeakValleyFlatB) as Value
                                   FROM tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
                                   where D.OrganizationID = '{1}'
                                     and C.LevelCode like D.LevelCode + '%'
-                                    and C.Type = '{2}'
+                                    {2}
                                     and A.StaticsCycle = 'day'
 	                                and A.OrganizationID = D.OrganizationID
 	                                and B.OrganizationID in (C.OrganizationID)
@@ -221,7 +223,7 @@ namespace Monitor_OverView.Service.OverView
                                   FROM tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
                                   where D.OrganizationID = '{1}'
                                     and C.LevelCode like D.LevelCode + '%'
-                                    and C.Type = '{2}'
+                                    {2}
                                     and A.StaticsCycle = 'day'
 	                                and A.OrganizationID = D.OrganizationID
 	                                and B.OrganizationID in (C.OrganizationID)
@@ -238,7 +240,12 @@ namespace Monitor_OverView.Service.OverView
                                 and W.State = 0
                                 and W.ENABLE = 1
                                 and M.VariableId = Z.VariableId";
-            m_Sql = string.Format(m_Sql, myVariableId, myOrganizationId, myOrganizationType, myStartTime, myEndTime);
+            if (myOrganizationType != "分厂")
+            {
+                m_Type = string.Format(" and  C.Type = '{0}'", myOrganizationType);
+                m_OrganizationID = "M.OrganizationID";
+            }
+            m_Sql = string.Format(m_Sql, myVariableId, myOrganizationId, m_Type, myStartTime, myEndTime, m_OrganizationID);
             try
             {
                 myDataTable = _dataFactory.Query(m_Sql);

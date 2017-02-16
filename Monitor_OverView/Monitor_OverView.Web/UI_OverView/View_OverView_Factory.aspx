@@ -41,7 +41,7 @@
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.dateAxisRenderer.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pointLabels.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.enhancedLegendRenderer.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasOverlay.min.js"></script> 
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasOverlay.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.cursor.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.highlighter.min.js"></script>
     <!--[if lt IE 8 ]><script type="text/javascript" src="/lib/pllib/plugins/jqplot.json2.min"></script><![endif]-->
@@ -77,7 +77,7 @@
                                             <div id="chartTab01_Legend" class="DataChartLegend">
                                             </div>
                                         </div>
-                                        <div title="故障率" >
+                                        <div title="故障率">
                                             <div id="chartTab02_Content" class="DataChartContent">
                                             </div>
                                             <div id="chartTab02_Legend" class="DataChartLegend">
@@ -90,7 +90,7 @@
                                             </div>
                                         </div>
                                         <div title="分步电耗">
-                                            <div id= "chartTab04_Content" class="DataChartContent">
+                                            <div id="chartTab04_Content" class="DataChartContent">
                                             </div>
                                             <div id="chartTab04_Legend" class="DataChartLegend">
                                             </div>
@@ -99,43 +99,12 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td id="EnergyZoneTitle" class="LeftTableTd">
-                                    <table>
-                                        <tr>
-                                            <td class="LeftMiddleZoneTitleText">能源
-                                            </td>
-                                            <td class="LeftMiddleZoneTitleLine"><span class ="ExtendPageDetail" onclick ="GetQuickMenuDetail('Energy');">More>>&nbsp;&nbsp;</span></td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="EnergyQuantityInfoTd" class="LeftTableTd"></td>
-                            </tr>
-                            <tr>
-                                <td id="EnergyConsumptionInfoTd" class="LeftTableTd"></td>
-                            </tr>
-                            <tr>
-                                <td id="EnergyConsumptionComprehensiveInfoTd" class="LeftTableTd"></td>
-                            </tr>
-                            <tr>
-                                <td id="CogenerationInfoTd" class="LeftTableTd"></td>
-                            </tr>
-                            <tr>
-                                <td id="EnergyAlarmTd" class="LeftTableTd"></td>
-                            </tr>
-
-                        </table>
-                    </td>
-                    <td class="MainTableMiddle">
-                        <table>
-                            <tr>
                                 <td class="LeftTableTd">
                                     <table>
                                         <tr>
                                             <td class="LeftMiddleZoneTitleText">生产
                                             </td>
-                                            <td class="LeftMiddleZoneTitleLine"><span class ="ExtendPageDetail" onclick ="GetQuickMenuDetail('Production');">More>>&nbsp;&nbsp;</span></td>
+                                            <td class="LeftMiddleZoneTitleLine"><span class="ExtendPageDetail" onclick="GetQuickMenuDetail('Production');">More>>&nbsp;&nbsp;</span></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -146,42 +115,81 @@
                             <tr>
                                 <td id="MaterialStorageTd" class="LeftTableTd"></td>
                             </tr>
-                            <tr>
-                                <td class="LeftTableTd">
+                             <tr>
+                                <td id="Td1" class="MiddleTableTd">
                                     <table>
                                         <tr>
                                             <td class="LeftMiddleZoneTitleText">设备
                                             </td>
-                                            <td class="LeftMiddleZoneTitleLine"><span class ="ExtendPageDetail" onclick ="GetQuickMenuDetail('Equipment');">More>>&nbsp;&nbsp;</span></td>
+                                            <td class="LeftMiddleZoneTitleLine"><span class="ExtendPageDetail" onclick="GetQuickMenuDetail('Equipment');">More>>&nbsp;&nbsp;</span></td>
                                         </tr>
                                     </table>
                                 </td>
                             </tr>
                             <tr>
-                                <td id="EquipmentRunIndicatorsTd" class="LeftTableTd"></td>
+                                <td id="EquipmentRunIndicatorsTd" class="MiddleTableTd"></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="MainTableMiddle">
+                        <table>
+                            <tr>
+                                <td id="EnergyZoneTitle" class="MiddleTableTd">
+                                    <table>
+                                        <tr>
+                                            <td class="LeftMiddleZoneTitleText">能源
+                                            </td>
+                                            <td class="LeftMiddleZoneTitleLine"><span class="ExtendPageDetail" onclick="GetQuickMenuDetail('Energy');">More>>&nbsp;&nbsp;</span></td>
+                                        </tr>
+                                    </table>
+                                </td>
                             </tr>
                             <tr>
-                                <td id="MachineHaltRecordTd" class="LeftTableTd"></td>
+                                <td id="EnergyQuantityInfoTd" class="MiddleTableTd"></td>
                             </tr>
+                            <tr>
+                                <td id="EnergyConsumptionInfoTd" class="MiddleTableTd"></td>
+                            </tr>
+                            <tr>
+                                <td id="EnergyConsumptionComprehensiveInfoTd" class="MiddleTableTd"></td>
+                            </tr>
+                            <tr>
+                                <td id="CogenerationInfoTd" class="MiddleTableTd"></td>
+                            </tr>
+                            <tr>
+                                <td id="EnergyAlarmTd" class="MiddleTableTd"></td>
+                            </tr>
+                            <tr>
+                                <td id="EquipmentZoneTitle" class="MiddleTableTd"">
+                                    <table>
+                                        <tr>
+                                            <td class="LeftMiddleZoneTitleText" >设备</td>
+                                            <td class="LeftMiddleZoneTitleLine"><span class="ExtendPageDetail" onclick="GetQuickMenuDetail('Equipment');">More>>&nbsp;&nbsp;</span></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td id="MachineHaltRecordTd" class="MiddleTableTd"></td>
+                            </tr>
+
                         </table>
                     </td>
                     <td class="MainTableRight">
                         <table>
                             <tr>
-                                <td class="RightSelectStationTd">
-                                    &nbsp;选择生产区域&nbsp;<select id="Select_SelectStation" class="easyui-combobox" name="SelectStation" data-options="panelHeight:'auto', editable:true, valueField: 'OrganizationId',textField: 'Name',onSelect:function(myRecord){RefreshFactoryOrganiztion(myRecord['OrganizationId']);}" style="width: 90px;"></select>
-                                    &nbsp;<a id ="button_BackToGlobalPage" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'ext-icon-application_go',plain:true" onclick="ChangeDisplayStation();">返回</a>
+                                <td class="RightSelectStationTd">&nbsp;选择生产区域&nbsp;<select id="Select_SelectStation" class="easyui-combobox" name="SelectStation" data-options="panelHeight:'auto', editable:true, valueField: 'OrganizationId',textField: 'Name',onSelect:function(myRecord){RefreshFactoryOrganiztion(myRecord['OrganizationId']);}" style="width: 90px;"></select>
+                                    &nbsp;<a id="button_BackToGlobalPage" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'ext-icon-application_go',plain:true" onclick="ChangeDisplayStation();">返回</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="RightSelectStationTd">
-                                    &nbsp;选择查询时间&nbsp;<input id="dateTime" type="text" class="easyui-datebox" required="required" data-options ="onSelect:function(date){QueryDataFun(date);}" style ="width:90px;"/>
+                                <td class="RightSelectStationTd">&nbsp;选择查询时间&nbsp;<input id="dateTime" type="text" class="easyui-datebox" required="required" data-options="onSelect:function(date){QueryDataFun(date);}" style="width: 90px;" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="RightAccordionTd">
                                     <div class="easyui-accordion" style="width: 250px;">
-                                        <div title="销售信息" data-options="iconCls:'ext-icon-medal_gold_1',selected:true" style="overflow: hidden; height: 170px;">
+                                        <div title="销售信息" data-options="iconCls:'ext-icon-medal_gold_1',selected:true" style="overflow: hidden; height: 175px;">
                                             <table id="datagrid_SaleInfo" class="easyui-datagrid" data-options="fit:true,striped:true, singleSelect:true, border:false">
                                                 <thead>
                                                     <tr>
@@ -189,12 +197,12 @@
                                                         <th data-options="field:'Clinker',width:80">熟料</th>
                                                         <th data-options="field:'Cement',fitColumns:true,width:80">水泥</th>
                                                     </tr>
-                                                </thead>  
+                                                </thead>
                                             </table>
                                         </div>
                                     </div>
                                     <div class="easyui-accordion" style="width: 250px;">
-                                        <div title="停机/能耗报警" data-options="iconCls:'ext-icon-error',selected:true" style="height: 290px;">
+                                        <div title="停机/能耗报警" data-options="iconCls:'ext-icon-error',selected:true" style="height: 300px;">
                                             <table id="datagrid_EquipmentHaltAlarm" class="easyui-datagrid" data-options="fit:true,striped:true, singleSelect:true, border:false">
                                                 <thead>
                                                     <tr>
@@ -208,7 +216,7 @@
                                         </div>
                                     </div>
                                     <div class="easyui-accordion" style="width: 250px;">
-                                        <div title="交接班记录" data-options="iconCls:'ext-icon-note',selected:true" style="height: 237px;">
+                                        <div title="交接班记录" data-options="iconCls:'ext-icon-note',selected:true" style="height: 250px;">
                                             <table id="datagrid_WorkingTeamShiftLogList" class="easyui-datagrid" data-options="fit:true,striped:true, singleSelect:true, border:false, onDblClickRow:function(myRowIndex, myRowData){GetWorkingTeamShiftLogDetail(myRowData);}">
                                                 <thead>
                                                     <tr>
@@ -235,7 +243,7 @@
         <table id="grid_ElectricityQuantityDetail" class="easyui-datagrid" data-options="fit:true, rownumbers: true,striped:true, singleSelect:true, border:false">
             <thead>
                 <tr>
-                    <th data-options="field:'OrganizationID',width:120, hidden: true">组织机构ID</th> 
+                    <th data-options="field:'OrganizationID',width:120, hidden: true">组织机构ID</th>
                     <th data-options="field:'BalanceVariableId',width:120,hidden: true">电耗ID</th>
                     <th data-options="field:'VariableId',width:120,hidden: true">工序ID</th>
                     <th data-options="field:'ProcessName',width:120">工序名称</th>
@@ -307,8 +315,8 @@
     <div id="dlg_RunIndictorsDetail" class="easyui-dialog">
         <table id="grid_RunIndictorsDetail" class="easyui-datagrid" data-options="fit:true, rownumbers: true,striped:true, singleSelect:true, border:false">
             <thead>
-                <tr>    
-                    <th data-options="field:'EquipmentId',width:110, hidden:true">设备名称</th> 
+                <tr>
+                    <th data-options="field:'EquipmentId',width:110, hidden:true">设备名称</th>
                     <th data-options="field:'EquipmentName',width:110">设备名称</th>
                     <th data-options="field:'运转率',width:80">运转率(%)</th>
                     <th data-options="field:'可靠性',width:80">可靠性(%)</th>
@@ -323,8 +331,8 @@
     <div id="dlg_MasterMachineHaltDetail" class="easyui-dialog">
         <table id="grid_MasterMachineHaltDetail" class="easyui-datagrid" data-options="fit:true, rownumbers: true,striped:true, singleSelect:true, border:false">
             <thead>
-                <tr> 
-                    <th data-options="field:'EquipmentId',width:110, hidden:true">设备ID</th>    
+                <tr>
+                    <th data-options="field:'EquipmentId',width:110, hidden:true">设备ID</th>
                     <th data-options="field:'EquipmentName',width:110">设备名称</th>
                     <th data-options="field:'DowntimeCount',width:60">总次数</th>
                     <th data-options="field:'ProcessDowntimeCount',width:60">工艺故障</th>
@@ -342,33 +350,30 @@
     </div>
     <!--交接班日志-->
     <div id="dlg_WorkingTeamShiftLogDetail" class="easyui-dialog">
-        <table class ="WorkingTeamShiftLogDetailTable">
-             <tr>
-                 <td class ="WorkingTeamShiftNameTd">
-                     &nbsp;&nbsp;班组&nbsp;
-                     <input id="input_WorkingTeamShiftName" class="easyui-textbox" data-options="readonly:true"  />
-                 </td>
-                 <td class ="WorkingTeamShiftMonitorTd">
-                     班长&nbsp;
-                     <input id="input_WorkingTeamShiftMonitor" class="easyui-textbox"  data-options="readonly:true" />
-                 </td>
-                 <td class ="WorkingTeamShiftUpdateTimeTd">
-                     提交时间&nbsp;
-                     <input id="input_WorkingTeamShiftUpdateTime" class="easyui-textbox"  data-options="readonly:true" />
-                 </td>
-             </tr>
+        <table class="WorkingTeamShiftLogDetailTable">
             <tr>
-                 <td colspan="3" class ="WorkingTeamShiftLogTd">
-                     <textarea id="TextArea_WorkingTeamShiftLog" cols="20" name="S1" rows="6"  readonly="readonly" ></textarea>
-                 </td>
-             </tr>
+                <td class="WorkingTeamShiftNameTd">&nbsp;&nbsp;班组&nbsp;
+                     <input id="input_WorkingTeamShiftName" class="easyui-textbox" data-options="readonly:true" />
+                </td>
+                <td class="WorkingTeamShiftMonitorTd">班长&nbsp;
+                     <input id="input_WorkingTeamShiftMonitor" class="easyui-textbox" data-options="readonly:true" />
+                </td>
+                <td class="WorkingTeamShiftUpdateTimeTd">提交时间&nbsp;
+                     <input id="input_WorkingTeamShiftUpdateTime" class="easyui-textbox" data-options="readonly:true" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" class="WorkingTeamShiftLogTd">
+                    <textarea id="TextArea_WorkingTeamShiftLog" cols="20" name="S1" rows="6" readonly="readonly"></textarea>
+                </td>
+            </tr>
         </table>
     </div>
     <!--快捷菜单-->
     <div id="dlg_QuickMenuDetail" class="easyui-dialog">
         <table id="grid_QuickMenuDetail" class="easyui-datagrid" data-options="fit:true, rownumbers: true,striped:true, singleSelect:true, border:false, onDblClickRow:function(rowIndex, rowData){AddNewPage(rowIndex, rowData);}">
             <thead>
-                <tr>     
+                <tr>
                     <th data-options="field:'PageId',width:60, hidden:true">页面ID</th>
                     <th data-options="field:'Name',width:150">页面名称</th>
                     <th data-options="field:'Description',width:190">描述</th>

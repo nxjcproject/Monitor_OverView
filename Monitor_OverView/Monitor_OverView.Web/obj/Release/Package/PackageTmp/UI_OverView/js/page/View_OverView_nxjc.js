@@ -139,8 +139,10 @@ function compareDate(d1, d2) {  // 时间比较的方法，如果d1时间比d2�
 }
 //////////////////////////获得后台数据//////////////////////
 function GetRealTimeData(myDate) {
-    var m_TodayDate = new Date();
-    var m_ViladDate = compareDate(DateTimeFormat(m_TodayDate, "yyyy-MM-dd"), DateTimeFormat(myDate, "yyyy-MM-dd"));
+    var m_TomorrowDate = new Date();
+    m_TomorrowDate.setDate(m_TomorrowDate.getDate() + 1);
+    //nowDate.setDate(nowDate.getDate() - 1)
+    var m_ViladDate = compareDate(DateTimeFormat(m_TomorrowDate, "yyyy-MM-dd"), DateTimeFormat(myDate, "yyyy-MM-dd"));
     if (m_ViladDate == true) {
         var SelectedDate = myDate;
         var SelectedDateString = DateTimeFormat(myDate, "yyyy-MM-dd");
