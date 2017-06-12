@@ -24,25 +24,25 @@
     height: 270px;
     text-align: left;
     vertical-align: top;
-    background-color: #f3f6fd;
+    background-color: #eeeeff;
 }
 
 .DataZoneBlankTd {
     width: 20px;
     height: 270px;
-    background-color: #f3f6fd;
+    background-color: #eeeeff;
 }
 
 .BorderBlankTd1 {
     width: 20px;
     height: 15px;
-    background-color: #f3f6fd;
+    background-color: #eeeeff;
 }
 
 .BorderBlankTd2 {
     width: 240px;
     height: 15px;
-    background-color: #f3f6fd;
+    background-color: #eeeeff;
     vertical-align:middle;
 }
 

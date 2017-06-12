@@ -129,66 +129,42 @@ namespace Monitor_OverView.Service.OverView
                                     case when D.MonthPlanValue > 0 then 100 * B.MonthValue / D.MonthPlanValue else D.MonthPlanValue end as MonthCompletionRate,
                                     case when D.YearPlanValue > 0 then 100 * C.YearValue / D.YearPlanValue else D.YearPlanValue end as YearCompletionRate
                                 from
-                                    (Select M.OrganizationID, M.VariableId, sum(M.Value) as YearValue from 
-                                        (SELECT A.BillNO, A.Suttle, D.OrganizationID, B.VariableId, B.VariableSpecs, A.ggxh AS Specs, 
-                                                CASE WHEN [weightdate] > [lightdate] THEN [lightdate] ELSE [weightdate] END AS StartTime, 
-                                                CASE WHEN [weightdate] > [lightdate] THEN [weightdate] ELSE [lightdate] END AS EndTime, 
-                                                CASE WHEN A.[sales_gblx] = 'DE' THEN A.Suttle
-				                                        WHEN A.[sales_gblx] = 'RD' THEN -A.Suttle 
-			                                    ELSE NULL END AS Value
-                                                FROM extern_interface.dbo.WB_WeightNYGL A, dbo.inventory_MaterialContrast B, system_Organization C, system_Organization D
-                                                where A.Material = B.MaterialID
-                                                and A.Type = 3
-                                                and B.VariableId in ({0})
-                                                and A.OrganizationID = C.OrganizationID
-												and D.LevelType = 'Company'
-												and charindex(D.LevelCode, C.LevelCode) > 0) M
-                                        where M.EndTime >= '{7}'
-                                        and M.EndTime < '{8}'
-                                        and M.VariableId in ({0})
-                                    group by M.OrganizationID, M.VariableId) C
+                                    (Select D.OrganizationID, A.ConstrastVariableId as VariableId, sum(CASE WHEN A.sales_gblx = 'DE' THEN A.Value WHEN A.sales_gblx = 'RD' THEN -A.Value end) as YearValue from 
+				                        VWB_WeightNYGL A, system_Organization C, system_Organization D
+                                        where A.StatisticalTime >= '{7}'
+                                        and A.StatisticalTime < '{8}'
+                                        and A.ConstrastVariableId in ({0})
+			                            and A.Type = 3
+                                        and A.OrganizationID = C.OrganizationID
+				                        and D.LevelType = 'Company'
+				                        and charindex(D.LevelCode, C.LevelCode) > 0
+                                    group by D.OrganizationID, A.ConstrastVariableId) C
                                     left join 
                                     (Select P.OrganizationID, substring(N.QuotasID,1, len(N.QuotasID) - 5) as VariableId, N.{9} as MonthPlanValue, N.Totals as YearPlanValue from tz_Plan M, plan_PurchaseSalesYearlyPlan N, system_Organization P, system_Organization Q
                                         where M.Date = '{2}' and M.PlanType = '{10}' and M.KeyID = N.KeyID and N.QuotasID in ({1})
                                         and M.OrganizationID = Q.OrganizationID and P.LevelType = 'Company' and CHARINDEX(P.LevelCode, Q.LevelCode) > 0) D on C.VariableId = D.VariableId and D.OrganizationID = C.OrganizationID
                                     left join 
-                                    (Select M.OrganizationID, M.VariableId, sum(M.Value) as DayValue from 
-                                        (SELECT A.BillNO, A.Suttle, D.OrganizationID, B.VariableId, B.VariableSpecs, A.ggxh AS Specs, 
-                                                CASE WHEN [weightdate] > [lightdate] THEN [lightdate] ELSE [weightdate] END AS StartTime, 
-                                                CASE WHEN [weightdate] > [lightdate] THEN [weightdate] ELSE [lightdate] END AS EndTime, 
-                                                CASE WHEN A.[sales_gblx] = 'DE' THEN A.Suttle
-				                                        WHEN A.[sales_gblx] = 'RD' THEN -A.Suttle 
-			                                    ELSE NULL END AS Value
-                                                FROM extern_interface.dbo.WB_WeightNYGL A, dbo.inventory_MaterialContrast B, system_Organization C, system_Organization D
-                                                where A.Material = B.MaterialID
-                                                and A.Type = 3
-                                                and B.VariableId in ({0})
-                                                and A.OrganizationID = C.OrganizationID
-												and D.LevelType = 'Company'
-												and charindex(D.LevelCode, C.LevelCode) > 0) M
-                                        where M.EndTime >= '{3}'
-                                        and M.EndTime < '{4}'
-                                        and M.VariableId in ({0})
-                                    group by M.OrganizationID, M.VariableId) A on A.VariableId = C.VariableId and A.OrganizationID = C.OrganizationID
+                                    (Select D.OrganizationID, A.ConstrastVariableId as VariableId, sum(CASE WHEN A.sales_gblx = 'DE' THEN A.Value WHEN A.sales_gblx = 'RD' THEN -A.Value end) as DayValue from 
+				                        VWB_WeightNYGL A, system_Organization C, system_Organization D
+                                        where A.StatisticalTime >= '{3}'
+                                        and A.StatisticalTime < '{4}'
+                                        and A.ConstrastVariableId in ({0})
+			                            and A.Type = 3
+                                        and A.OrganizationID = C.OrganizationID
+				                        and D.LevelType = 'Company'
+				                        and charindex(D.LevelCode, C.LevelCode) > 0
+                                    group by D.OrganizationID, A.ConstrastVariableId) A on A.VariableId = C.VariableId and A.OrganizationID = C.OrganizationID
                                     left join 
-                                   (Select M.OrganizationID, M.VariableId, sum(M.Value) as MonthValue from 
-                                         (SELECT A.BillNO, A.Suttle, D.OrganizationID, B.VariableId, B.VariableSpecs, A.ggxh AS Specs, 
-                                                CASE WHEN [weightdate] > [lightdate] THEN [lightdate] ELSE [weightdate] END AS StartTime, 
-                                                CASE WHEN [weightdate] > [lightdate] THEN [weightdate] ELSE [lightdate] END AS EndTime, 
-                                                CASE WHEN A.[sales_gblx] = 'DE' THEN A.Suttle
-				                                        WHEN A.[sales_gblx] = 'RD' THEN -A.Suttle 
-			                                    ELSE NULL END AS Value
-                                                FROM extern_interface.dbo.WB_WeightNYGL A, dbo.inventory_MaterialContrast B, system_Organization C, system_Organization D
-                                                where A.Material = B.MaterialID
-                                                and A.Type = 3
-                                                and B.VariableId in ({0})
-                                                and A.OrganizationID = C.OrganizationID
-												and D.LevelType = 'Company'
-												and charindex(D.LevelCode, C.LevelCode) > 0) M
-                                        where M.EndTime >= '{5}'
-                                        and M.EndTime < '{6}'
-                                        and M.VariableId in ({0})
-                                    group by M.OrganizationID, M.VariableId) B on B.VariableId = C.VariableId and B.OrganizationID = C.OrganizationID";
+                                   (Select D.OrganizationID, A.ConstrastVariableId as VariableId, sum(CASE WHEN A.sales_gblx = 'DE' THEN A.Value WHEN A.sales_gblx = 'RD' THEN -A.Value end) as MonthValue from 
+				                        VWB_WeightNYGL A, system_Organization C, system_Organization D
+                                        where A.StatisticalTime >= '{5}'
+                                        and A.StatisticalTime < '{6}'
+                                        and A.ConstrastVariableId in ({0})
+			                            and A.Type = 3
+                                        and A.OrganizationID = C.OrganizationID
+				                        and D.LevelType = 'Company'
+				                        and charindex(D.LevelCode, C.LevelCode) > 0
+                                    group by D.OrganizationID, A.ConstrastVariableId) B on B.VariableId = C.VariableId and B.OrganizationID = C.OrganizationID";
                 for (int i = 0; i < m_MaterialIds.Length; i++)
                 {
                     if (i == 0)

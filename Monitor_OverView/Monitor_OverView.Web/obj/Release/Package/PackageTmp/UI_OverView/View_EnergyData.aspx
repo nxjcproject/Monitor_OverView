@@ -23,9 +23,9 @@
     <script type="text/javascript" src="/lib/ealib/easyui-lang-zh_CN.js" charset="utf-8"></script>
 
     <!--[if gt IE 8]><script type="text/javascript" src="/lib/ealib/extend/easyUI.WindowsOverrange.js" charset="utf-8"></script>-->
-    <!--[if !IE]><!-->
+    <!--[if !IE]>
     <script type="text/javascript" src="/lib/ealib/extend/easyUI.WindowsOverrange.js" charset="utf-8"></script>
-    <!--<![endif]-->
+    <![endif]-->
 
     <!--[if lt IE 9]><script type="text/javascript" src="/lib/pllib/excanvas.js"></script><![endif]-->
     <script type="text/javascript" src="/lib/pllib/jquery.jqplot.min.js"></script>

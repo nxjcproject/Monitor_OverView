@@ -158,6 +158,10 @@ function GetServerInfoInsertTable(myServer, myFirstNodeRowIndex, myFirstNodeColu
                 if (myServer["DataComputer"].length == 1) {       //只有一台数采计算机
                     TableRowArray[myFirstNodeRowIndex + 1][m_NodeColumnIndex] = { "NodeName": myServer["DataComputer"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "2", "X": m_NodeColumnIndex, "Y": myFirstNodeRowIndex + 1 };
                 }
+                else if (i == 0 && m_DataComputerNodexColumnIndex == m_NodeColumnIndex)    //如果第一个节点和父节点一样,则用左T型
+                {
+                    TableRowArray[myFirstNodeRowIndex + 1][m_DataComputerNodexColumnIndex] = { "NodeName": myServer["DataComputer"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "7", "X": m_DataComputerNodexColumnIndex, "Y": myFirstNodeRowIndex + 1 };
+                }
                 else if (i == 0) {
                     TableRowArray[myFirstNodeRowIndex + 1][m_DataComputerNodexColumnIndex] = { "NodeName": myServer["DataComputer"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "8", "X": m_DataComputerNodexColumnIndex, "Y": myFirstNodeRowIndex + 1 };
                 }
@@ -290,7 +294,11 @@ function GetSubNodeInfo(mySwitch, myFirstNodeRowIndex, myFirstNodeColumnIndex, m
             if (m_CollectorCount == 1) {      //如果只有一个节点
                 m_NodeArray.push({ "NodeName": mySwitch["Collector"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "2", "X": myParentNodeColumnIndex, "Y": m_CurrentNodeRowIndex });
             }
-            else if (i == 0) { 
+            else if (i == 0 && m_CurrentNodeColumnIndex == myParentNodeColumnIndex)  //如果第一个节点上面就是父节点
+            {
+                m_NodeArray.push({ "NodeName": mySwitch["Collector"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "7", "X": m_CurrentNodeColumnIndex, "Y": m_CurrentNodeRowIndex });
+            }
+            else if (i == 0) {
                 m_NodeArray.push({ "NodeName": mySwitch["Collector"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "8", "X": m_CurrentNodeColumnIndex, "Y": m_CurrentNodeRowIndex });
             }
             else if (m_CurrentNodeColumnIndex == myParentNodeColumnIndex && m_CollectorCount == 2) {
@@ -327,7 +335,11 @@ function GetSubNodeInfo(mySwitch, myFirstNodeRowIndex, myFirstNodeColumnIndex, m
             if (m_SubSwitchCount == 1) {
                 m_NodeArray.push({ "NodeName": mySwitch["Switch"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "2", "X": myParentNodeColumnIndex, "Y": m_CurrentNodeRowIndex });
             }
-            else if (i == 0) {       //如果只有一个节点
+            else if (i == 0 && m_CurrentNodeColumnIndex + m_SwitchNodeOffsetX == myParentNodeColumnIndex)   //如果第一个节点也是父节点所在列
+            {
+                m_NodeArray.push({ "NodeName": mySwitch["Switch"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "7", "X": m_CurrentNodeColumnIndex + m_SwitchNodeOffsetX, "Y": m_CurrentNodeRowIndex });
+            }
+            else if (i == 0) {       //如果是第一个节点
                 m_NodeArray.push({ "NodeName": mySwitch["Switch"][i]["Id"], "NodeType": "Network", "CrossPointStyle": "8", "X": m_CurrentNodeColumnIndex + m_SwitchNodeOffsetX, "Y": m_CurrentNodeRowIndex });
             }
             else if (m_CurrentNodeColumnIndex + m_SwitchNodeOffsetX == myParentNodeColumnIndex && m_SubSwitchCount == 2) {

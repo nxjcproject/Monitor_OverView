@@ -329,8 +329,8 @@ function GetChartDataTabs(myTabName, myData, myObjArrayIndex, myTabTitle) {
         PlotObjArray[myObjArrayIndex]["FirstLoadFlag"] = false;
     }
     else {
-        PlotObjArray[myObjArrayIndex]["Obj"].series[0].data = m_ChartData;
-        PlotObjArray[myObjArrayIndex]["Obj"].replot(PlotObjArray[myObjArrayIndex]["Obj"].series[0].options);
+        PlotObjArray[myObjArrayIndex]["Obj"].data = m_ChartData;
+        PlotObjArray[myObjArrayIndex]["Obj"].replot(PlotObjArray[myObjArrayIndex]["Obj"].options);
         //PlotObjArray[myObjArrayIndex]["Obj"].destroy();
         //$('#' + myTabName).empty();
         //GetLineChart(myTabName, m_ChartData, myObjArrayIndex, m_MaxValue);
@@ -410,7 +410,7 @@ function GetLineChart(myTabName, myData, myObjArrayIndex, myMaxValue) {
         grid: {
             drawGridLines: true, // wether to draw lines across the grid or not.
             gridLineColor: '#cccccc', // 设置整个图标区域网格背景线的颜色
-            background: '#f3f6fd', // 设置整个图表区域的背景色
+            background: '#eeeeff', // 设置整个图表区域的背景色
             borderColor: '#999999', // 设置图表的(最外侧)边框的颜色
             borderWidth: 2.0, //设置图表的（最外侧）边框宽度
             shadow: false, // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
@@ -508,7 +508,7 @@ function GetPieChart(myObjId, myObjArrayIndex, myData) {
           grid: {
               drawBorder: false,
               drawGridlines: false,
-              background: '#f3f6fd',
+              background: '#eeeeff',
               shadow: false
           },
           seriesDefaults: {

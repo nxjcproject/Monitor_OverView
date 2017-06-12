@@ -17,7 +17,7 @@ namespace Monitor_OverView.Web.UI_OverView
             if (!IsPostBack)
             {
 #if DEBUG
-                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx", "zc_nxjc_byc" ,"zc_nxjc_klqc","zc_nxjc_znc","zc_nxjc_tsc"};
+                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx", "zc_nxjc_byc" ,"zc_nxjc_klqc","zc_nxjc_znc","zc_nxjc_tsc", "zc_nxjc_lpsc", "zc_nxjc_ychc"};
                 AddDataValidIdGroup("ProductionOrganization", m_DataValidIdItems);
 
 #endif
@@ -339,39 +339,43 @@ namespace Monitor_OverView.Web.UI_OverView
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
             string m_ReturnValue = "";
-            List<string> m_InventoryDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetInventoryData(myMaterialList, myOrganizationId, m_TodayDateTime);
-            List<string> m_WareHousingValue = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHousingData(myMaterialList, myOrganizationId, m_TodayDateTime);
-            for (int i = 0; i < m_InventoryDataValue.Count; i++)
+            if (myMaterialList != "")
             {
-                if(m_ReturnValue == "")
+                string[] m_MaterialArray = myMaterialList.Split(',');
+                DataTable m_WareHousingContrastTable = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHousingContrast(m_MaterialArray, myOrganizationId);
+                List<string> m_InventoryDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetInventoryData(m_MaterialArray, myOrganizationId, m_WareHousingContrastTable, m_TodayDateTime);
+                List<string> m_WareHousingValue = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHousingData(m_MaterialArray, myOrganizationId, m_WareHousingContrastTable, m_TodayDateTime);
+                for (int i = 0; i < m_InventoryDataValue.Count; i++)
                 {
-                    m_ReturnValue = m_InventoryDataValue[i];
+                    if (m_ReturnValue == "")
+                    {
+                        m_ReturnValue = m_InventoryDataValue[i];
+                    }
+                    else
+                    {
+                        m_ReturnValue = m_ReturnValue + "," + m_InventoryDataValue[i];
+                    }
                 }
-                else
+                for (int i = 0; i < m_WareHousingValue.Count; i++)
                 {
-                    m_ReturnValue = m_ReturnValue + "," + m_InventoryDataValue[i];
+                    if (m_ReturnValue == "")
+                    {
+                        m_ReturnValue = m_WareHousingValue[i];
+                    }
+                    else
+                    {
+                        m_ReturnValue = m_ReturnValue + "," + m_WareHousingValue[i];
+                    }
                 }
-            }
-            for (int i = 0; i < m_WareHousingValue.Count; i++)
-            {
                 if (m_ReturnValue == "")
                 {
-                    m_ReturnValue = m_WareHousingValue[i];
+                    m_ReturnValue = "[]";
                 }
                 else
                 {
-                    m_ReturnValue = m_ReturnValue + "," + m_WareHousingValue[i];
+                    m_ReturnValue = "{" + m_ReturnValue + "}";
                 }
             }
-            if (m_ReturnValue == "")
-            {
-                m_ReturnValue = "[]";
-            }
-            else
-            {
-                m_ReturnValue = "{" + m_ReturnValue + "}";
-            }
-
             return m_ReturnValue;
         }
         [WebMethod]

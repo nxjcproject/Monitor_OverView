@@ -22,9 +22,9 @@
     <script type="text/javascript" src="/lib/ealib/easyui-lang-zh_CN.js" charset="utf-8"></script>
 
     <!--[if gt IE 8]><script type="text/javascript" src="/lib/ealib/extend/easyUI.WindowsOverrange.js" charset="utf-8"></script>-->
-    <!--[if !IE]><!-->
+    <!--[if !IE]>
     <script type="text/javascript" src="/lib/ealib/extend/easyUI.WindowsOverrange.js" charset="utf-8"></script>
-    <!--<![endif]-->
+    <![endif]-->
 
     <!--[if lt IE 9]><script type="text/javascript" src="/lib/pllib/excanvas.js"></script><![endif]-->
     <script type="text/javascript" src="/lib/pllib/jquery.jqplot.min.js"></script>
@@ -306,7 +306,7 @@
                     <th data-options="field:'MaterialName',width:120">物料名称</th>
                     <th data-options="field:'DayMaterialWeight',width:90">昨日</th>
                     <th data-options="field:'MonthMaterialWeight',width:90">本月累计</th>
-                    <%--<th data-options="field:'MonthMaterialPlan',width:90">本月计划</th>--%>
+                    <!--<th data-options="field:'MonthMaterialPlan',width:90">本月计划</th>-->
                 </tr>
             </thead>
         </table>

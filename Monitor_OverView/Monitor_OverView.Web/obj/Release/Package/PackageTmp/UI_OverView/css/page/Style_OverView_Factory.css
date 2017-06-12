@@ -49,7 +49,7 @@ ul, li, div {
 
 .MainTableRight {
     width: 260px;
-    background-color: #f3f6fd;
+    background-color: #eeeeff;
     vertical-align: top;
 }
 
@@ -108,7 +108,7 @@ ul, li, div {
     height: 230px;
     background-color: #ffffff;
     margin-top: 15px;
-    font-size: 9pt;
+    font-size: 7pt;
     color: black;
 }
 
@@ -166,7 +166,7 @@ ul, li, div {
 }
 
 .ElectricPercentageTd {
-    background-color: #f3f6fd;
+    background-color: #eeeeff;
     border-left: 1px dashed #cccccc;
     border-right: 1px dashed #cccccc;
     border-bottom: 1px solid #cccccc;
@@ -192,7 +192,7 @@ ul, li, div {
 }
 
     .ElectricTableForcusColumnTd:hover {
-        background-color: #f3f6fd;
+        background-color: #eeeeff;
         cursor: pointer;
         color: #cc0000;
     }
@@ -216,7 +216,7 @@ ul, li, div {
 }
 
     .ElectricTableForcusTd:hover {
-        background-color: #f3f6fd;
+        background-color: #eeeeff;
         cursor: pointer;
         color: #cc0000;
     }
@@ -242,7 +242,7 @@ ul, li, div {
 }
 
     .ElectricTableLastRowForcusTd:hover {
-        background-color: #f3f6fd;
+        background-color: #eeeeff;
         cursor: pointer;
         color: #cc0000;
     }
@@ -268,7 +268,7 @@ ul, li, div {
 }
 
     .ElectricTableLastRowForcusColumnTd:hover {
-        background-color: #f3f6fd;
+        background-color: #eeeeff;
         cursor: pointer;
         color: #cc0000;
     }
@@ -322,7 +322,7 @@ ul, li, div {
 }
 
     .ElectricComprehensiveTableForcusTd:hover {
-        background-color: #f3f6fd;
+        background-color: #eeeeff;
         cursor: pointer;
         color: #cc0000;
     }
@@ -348,7 +348,7 @@ ul, li, div {
 }
 
     .ElectricComprehensiveTableLastRowForcusTd:hover {
-        background-color: #f3f6fd;
+        background-color: #eeeeff;
         cursor: pointer;
         color: #cc0000;
     }
@@ -394,7 +394,7 @@ ul, li, div {
 }
 
     .MaterialWeightTitleRowForcusTd:hover {
-        background-color: #f3f6fd;
+        background-color: #eeeeff;
         cursor: pointer;
         color: #cc0000;
     }
@@ -418,7 +418,7 @@ ul, li, div {
 }
 
     .MaterialWeightForcusRowTd:hover {
-        background-color: #f3f6fd;
+        background-color: #eeeeff;
         cursor: pointer;
         color: #cc0000;
     }
@@ -444,7 +444,7 @@ ul, li, div {
 }
 
     .MaterialWeightForcusLastRowTd:hover {
-        background-color: #f3f6fd;
+        background-color: #eeeeff;
         cursor: pointer;
         color: #cc0000;
     }
@@ -492,7 +492,7 @@ ul, li, div {
     vertical-align: middle;
     border-top: 1px solid #cccccc;
     border-bottom: 1px solid #cccccc;
-    background-color: #f3f6fd;
+    background-color: #eeeeff;
 }
 
 .MachineHaltStatisticalRangeRowTd2 {
@@ -505,7 +505,7 @@ ul, li, div {
     vertical-align: middle;
     border-top: 1px solid #cccccc;
     border-bottom: 1px solid #cccccc;
-    background-color: #f3f6fd;
+    background-color: #eeeeff;
 }
 
 .MachineHaltStatisticalRangeRowRightTd {
@@ -519,7 +519,7 @@ ul, li, div {
     border-right: 1px solid #cccccc;
     border-top: 1px solid #cccccc;
     border-bottom: 1px solid #cccccc;
-    background-color: #f3f6fd;
+    background-color: #eeeeff;
 }
 
 /*右边部分*/

@@ -149,7 +149,7 @@ function GetEnergyQuantityHtml(myRootDomId) {
     var m_EnergyQuantity = '<table>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricFirstTableTitleTd">工序电量</td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricPercentageTitleTd"  colspan = "3">单位(kWh)</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricPercentageColumnTd"  colspan = "3">工序用电比例(月)</td></tr>';
-    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'limestoneMine\',\'分厂\',\'工序电量\');">矿山</td><td id = "limestoneMine_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "limestoneMine_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricPercentageTd" rowspan = "7" colspan = "3"><div id = "piechart_ElectricPercentage" style ="width:207px; height:140px; padding:0px; margin:0px;font-size:8pt; color:black;"></div></td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'limestoneMine\',\'分厂\',\'工序电量\');">矿山</td><td id = "limestoneMine_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "limestoneMine_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricPercentageTd" rowspan = "7" colspan = "3"><div id = "piechart_ElectricPercentage" style ="width:207px; height:140px; padding:0px; margin:0px;font-size:8pt; color:black; line-height:3px;"></div></td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'rawMaterialsHomogenize\',\'熟料\',\'工序电量\');">原料调配</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'rawMaterialsGrind\',\'熟料\',\'工序电量\');">生料粉磨</td><td id = "rawMaterialsGrind_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsGrind_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'coalPreparation\',\'熟料\',\'工序电量\');">煤粉制备</td><td id = "coalPreparation_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "coalPreparation_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
@@ -329,8 +329,8 @@ function GetChartDataTabs(myTabName, myData, myObjArrayIndex, myTabTitle) {
         PlotObjArray[myObjArrayIndex]["FirstLoadFlag"] = false;
     }
     else {
-        PlotObjArray[myObjArrayIndex]["Obj"].series[0].data = m_ChartData;
-        PlotObjArray[myObjArrayIndex]["Obj"].replot(PlotObjArray[myObjArrayIndex]["Obj"].series[0].options);
+        PlotObjArray[myObjArrayIndex]["Obj"].data = m_ChartData;
+        PlotObjArray[myObjArrayIndex]["Obj"].replot(PlotObjArray[myObjArrayIndex]["Obj"].options);
         //PlotObjArray[myObjArrayIndex]["Obj"].destroy();
         //$('#' + myTabName).empty();
         //GetLineChart(myTabName, m_ChartData, myObjArrayIndex, m_MaxValue);
@@ -410,7 +410,7 @@ function GetLineChart(myTabName, myData, myObjArrayIndex, myMaxValue) {
         grid: {
             drawGridLines: true, // wether to draw lines across the grid or not.
             gridLineColor: '#cccccc', // 设置整个图标区域网格背景线的颜色
-            background: '#f3f6fd', // 设置整个图表区域的背景色
+            background: '#eeeeff', // 设置整个图表区域的背景色
             borderColor: '#999999', // 设置图表的(最外侧)边框的颜色
             borderWidth: 2.0, //设置图表的（最外侧）边框宽度
             shadow: false, // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
@@ -508,7 +508,7 @@ function GetPieChart(myObjId, myObjArrayIndex, myData) {
           grid: {
               drawBorder: false,
               drawGridlines: false,
-              background: '#f3f6fd',
+              background: '#eeeeff',
               shadow: false
           },
           seriesDefaults: {
