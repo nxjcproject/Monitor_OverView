@@ -5,6 +5,9 @@ var MaxFullDisplayHeight = 600;
 var FactoryOrganizationId = "";
 var RuntimeRefreshInterval = 10000;
 
+var CurrentPreLoadComponents = 0;        //当前已经动态加载了几个
+var MaxPreLoadComponents = 1;            //提前动态加载的组件数量
+
 var ElectricPercentageLoadCount;  //用电比例数据加载完成计数(某些数据是两次或者三次回调才生成)
 var PlotObjArray = [{"Obj":[],"FirstLoadFlag":true},{"Obj":[],"FirstLoadFlag":true},{"Obj":[],"FirstLoadFlag":true}
                    , { "Obj": [], "FirstLoadFlag": true }, { "Obj": [], "FirstLoadFlag": true }, { "Obj": [], "FirstLoadFlag": true }];   //1、能源比例;2、故障停机比例;3、运转率;4、故障率;5、可靠性;6、分步电耗
@@ -58,10 +61,17 @@ $(document).ready(function () {
     loadQuickMenuDetailDialog();                    //初始化快捷菜单
 
     //GetRealTimeData();
-    ////////////////当前页面所处生产区域///////////////
-    GetDisplayFactoryOragization();
+
 
 });
+function AddLoadComponentFlag() {                           //增加一个组件标志
+    CurrentPreLoadComponents = CurrentPreLoadComponents + 1;
+    if (CurrentPreLoadComponents == MaxPreLoadComponents) {
+        ////////////////当前页面所处生产区域///////////////
+        GetDisplayFactoryOragization();
+    }
+
+}
 //////////////////时间选项///////////////////
 function InitializationDateTime() {
     var nowDate = new Date();
@@ -148,7 +158,7 @@ function ChangeDisplayStation() {
 function GetEnergyQuantityHtml(myRootDomId) {
     var m_EnergyQuantity = '<table>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricFirstTableTitleTd">工序电量</td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricPercentageTitleTd"  colspan = "3">单位(kWh)</td></tr>';
-    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricPercentageColumnTd"  colspan = "3">工序用电比例(月)</td></tr>';
+    m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">当日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricPercentageColumnTd"  colspan = "3">工序用电比例(月)</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'limestoneMine\',\'分厂\',\'工序电量\');">矿山</td><td id = "limestoneMine_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "limestoneMine_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricPercentageTd" rowspan = "7" colspan = "3"><div id = "piechart_ElectricPercentage" style ="width:207px; height:140px; padding:0px; margin:0px;font-size:8pt; color:black; line-height:3px;"></div></td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'rawMaterialsHomogenize\',\'熟料\',\'工序电量\');">原料调配</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsHomogenize_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyQuantity = m_EnergyQuantity + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'rawMaterialsGrind\',\'熟料\',\'工序电量\');">生料粉磨</td><td id = "rawMaterialsGrind_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsGrind_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
@@ -167,7 +177,7 @@ function GetEnergyQuantityHtml(myRootDomId) {
 function GetEnergyConsumptionHtml(myRootDomId) {
     var m_EnergyConsumption = '<table>';
     m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricFirstTableTitleTd">工序电耗</td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricFirstTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd">单位(kWh/t)</td></tr>';
-    m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td></tr>';
+    m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">当日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricTableColumnTd">工序名称</td><td class = "ElectricTableColumnTd">当日</td><td class = "ElectricTableColumnTd">月累计</td></tr>';
     m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'limestoneMine\',\'clinker_MixtureMaterialsOutput\',\'分厂\',\'工序电耗\');">矿山</td><td id = "limestoneMine_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "limestoneMine_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'rawMaterialsHomogenize\',\'clinker_MixtureMaterialsOutput\',\'熟料\',\'工序电耗\');">原料调配</td><td id = "rawMaterialsHomogenize_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsHomogenize_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'rawMaterialsGrind\',\'clinker_MixtureMaterialsOutput\',\'熟料\',\'工序电耗\');">生料粉磨</td><td id = "rawMaterialsGrind_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "rawMaterialsGrind_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'coalPreparation\',\'clinker_PulverizedCoalOutput\',\'熟料\',\'工序电耗\');">煤粉制备</td><td id = "coalPreparation_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "coalPreparation_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_EnergyConsumption = m_EnergyConsumption + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'clinkerBurning\',\'clinker_ClinkerOutput\',\'熟料\',\'工序电耗\');">熟料烧成</td><td id = "clinkerBurning_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "clinkerBurning_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td><td  class = "ElectricTableForcusColumnTd" onclick ="GetElectricityConsumptionDetail(this,\'kilnSystem\',\'clinker_ClinkerOutput\',\'熟料\',\'工序电耗\');">废气处理</td><td id = "kilnSystem_ElectricityConsumption_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "kilnSystem_ElectricityConsumption_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
@@ -188,7 +198,7 @@ function GetEnergyConsumptionComprehensiveHtml(myRootDomId) {
 function GetCogenerationHtml(myRootDomId) {
     var m_Cogeneration = '<table>';
     m_Cogeneration = m_Cogeneration + '<tr><td class = "ElectricFirstTableTitleTd">余热发电</td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricFirstTableTitleTd"></td><td class = "ElectricTableTitleTd"></td><td class = "ElectricTableTitleTd">单位(kWh)</td></tr>';
-    m_Cogeneration = m_Cogeneration + '<tr><td class = "ElectricTableColumnTd">名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricTableColumnTd">名称</td><td class = "ElectricTableColumnTd">昨日</td><td class = "ElectricTableColumnTd">月累计</td></tr>';
+    m_Cogeneration = m_Cogeneration + '<tr><td class = "ElectricTableColumnTd">名称</td><td class = "ElectricTableColumnTd">当日</td><td class = "ElectricTableColumnTd">月累计</td><td class = "ElectricTableColumnTd">名称</td><td class = "ElectricTableColumnTd">当日</td><td class = "ElectricTableColumnTd">月累计</td></tr>';
     m_Cogeneration = m_Cogeneration + '<tr><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'clinkerElectricityGeneration\',\'余热发电\',\'\');">发电量</td><td id = "clinkerElectricityGeneration_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "clinkerElectricityGeneration_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td><td class = "ElectricTableForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'electricityOutput\',\'余热发电\',\'\');">上网电量</td><td id = "electricityOutput_ElectricityQuantity_DayGlobal" class = "ElectricTableTd">0.00</td><td id = "electricityOutput_ElectricityQuantity_MonthGlobal" class = "ElectricTableTd">0.00</td></tr>';
     m_Cogeneration = m_Cogeneration + '<tr><td class = "ElectricTableLastRowForcusColumnTd" onclick ="GetElectricityQuantityDetail(this,\'electricityOwnDemand\',\'余热发电\',\'\');">自用电量</td><td id = "electricityOwnDemand_ElectricityQuantity_DayGlobal" class = "ElectricTableLastRowTd">0.00</td><td id = "electricityOwnDemand_ElectricityQuantity_MonthGlobal" class = "ElectricTableLastRowTd">0.00</td><td class = "ElectricTableLastRowForcusColumnTd" onclick ="GetElectricityConsumptionDetailYR(this,\'clinkerElectricityGeneration\',\'clinker_ClinkerOutput\',\'余热发电\',\'吨熟料发电量\');">吨熟料发电</td><td id = "clinkerElectricityGeneration_ElectricityConsumption_DayGlobal" class = "ElectricTableLastRowTd">0.00</td><td id = "clinkerElectricityGeneration_ElectricityConsumption_MonthGlobal" class = "ElectricTableLastRowTd">0.00</td></tr>';
     m_Cogeneration = m_Cogeneration + '</table>';
@@ -198,28 +208,41 @@ function GetCogenerationHtml(myRootDomId) {
 //////////////////////中间区域/////////////////////
 function GetMaterialWeightHtml(myRootDomId) {
     var m_MaterialWeight = '<table>';
-    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFirstTitleRowTd">总产量(t)</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_ClinkerOutput\',\'Output\',\'熟料\');">熟料</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'cement_CementOutput\',\'Output\',\'水泥磨\');">水泥</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_LimestoneOutput\',\'Output\',\'熟料\');">石灰石</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_PulverizedCoalOutput\',\'Output\',\'熟料\');">煤粉</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_MixtureMaterialsOutput\',\'Output\',\'熟料\');">生料</td></tr>';
-    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFristRowTd">○昨日</td><td id = "clinker_ClinkerOutput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "cement_CementOutput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_LimestoneOutput_DayGlobal"  class = "MaterialWeightRowTd">0.00</td><td id = "clinker_PulverizedCoalOutput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_MixtureMaterialsOutput_DayGlobal" class = "MaterialWeightRowTd">0.00</td></tr>';
-    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFristRowTd">○月累计</td><td id = "clinker_ClinkerOutput_MonthGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "cement_CementOutput_MonthGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_LimestoneOutput_MonthGlobal"  class = "MaterialWeightRowTd">0.00</td><td id = "clinker_PulverizedCoalOutput_MonthGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_MixtureMaterialsOutput_MonthGlobal" class = "MaterialWeightRowTd">0.00</td></tr>';
+    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFirstTitleRowTd">总产量(t)</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_ClinkerOutput\',\'Output\',\'熟料\');">熟料</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'cement_CementOutput\',\'Output\',\'水泥磨\');">水泥</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_PulverizedCoalOutput\',\'Output\',\'熟料\');">煤粉</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_MixtureMaterialsOutput\',\'Output\',\'熟料\');">生料</td></tr>';
+    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFristRowTd">○当日</td><td id = "clinker_ClinkerOutput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "cement_CementOutput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_PulverizedCoalOutput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_MixtureMaterialsOutput_DayGlobal" class = "MaterialWeightRowTd">0.00</td></tr>';
+    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFristRowTd">○月累计</td><td id = "clinker_ClinkerOutput_MonthGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "cement_CementOutput_MonthGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_PulverizedCoalOutput_MonthGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_MixtureMaterialsOutput_MonthGlobal" class = "MaterialWeightRowTd">0.00</td></tr>';
     //m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFristRowTd">○月计划</td><td class = "MaterialWeightRowTd">0.00</td><td class = "MaterialWeightRowTd">0.00</td><td class = "MaterialWeightRowTd">0.00</td><td class = "MaterialWeightRowTd">0.00</td><td class = "MaterialWeightRowTd">0.00</td></tr>';
-    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFirstTitleRowTd">消耗量(t)</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_LimestoneInput\',\'Input\',\'熟料\');">熟料石灰石</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_MixtureMaterialsInput\',\'Input\',\'熟料\');">熟料耗生料</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_PulverizedCoalInput\',\'Input\',\'熟料\');">熟料耗煤粉</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_ClinkerInput\',\'Input\',\'水泥磨\');">水泥耗熟料</td><td class = "MaterialWeightTitleRowForcusTd"></td></tr>';
-    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFristRowTd">○昨日</td><td id = "clinker_LimestoneInput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_MixtureMaterialsInput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_PulverizedCoalInput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_ClinkerInput_DayGlobal"class = "MaterialWeightRowTd">0.00</td><td class = "MaterialWeightRowTd"></td></tr>';
-    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFristLastRowTd">○月累计</td><td id = "clinker_LimestoneInput_MonthGlobal" class = "MaterialWeightLastRowTd">0.00</td><td id = "clinker_MixtureMaterialsInput_MonthGlobal" class = "MaterialWeightLastRowTd">0.00</td><td id = "clinker_PulverizedCoalInput_MonthGlobal" class = "MaterialWeightLastRowTd">0.00</td><td id = "clinker_ClinkerInput_MonthGlobal" class = "MaterialWeightLastRowTd">0.00</td><td class = "MaterialWeightLastRowTd"></td></tr>';
+    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFirstTitleRowTd">消耗量(t)</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_LimestoneInput\',\'Input\',\'熟料\');">熟料石灰石</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_MixtureMaterialsInput\',\'Input\',\'熟料\');">熟料耗生料</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_PulverizedCoalInput\',\'Input\',\'熟料\');">熟料耗煤粉</td><td class = "MaterialWeightTitleRowForcusTd" onclick ="GetMaterialWeightDetail(this,\'clinker_ClinkerInput\',\'Input\',\'水泥磨\');">水泥耗熟料</td></tr>';
+    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFristRowTd">○当日</td><td id = "clinker_LimestoneInput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_MixtureMaterialsInput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_PulverizedCoalInput_DayGlobal" class = "MaterialWeightRowTd">0.00</td><td id = "clinker_ClinkerInput_DayGlobal"class = "MaterialWeightRowTd">0.00</td><td class = "MaterialWeightRowTd"></td></tr>';
+    m_MaterialWeight = m_MaterialWeight + '<tr><td class = "MaterialWeightFristLastRowTd">○月累计</td><td id = "clinker_LimestoneInput_MonthGlobal" class = "MaterialWeightLastRowTd">0.00</td><td id = "clinker_MixtureMaterialsInput_MonthGlobal" class = "MaterialWeightLastRowTd">0.00</td><td id = "clinker_PulverizedCoalInput_MonthGlobal" class = "MaterialWeightLastRowTd">0.00</td><td id = "clinker_ClinkerInput_MonthGlobal" class = "MaterialWeightLastRowTd">0.00</td></tr>';
     m_MaterialWeight = m_MaterialWeight + '</table>';
     $("#" + myRootDomId).html(m_MaterialWeight);
 }
 
 function GetMaterialStorage(myRootDomId) {
-    var m_MaterialStorage = '<table>';
-    m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFirstTitleRowTd">库存(t)</td><td class = "MaterialWeightTitleRowTd">月初库存</td><td class = "MaterialWeightTitleRowTd">昨日期初</td><td class = "MaterialWeightTitleRowTd">昨日期末</td><td class = "MaterialWeightTitleRowTd">昨日入库</td><td class = "MaterialWeightTitleRowTd">昨日出库</td></tr>';
-    m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristRowTd">◎石灰石</td><td id = "Limestone_Inventory_MonthF" class = "MaterialWeightRowTd">0.00</td><td id = "Limestone_Inventory_DayF" class = "MaterialWeightRowTd">0.00</td><td id = "Limestone_Inventory_DayL" class = "MaterialWeightRowTd">0.00</td><td id = "Limestone_Input_Day" class = "MaterialWeightRowTd">0.00</td><td id = "Limestone_Output_Day" class = "MaterialWeightRowTd">0.00</td></tr>';
-    m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristRowTd">◎原煤</td><td id = "RawCoal_Inventory_MonthF" class = "MaterialWeightRowTd">0.00</td><td id = "RawCoal_Inventory_DayF" class = "MaterialWeightRowTd">0.00</td><td id = "RawCoal_Inventory_DayL" class = "MaterialWeightRowTd">0.00</td><td id = "RawCoal_Input_Day" class = "MaterialWeightRowTd">0.00</td><td id = "RawCoal_Output_Day" class = "MaterialWeightRowTd">0.00</td></tr>';
-    m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristRowTd">◎石膏</td><td id = "Gypsum_Inventory_MonthF" class = "MaterialWeightRowTd">0.00</td><td id = "Gypsum_Inventory_DayF" class = "MaterialWeightRowTd">0.00</td><td id = "Gypsum_Inventory_DayL" class = "MaterialWeightRowTd">0.00</td><td id = "Gypsum_Input_Day" class = "MaterialWeightRowTd">0.00</td><td id = "Gypsum_Output_Day" class = "MaterialWeightRowTd">0.00</td></tr>';
-    m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristRowTd">◎砂岩</td><td id = "Sandstone_Inventory_MonthF" class = "MaterialWeightRowTd">0.00</td><td id = "Sandstone_Inventory_DayF" class = "MaterialWeightRowTd">0.00</td><td id = "Sandstone_Inventory_DayL" class = "MaterialWeightRowTd">0.00</td><td id = "Sandstone_Input_Day" class = "MaterialWeightRowTd">0.00</td><td id = "Sandstone_Output_Day" class = "MaterialWeightRowTd">0.00</td></tr>';
-    m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristRowTd">◎熟料</td><td id = "Clinker_Inventory_MonthF" class = "MaterialWeightRowTd">0.00</td><td id = "Clinker_Inventory_DayF" class = "MaterialWeightRowTd">0.00</td><td id = "Clinker_Inventory_DayL" class = "MaterialWeightRowTd">0.00</td><td id = "Clinker_Input_Day" class = "MaterialWeightRowTd">0.00</td><td id = "Clinker_Output_Day" class = "MaterialWeightRowTd">0.00</td></tr>';
-    m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristLastRowTd">◎水泥</td><td id = "Cement_Inventory_MonthF" class = "MaterialWeightLastRowTd">0.00</td><td id = "Cement_Inventory_DayF" class = "MaterialWeightLastRowTd">0.00</td><td id = "Cement_Inventory_DayL" class = "MaterialWeightLastRowTd">0.00</td><td id = "Cement_Input_Day" class = "MaterialWeightLastRowTd">0.00</td><td id = "Cement_Output_Day" class = "MaterialWeightLastRowTd">0.00</td></tr>';
-    m_MaterialStorage = m_MaterialStorage + '</table>';
-    $("#" + myRootDomId).html(m_MaterialStorage);
+    var m_Msg = $("#HiddenField_StationOrganizationIds").val();
+    var m_FactoryOragization = jQuery.parseJSON(m_Msg);
+    if (m_FactoryOragization != null && m_FactoryOragization != undefined) {
+        if (m_FactoryOragization["rows"].length > 0) {
+            FactoryOrganizationId = m_FactoryOragization["rows"][0]["OrganizationId"];
+        }
+    }
+    //这里库存改成活的库存
+    $.ajax({
+        type: "POST",
+        url: "View_OverView_Factory.aspx/GetMaterialStorageInfo",
+        data: '{myFactoryOrganizationId:"' +  FactoryOrganizationId + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+            var m_MaterialStorage = msg.d;
+            $("#" + myRootDomId).html(m_MaterialStorage);
+            AddLoadComponentFlag();
+        },
+        error: function (err) {
+            AddLoadComponentFlag();
+        }
+    });
 }
 
 function GetRunIndicatorsHtml(myRootDomId) {
@@ -916,12 +939,12 @@ function GetMaterialWeightData(myVarialbeIdList, myOrganizationType) {
         }
     });
 }
-function GetInventoryData(myMaterialList)
+function GetInventoryData()
 {
     $.ajax({
         type: "POST",
         url: "View_OverView_Factory.aspx/GetInventoryData",
-        data: '{myMaterialList:"' + myMaterialList + '",myOrganizationId:"' + FactoryOrganizationId + '",myDatetime:"' + SelectedDateString + '"}',
+        data: '{myOrganizationId:"' + FactoryOrganizationId + '",myDatetime:"' + SelectedDateString + '"}',
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
@@ -931,6 +954,29 @@ function GetInventoryData(myMaterialList)
                     var m_ObjTemp = $('#' + key);
                     if (m_ObjTemp != null && m_ObjTemp != undefined) {
                         m_ObjTemp.html(m_MsgData[key].toFixed(2));
+                        if(m_ObjTemp.data("options") != undefined)   // 设置上下限背景色
+                        {
+                            //先设置背景色为无色
+                            m_ObjTemp.css("background-Color", "transparent");
+                            if (m_ObjTemp.data("options").HighLimit != undefined && m_ObjTemp.data("options").HighLimit != "null") {   //设置了上限
+                                if (parseFloat(m_MsgData[key]) > parseFloat(m_ObjTemp.data("options").HighLimit)) {
+                                    //上限报警红色
+                                    m_ObjTemp.css("background-Color", "red");
+                                }
+                            }
+                            if (m_ObjTemp.data("options").LowLimit != undefined && m_ObjTemp.data("options").LowLimit != "null") {     //设置了下限
+                                if (parseFloat(m_MsgData[key]) < parseFloat(m_ObjTemp.data("options").LowLimit)) {
+                                    //下限报警红色
+                                    m_ObjTemp.css("background-Color", "yellow");
+                                }
+                            }
+                            
+                        }
+                        else{
+                            //设置背景色为无色
+                            m_ObjTemp.css("background-Color", "transparent");
+                        }
+
                     }
                 }
 
@@ -1172,7 +1218,7 @@ function RefreshFactoryOrganiztion(myOrganizationId) {
         GetElectricityConsumptionData("rawMaterialsHomogenize,rawMaterialsGrind,coalPreparation,clinkerBurning,kilnSystem,hybridMaterialsPreparation,clinkerTransport,cementGrind,limestoneMine,auxiliaryProduction,cementPacking",
                                       "clinker_MixtureMaterialsOutput,clinker_MixtureMaterialsOutput,clinker_PulverizedCoalOutput,clinker_ClinkerOutput,clinker_ClinkerOutput,cement_CementOutput,cement_CementOutput,cement_CementOutput,clinker_MixtureMaterialsOutput,cement_CementOutput,cement_CementOutput", "熟料,水泥磨");
         GetElectricityConsumptionCData();      //计算综合电耗
-        GetMaterialWeightData("clinker_ClinkerOutput,cement_CementOutput,clinker_LimestoneOutput,clinker_PulverizedCoalOutput,clinker_MixtureMaterialsOutput,clinker_LimestoneInput,clinker_MixtureMaterialsInput,clinker_PulverizedCoalInput,clinker_ClinkerInput", "熟料,水泥磨");
+        GetMaterialWeightData("clinker_ClinkerOutput,cement_CementOutput,clinker_PulverizedCoalOutput,clinker_MixtureMaterialsOutput,clinker_LimestoneInput,clinker_MixtureMaterialsInput,clinker_PulverizedCoalInput,clinker_ClinkerInput", "熟料,水泥磨");
 
         GetRunIndictorsData("台时产量,运转率,可靠性,故障率,运转时间", "MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");                            //运转率等指标
         GetEquipmentHaltDataFunction();           //设备停机记录
@@ -1186,7 +1232,7 @@ function RefreshFactoryOrganiztion(myOrganizationId) {
         GetHaltRateChart("MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");
         GetRunningRateChart("MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");
         GetProductSaleData("Clinker,Cement");               //产品销售
-        GetInventoryData("Limestone,RawCoal,Gypsum,Sandstone,Clinker,Cement");
+        GetInventoryData();                         //库存记录
     }
     else {
         FactoryOrganizationId = "";

@@ -50,13 +50,13 @@ namespace Monitor_OverView.Service.OverView
             {
                 m_Sql = string.Format(m_Sql, "A.OrganizationID", m_OrganizationListCondition);
             }
-            
+
             try
             {
                 DataTable result = _dataFactory.Query(m_Sql);
                 string m_ResultValue = EasyUIJsonParser.DataGridJsonParser.DataTableToJson(result);
                 return m_ResultValue;
-                
+
             }
             catch
             {
@@ -71,7 +71,7 @@ namespace Monitor_OverView.Service.OverView
 
             for (int i = 0; i < m_OrganizationTypeList.Length; i++)
             {
-                if(i==0)
+                if (i == 0)
                 {
                     m_OrganizationType = "'" + m_OrganizationTypeList[i] + "'";
                 }
@@ -358,8 +358,8 @@ namespace Monitor_OverView.Service.OverView
 
         public static string GetElectricityConsumptionDetailData(DataTable myElectricityConsumptionTable)
         {
-             string  m_ValueString = EasyUIJsonParser.DataGridJsonParser.DataTableToJson(myElectricityConsumptionTable);
-             return m_ValueString;
+            string m_ValueString = EasyUIJsonParser.DataGridJsonParser.DataTableToJson(myElectricityConsumptionTable);
+            return m_ValueString;
         }
         public static string GetEnergyConsumptionComprehensiveDetail(string myOrganizationId, string myOrganizationType, string myStartTime, string myEndTime)
         {
@@ -431,7 +431,7 @@ namespace Monitor_OverView.Service.OverView
                 {
                     return "{\"rows\":[],\"total\"0}";
                 }
-                    
+
             }
             catch
             {
@@ -539,20 +539,20 @@ namespace Monitor_OverView.Service.OverView
             string m_ReturnString = EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_RunIndictorsDetailTable);
             return m_ReturnString;
         }
-        public static List<string> GetInventoryData(string[] myMaterialList, string myOrganizationId, DataTable myWareHousingContrastTable, DateTime myTodayTime)
+        public static List<string> GetInventoryData(DataTable myWareHouseQueryInfoTable, string myOrganizationId, DataTable myWareHousingContrastTable, DateTime myTodayTime)
         {
             List<string> m_ReturnString = new List<string>();
             //string[] m_MaterialArray = myMaterialList.Split(',');
-            DataTable m_CheckWarehouseTable = GetCheckWarehouseInfo(myMaterialList, myOrganizationId, myTodayTime);
+            DataTable m_CheckWarehouseTable = GetCheckWarehouseInfo(myWareHouseQueryInfoTable, myOrganizationId, myTodayTime);     //找到相应的盘库值
             //DataTable m_WareHousingContrastTable = GetWareHousingContrast(m_MaterialArray,myOrganizationId);
             if (m_CheckWarehouseTable != null && myWareHousingContrastTable != null)
             {
-                DataTable m_InventoryDataTable = GetInventoryDataByContrast(myOrganizationId, m_CheckWarehouseTable, myWareHousingContrastTable);
-                if (m_InventoryDataTable != null)
+                DataTable m_WareHousingDataTable = GetWareHousingDataByContrast(myOrganizationId, m_CheckWarehouseTable, myWareHousingContrastTable);
+                if (m_WareHousingDataTable != null)
                 {
                     for (int i = 0; i < m_CheckWarehouseTable.Rows.Count; i++)
                     {
-                        string m_ValueTemp = GetInventory(m_CheckWarehouseTable.Rows[i], m_InventoryDataTable);
+                        string m_ValueTemp = GetInventory(m_CheckWarehouseTable.Rows[i], m_WareHousingDataTable);
                         if (m_ValueTemp != "")
                         {
                             string m_ElementTempString = string.Format("\"{0}\":{1}", m_CheckWarehouseTable.Rows[i]["ElementId"].ToString(), m_ValueTemp);
@@ -564,30 +564,30 @@ namespace Monitor_OverView.Service.OverView
             }
             return m_ReturnString;
         }
-        public static List<string> GetWareHousingData(string[] myMaterialList, string myOrganizationId, DataTable myWareHousingContrastTable, DateTime myTodayTime)
+        public static List<string> GetWareHousingData(DataTable myWareHouseQueryInfoTable, string myOrganizationId, DataTable myWareHousingContrastTable, DateTime myTodayTime)
         {
             List<string> m_ReturnString = new List<string>();
             //string[] m_MaterialArray = myMaterialList.Split(',');
-            DataTable m_WareHouseInfoTable = GetWareHouseInfo(myMaterialList, myOrganizationId, myTodayTime.ToString("yyyy-MM-dd 00:00:00"), myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"));
+            //DataTable m_WareHouseInfoTable = GetWareHouseInfo(myMaterialList, myOrganizationId, myTodayTime.ToString("yyyy-MM-dd 00:00:00"), myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"));
             //DataTable m_WareHousingContrastTable = GetWareHousingContrast(m_MaterialArray, myOrganizationId);
-            if (m_WareHouseInfoTable != null && myWareHousingContrastTable != null)
+            if (myWareHouseQueryInfoTable != null && myWareHousingContrastTable != null)
             {
-                DataTable m_InventoryDataTable = GetInventoryDataByContrast(myOrganizationId, m_WareHouseInfoTable, myWareHousingContrastTable);
-                if (m_InventoryDataTable != null)
+                DataTable m_WareHousingDataTable = GetWareHousingDataByContrast(myOrganizationId, myWareHouseQueryInfoTable, myWareHousingContrastTable);
+                if (m_WareHousingDataTable != null)
                 {
-                    for (int i = 0; i < m_WareHouseInfoTable.Rows.Count; i++)
+                    for (int i = 0; i < myWareHouseQueryInfoTable.Rows.Count; i++)
                     {
-                        string m_ValueTemp = GetWareHousing(m_WareHouseInfoTable.Rows[i], m_InventoryDataTable, "Input");
+                        string m_ValueTemp = GetWareHousing(myWareHouseQueryInfoTable.Rows[i], m_WareHousingDataTable, "Input");
                         if (m_ValueTemp != "")
                         {
-                            string m_ElementTempString = string.Format("\"{0}\":{1}", m_WareHouseInfoTable.Rows[i]["MaterialId"].ToString() + "_" + "Input_Day", m_ValueTemp);
+                            string m_ElementTempString = string.Format("\"{0}\":{1}", myWareHouseQueryInfoTable.Rows[i]["MaterialId"].ToString() + "_" + "Input_Day", m_ValueTemp);
                             m_ReturnString.Add(m_ElementTempString);
                         }
                         m_ValueTemp = "";
-                        m_ValueTemp = GetWareHousing(m_WareHouseInfoTable.Rows[i], m_InventoryDataTable, "Output");
+                        m_ValueTemp = GetWareHousing(myWareHouseQueryInfoTable.Rows[i], m_WareHousingDataTable, "Output");
                         if (m_ValueTemp != "")
                         {
-                            string m_ElementTempString = string.Format("\"{0}\":{1}", m_WareHouseInfoTable.Rows[i]["MaterialId"].ToString() + "_" + "Output_Day", m_ValueTemp);
+                            string m_ElementTempString = string.Format("\"{0}\":{1}", myWareHouseQueryInfoTable.Rows[i]["MaterialId"].ToString() + "_" + "Output_Day", m_ValueTemp);
                             m_ReturnString.Add(m_ElementTempString);
                         }
                         // ;
@@ -596,57 +596,66 @@ namespace Monitor_OverView.Service.OverView
             }
             return m_ReturnString;
         }
-        private static DataTable GetWareHouseInfo(string[] myMaterialArray, string myOrganizationId, string myStartTime, string myEndTime)
+        public static DataTable GetWareHouseQueryInfo(string myOrganizationId, DateTime myTodayDateTime, string[] myNoStaticsWareHouse)
         {
             string m_Sql = @"SELECT A.Id as WarehouseId
                                   ,A.Code
                                   ,A.Name
                                   ,A.Type
+                                  ,convert(decimal, 0) as Value
                                   ,A.OrganizationID
                                   ,A.MaterialId
                                   ,A.Spec
                                   ,A.LevelCode
-                                  ,convert(datetime,'{2}') as StartTime
-                                  ,convert(datetime,'{3}') as EndTime
+                                  ,A.HighLimit
+                                  ,A.LowLimit
+                                  ,A.AlarmEnabled
+                                  ,convert(Datetime, '{1}') as StartTime
+                                  ,convert(Datetime, '{2}') as EndTime
                               FROM inventory_Warehouse A
                               where A.Enabled = 1
                               and A.OrganizationID = '{0}'
-                              and A.MaterialId in ({1})";
-            string m_MaterialIdArray = "";
-            for (int i = 0; i < myMaterialArray.Length; i++)
+                              and len(A.LevelCode) = 3
+                              {3}";
+            string m_NoStaticsWareHouse = "";
+            for (int i = 0; i < myNoStaticsWareHouse.Length; i++)
             {
                 if (i == 0)
                 {
-                    m_MaterialIdArray = "'" + myMaterialArray[i] + "'";
+                    m_NoStaticsWareHouse = "'" + myNoStaticsWareHouse[i] + "'";
                 }
                 else
                 {
-                    m_MaterialIdArray = m_MaterialIdArray + ",'" + myMaterialArray[i] + "'";
+                    m_NoStaticsWareHouse = m_NoStaticsWareHouse + ",'" + myNoStaticsWareHouse[i] + "'";
                 }
             }
-            m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray, myStartTime, myEndTime);
+            if (m_NoStaticsWareHouse != "")
+            {
+                m_NoStaticsWareHouse = string.Format("and A.MaterialId not in ({0})", m_NoStaticsWareHouse);
+            }
+            m_Sql = string.Format(m_Sql, myOrganizationId, myTodayDateTime.ToString("yyyy-MM-dd 00:00:00"), myTodayDateTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"), m_NoStaticsWareHouse);
             try
             {
-                DataTable m_WareHouseInfoTable = _dataFactory.Query(m_Sql);
-                return m_WareHouseInfoTable;
+                DataTable m_WareHouseQueryInfoTable = _dataFactory.Query(m_Sql);
+                return m_WareHouseQueryInfoTable;
             }
             catch
             {
                 return null;
             }
         }
-        private static DataTable GetCheckWarehouseInfo(string[] myMaterialArray, string myOrganizationId, DateTime myTodayTime)
+        private static DataTable GetCheckWarehouseInfo(DataTable myWarehouseInfo, string myOrganizationId, DateTime myTodayTime)
         {
             string m_Sql = @"Select M.OrganizationID as OrganizationId, 
                                 M.WarehouseId,
 	                            M.MaterialId,
 	                            M.ElementId + '_' + M.Type as ElementId,
 	                            M.Type,
-	                            M.Value as CheckWarehouseValue,
+	                            M.Value as Value,
 	                            M.StartTime,
                                 M.EndTime
                             from 
-	                            (Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId, C.MaterialId, 'DayF' as Type,  D.Value, C.TimeStamp as StartTime, convert(datetime,'{2}') as EndTime
+	                            (Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId,C.MaterialId, 'DayL' as Type, D.Value, C.TimeStamp as StartTime, convert(datetime,'{2}') as EndTime
 	                            from
 	                                (Select B.OrganizationID, A.WarehouseId, MAX(A.TimeStamp) as TimeStamp, B.MaterialId from inventory_CheckWarehouse A, inventory_Warehouse B
 	                                    where A.TimeStamp < '{2}'
@@ -655,9 +664,9 @@ namespace Monitor_OverView.Service.OverView
 			                            and B.OrganizationID = '{0}'
 	                                    group by B.OrganizationID, A.WarehouseId, B.MaterialId) C, inventory_CheckWarehouse D
 	                                 where C.WarehouseId = D.WarehouseId
-	                                    and C.TimeStamp = D.TimeStamp
-	                            union all
-	                            Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId,C.MaterialId, 'DayL' as Type, D.Value, C.TimeStamp as StartTime, convert(datetime,'{3}') as EndTime
+	                                    and C.TimeStamp = D.TimeStamp 
+                                union all
+                                Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId, C.MaterialId, 'MonthF' as Type, D.Value, C.TimeStamp as StartTime, convert(datetime,'{3}') as EndTime
 	                            from
 	                                (Select B.OrganizationID, A.WarehouseId, MAX(A.TimeStamp) as TimeStamp, B.MaterialId from inventory_CheckWarehouse A, inventory_Warehouse B
 	                                    where A.TimeStamp < '{3}'
@@ -666,32 +675,21 @@ namespace Monitor_OverView.Service.OverView
 			                            and B.OrganizationID = '{0}'
 	                                    group by B.OrganizationID, A.WarehouseId, B.MaterialId) C, inventory_CheckWarehouse D
 	                                 where C.WarehouseId = D.WarehouseId
-	                                    and C.TimeStamp = D.TimeStamp 
-                                union all
-                                Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId, C.MaterialId, 'MonthF' as Type, D.Value, C.TimeStamp as StartTime, convert(datetime,'{4}') as EndTime
-	                            from
-	                                (Select B.OrganizationID, A.WarehouseId, MAX(A.TimeStamp) as TimeStamp, B.MaterialId from inventory_CheckWarehouse A, inventory_Warehouse B
-	                                    where A.TimeStamp < '{4}'
-			                            and A.WarehouseId = B.Id
-			                            and B.MaterialId in ({1})
-			                            and B.OrganizationID = '{0}'
-	                                    group by B.OrganizationID, A.WarehouseId, B.MaterialId) C, inventory_CheckWarehouse D
-	                                 where C.WarehouseId = D.WarehouseId
 	                                    and C.TimeStamp = D.TimeStamp) M
                             order by M.OrganizationID, M.WarehouseId, M.MaterialId, M.Type, M.StartTime";
             string m_MaterialIdArray = "";
-            for (int i = 0; i < myMaterialArray.Length; i++)
+            for (int i = 0; i < myWarehouseInfo.Rows.Count; i++)
             {
                 if (i == 0)
                 {
-                    m_MaterialIdArray = "'" + myMaterialArray[i] + "'";
+                    m_MaterialIdArray = "'" + myWarehouseInfo.Rows[i]["MaterialId"] + "'";
                 }
                 else
                 {
-                    m_MaterialIdArray = m_MaterialIdArray + ",'" + myMaterialArray[i] + "'";
+                    m_MaterialIdArray = m_MaterialIdArray + ",'" + myWarehouseInfo.Rows[i]["MaterialId"] + "'";
                 }
             }
-            m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray, myTodayTime.ToString("yyyy-MM-dd 00:00:00"), myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"), myTodayTime.ToString("yyyy-MM-01 00:00:00"));
+            m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray, myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"), myTodayTime.ToString("yyyy-MM-01 00:00:00"));
             try
             {
                 DataTable m_WareHousingContrastTable = _dataFactory.Query(m_Sql);
@@ -702,14 +700,16 @@ namespace Monitor_OverView.Service.OverView
                 return null;
             }
         }
-        public static DataTable GetWareHousingContrast(string[] myMaterialArray, string myOrganizationId)
+        public static DataTable GetWareHousingContrast(DataTable myWareHouseInfoTable, string myOrganizationId, DateTime myTodayDateTime)
         {
             string m_Sql = @"SELECT A.ItemId
                                 ,A.WarehouseId
 	                            ,B.OrganizationID as OrganizationId
                                 ,A.VariableId
+                                ,B.MaterialId
                                 ,A.Specs
                                 ,A.DataBaseName + '.dbo.' + A.DataTableName as DataTableName
+                                ,A.DataTableName as ModifyWaterContentFlag
                                 ,A.WarehousingType
                                 ,A.Multiple
                                 ,A.Offset
@@ -722,21 +722,25 @@ namespace Monitor_OverView.Service.OverView
                             and B.MaterialId in ({1})
                             order by B.OrganizationID, B.Id, A.DataBaseName + '.dbo.' + A.DataTableName, A.WarehousingType";
             string m_MaterialIdArray = "";
-            for (int i = 0; i < myMaterialArray.Length; i++)
+            if (myWareHouseInfoTable != null)
             {
-                if (i == 0)
+                for (int i = 0; i < myWareHouseInfoTable.Rows.Count; i++)
                 {
-                    m_MaterialIdArray = "'" + myMaterialArray[i] + "'";
-                }
-                else
-                {
-                    m_MaterialIdArray = m_MaterialIdArray + ",'" + myMaterialArray[i] + "'";
+                    if (i == 0)
+                    {
+                        m_MaterialIdArray = "'" + myWareHouseInfoTable.Rows[i]["MaterialId"] + "'";
+                    }
+                    else
+                    {
+                        m_MaterialIdArray = m_MaterialIdArray + ",'" + myWareHouseInfoTable.Rows[i]["MaterialId"] + "'";
+                    }
                 }
             }
             m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray);
             try
             {
                 DataTable m_WareHousingContrastTable = _dataFactory.Query(m_Sql);
+                ModifyMultipleByWaterContent(ref m_WareHousingContrastTable, myOrganizationId, "PulverizedCoal", "HistoryDCSIncrement", "Input", "RawCoal_WaterContent", "PulverizedCoal_WaterContent", myTodayDateTime);          //根据含水量修正乘积因子.设置煤粉产量系数,通过水分的差值设置煤粉产量的乘积因子,因为当前的煤粉产量是用原煤入磨量来计量的,因此产量应该去除水分差
                 return m_WareHousingContrastTable;
             }
             catch
@@ -744,7 +748,53 @@ namespace Monitor_OverView.Service.OverView
                 return null;
             }
         }
-        private static DataTable GetInventoryDataByContrast(string myOrganizationId, DataTable myCheckWarehouseTable, DataTable myWareHousingContrastTable)
+        /// <summary>
+        /// 计算水分差值,并修正乘积因子
+        /// </summary>
+        /// <param name="myWareHousingContrastTable"></param>
+        /// <param name="myVariableId">修正的变量名</param>
+        /// <param name="myDataTableName">修正标签的表名</param>
+        /// <param name="myDataBaseName">修正标签的数据库名</param>
+        /// <param name="myMinuendVariable">被减数</param>
+        /// <param name="mySubtrahend">减数</param>
+        /// <param name="myDateTime">本月日期</param>
+        private static void ModifyMultipleByWaterContent(ref DataTable myWareHousingContrastTable, string myOrganizationId, string myMaterialId, string myModifyWaterContentFlag, string myWarehousingType, string myMinuendVariable, string mySubtrahend, DateTime myDateTime)
+        {
+            string m_Sql = @"Select  1 - (M.MinuendVariable - N.Subtrahend) / 100 as Value from 
+                                            (SELECT avg(A.DataValue) as MinuendVariable
+                                              FROM system_EnergyDataManualInput A
+                                              where A.VariableId = '{0}'
+                                              and OrganizationID = '{2}'
+                                              and A.[TimeStamp] >= '{3}'
+                                              and A.[TimeStamp] < '{4}') M,
+                                             (SELECT avg(A.DataValue) as Subtrahend
+                                              FROM system_EnergyDataManualInput A
+                                              where A.VariableId = '{1}'
+                                              and OrganizationID = '{2}'
+                                              and A.[TimeStamp] >= '{3}'
+                                              and A.[TimeStamp] < '{4}') N
+                                              where M.MinuendVariable is not null
+                                              and N.Subtrahend is not null";
+            m_Sql = string.Format(m_Sql, myMinuendVariable, mySubtrahend, myOrganizationId, myDateTime.AddMonths(-1).ToString("yyyy-MM-dd HH:mm:ss"), myDateTime.ToString("yyyy-MM-dd HH:mm:ss"));        //取前一个月的平均水分值
+            try
+            {
+                DataTable m_MultipleByWaterContentTable = _dataFactory.Query(m_Sql);
+
+                if (myWareHousingContrastTable != null && m_MultipleByWaterContentTable != null && m_MultipleByWaterContentTable.Rows.Count > 0)
+                {
+                    decimal m_ModifyValue = (decimal)m_MultipleByWaterContentTable.Rows[0]["Value"];
+                    DataRow[] m_WareHousingContrastRows = myWareHousingContrastTable.Select(string.Format("OrganizationId = '{0}'  and  MaterialId = '{1}' and ModifyWaterContentFlag = '{2}' and WarehousingType = '{3}'", myOrganizationId, myMaterialId, myModifyWaterContentFlag, myWarehousingType));
+                    for (int i = 0; i < m_WareHousingContrastRows.Length; i++)
+                    {
+                        m_WareHousingContrastRows[i]["Multiple"] = (decimal)m_WareHousingContrastRows[i]["Multiple"] * m_ModifyValue;
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+        private static DataTable GetWareHousingDataByContrast(string myOrganizationId, DataTable myWarehouseQueryTable, DataTable myWareHousingContrastTable)
         {
             DataTable m_InventoryDataTable = new DataTable();
             m_InventoryDataTable.Columns.Add("OrganizationId", typeof(string));
@@ -753,50 +803,64 @@ namespace Monitor_OverView.Service.OverView
             m_InventoryDataTable.Columns.Add("VariableId", typeof(string));
             m_InventoryDataTable.Columns.Add("WarehousingType", typeof(string));
             m_InventoryDataTable.Columns.Add("Type", typeof(string));
-            if (myCheckWarehouseTable != null && myWareHousingContrastTable != null)
+            if (myWarehouseQueryTable != null && myWareHousingContrastTable != null)
             {
-                for (int i = 0; i < myCheckWarehouseTable.Rows.Count; i++)
+                for (int i = 0; i < myWarehouseQueryTable.Rows.Count; i++)
                 {
-                    DataRow[] m_WareHousingContrastRows = myWareHousingContrastTable.Select(string.Format("OrganizationId = '{0}' and WarehouseId = '{1}'", myOrganizationId, myCheckWarehouseTable.Rows[i]["WarehouseId"].ToString()));
-                    string m_Type = myCheckWarehouseTable.Rows[i]["Type"].ToString();
-                    string m_WarehouseId = myCheckWarehouseTable.Rows[i]["WarehouseId"].ToString();
-                    DateTime m_StartTime = (DateTime)myCheckWarehouseTable.Rows[i]["StartTime"];
-                    DateTime m_EndTime = (DateTime)myCheckWarehouseTable.Rows[i]["EndTime"];
+                    DataRow[] m_WareHousingContrastRows = myWareHousingContrastTable.Select(string.Format("OrganizationId = '{0}' and WarehouseId = '{1}'", myOrganizationId, myWarehouseQueryTable.Rows[i]["WarehouseId"].ToString()));
+                    string m_Type = myWarehouseQueryTable.Rows[i]["Type"].ToString();
+                    string m_WarehouseId = myWarehouseQueryTable.Rows[i]["WarehouseId"].ToString();
+                    DateTime m_StartTime = (DateTime)myWarehouseQueryTable.Rows[i]["StartTime"];
+                    DateTime m_EndTime = (DateTime)myWarehouseQueryTable.Rows[i]["EndTime"];
 
                     string m_DCSDataBaseTable = "";
 
                     string m_VWB_WeightNYGL_Variables = "";
                     string m_HistoryDCSIncrement_Variables = "";
-                    for (int j = 0; j < m_WareHousingContrastRows.Length; j++)
+                    if (m_Type == "MonthF")
                     {
-                        string m_DataTableNameTemp = m_WareHousingContrastRows[j]["DataTableName"].ToString();
-                        if (m_DataTableNameTemp.Contains("NXJC.dbo.VWB_WeightNYGL"))
-                        {
-                            if (m_VWB_WeightNYGL_Variables == "")
-                            {
-                                m_VWB_WeightNYGL_Variables = "'" + m_WareHousingContrastRows[j]["VariableId"].ToString() + "'";
-                            }
-                            else
-                            {
-                                m_VWB_WeightNYGL_Variables = m_VWB_WeightNYGL_Variables + ",'" + m_WareHousingContrastRows[j]["VariableId"].ToString() + "'";
-                            }
-                        }
-                        else if (m_DataTableNameTemp.Contains("dbo.HistoryDCSIncrement"))
-                        {
-                            m_DCSDataBaseTable = m_DataTableNameTemp;
-                            if (m_HistoryDCSIncrement_Variables == "")
-                            {
-                                m_HistoryDCSIncrement_Variables = string.Format(" sum({0}) as {0} ", m_WareHousingContrastRows[j]["VariableId"].ToString());
-                            }
-                            else
-                            {
-                                m_HistoryDCSIncrement_Variables = m_HistoryDCSIncrement_Variables + "," + string.Format(" sum({0}) as {0} ", m_WareHousingContrastRows[j]["VariableId"].ToString());
-                            }
-                        }
+                        m_InventoryDataTable.Rows.Add(new object[]
+                                              {
+                                              myOrganizationId, 
+                                              myWarehouseQueryTable.Rows[i]["WarehouseId"].ToString(),
+                                              0.0m,
+                                              myWarehouseQueryTable.Rows[i]["WarehouseId"].ToString(),
+                                              "Input",
+                                              m_Type
+                                              });
                     }
-                    if (m_VWB_WeightNYGL_Variables != "")
+                    else
                     {
-                        string m_Sql = @"Select A.OrganizationID,
+                        for (int j = 0; j < m_WareHousingContrastRows.Length; j++)
+                        {
+                            string m_DataTableNameTemp = m_WareHousingContrastRows[j]["DataTableName"].ToString();
+                            if (m_DataTableNameTemp.Contains("NXJC.dbo.VWB_WeightNYGL"))
+                            {
+                                if (m_VWB_WeightNYGL_Variables == "")
+                                {
+                                    m_VWB_WeightNYGL_Variables = "'" + m_WareHousingContrastRows[j]["VariableId"].ToString() + "'";
+                                }
+                                else
+                                {
+                                    m_VWB_WeightNYGL_Variables = m_VWB_WeightNYGL_Variables + ",'" + m_WareHousingContrastRows[j]["VariableId"].ToString() + "'";
+                                }
+                            }
+                            else if (m_DataTableNameTemp.Contains("dbo.HistoryDCSIncrement"))
+                            {
+                                m_DCSDataBaseTable = m_DataTableNameTemp;
+                                if (m_HistoryDCSIncrement_Variables == "")
+                                {
+                                    m_HistoryDCSIncrement_Variables = string.Format(" sum(case when {0} is null then 0 else {0} end) as {0} ", m_WareHousingContrastRows[j]["VariableId"].ToString());
+                                }
+                                else
+                                {
+                                    m_HistoryDCSIncrement_Variables = m_HistoryDCSIncrement_Variables + "," + string.Format(" sum(case when {0} is null then 0 else {0} end) as {0} ", m_WareHousingContrastRows[j]["VariableId"].ToString());
+                                }
+                            }
+                        }
+                        if (m_VWB_WeightNYGL_Variables != "")
+                        {
+                            string m_Sql = @"Select A.OrganizationID,
 		                                            A.VariableId,
 		                                            sum(A.Value) as Value
 			                                    from NXJC.dbo.VWB_WeightNYGL A
@@ -805,61 +869,61 @@ namespace Monitor_OverView.Service.OverView
 				                                    and A.OrganizationID = '{0}'
 				                                    and A.VariableId in ({1}) 
 			                                    group by A.OrganizationID, A.VariableId";
-                        m_Sql = string.Format(m_Sql, myOrganizationId, m_VWB_WeightNYGL_Variables, m_StartTime.ToString("yyyy-MM-dd HH:mm:ss"), m_EndTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                        DataTable m_InventoryDataTableTemp = _dataFactory.Query(m_Sql);
-                        if (m_InventoryDataTableTemp != null)
-                        {
-                            for (int m = 0; m < m_InventoryDataTableTemp.Rows.Count; m++)
+                            m_Sql = string.Format(m_Sql, myOrganizationId, m_VWB_WeightNYGL_Variables, m_StartTime.ToString("yyyy-MM-dd HH:mm:ss"), m_EndTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                            DataTable m_InventoryDataTableTemp = _dataFactory.Query(m_Sql);
+                            if (m_InventoryDataTableTemp != null)
                             {
-                                for (int n = 0; n < m_WareHousingContrastRows.Length; n++)
+                                for (int m = 0; m < m_InventoryDataTableTemp.Rows.Count; m++)
                                 {
-                                    if (m_InventoryDataTableTemp.Rows[m]["VariableId"].ToString() == m_WareHousingContrastRows[n]["VariableId"].ToString())
+                                    for (int n = 0; n < m_WareHousingContrastRows.Length; n++)
                                     {
-                                        m_InventoryDataTable.Rows.Add(new object[]
+                                        if (m_InventoryDataTableTemp.Rows[m]["VariableId"].ToString() == m_WareHousingContrastRows[n]["VariableId"].ToString())
+                                        {
+                                            m_InventoryDataTable.Rows.Add(new object[]
                                               {
                                               myOrganizationId, 
                                               m_WareHousingContrastRows[n]["WarehouseId"].ToString(),
-                                              (decimal)m_InventoryDataTableTemp.Rows[m]["Value"],
+                                              (decimal)m_InventoryDataTableTemp.Rows[m]["Value"] * (decimal)m_WareHousingContrastRows[n]["Multiple"] + (decimal)m_WareHousingContrastRows[n]["Offset"],
                                               m_WareHousingContrastRows[n]["VariableId"].ToString(),
                                               m_WareHousingContrastRows[n]["WarehousingType"].ToString(),
                                               m_Type
                                               });
+                                        }
                                     }
                                 }
 
                             }
-
                         }
-                    }
-                    if (m_HistoryDCSIncrement_Variables != "")
-                    {
-                        string m_Sql = @"Select {1}
+                        if (m_HistoryDCSIncrement_Variables != "")
+                        {
+                            string m_Sql = @"Select {1}
 			                                    from {0} A
 			                                    where A.vDate >= '{2}'
 				                                    and A.vDate < '{3}'";
-                        m_Sql = string.Format(m_Sql, m_DCSDataBaseTable, m_HistoryDCSIncrement_Variables, m_StartTime.ToString("yyyy-MM-dd HH:mm:ss"), m_EndTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                        DataTable m_InventoryDataTableTemp = _dataFactory.Query(m_Sql);
-                        if (m_InventoryDataTableTemp != null)
-                        {
-                            for (int m = 0; m < m_InventoryDataTableTemp.Columns.Count; m++)
+                            m_Sql = string.Format(m_Sql, m_DCSDataBaseTable, m_HistoryDCSIncrement_Variables, m_StartTime.ToString("yyyy-MM-dd HH:mm:ss"), m_EndTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                            DataTable m_InventoryDataTableTemp = _dataFactory.Query(m_Sql);
+                            if (m_InventoryDataTableTemp != null)
                             {
-                                for (int n = 0; n < m_WareHousingContrastRows.Length; n++)
+                                for (int m = 0; m < m_InventoryDataTableTemp.Columns.Count; m++)
                                 {
-                                    if (m_InventoryDataTableTemp.Columns[m].ColumnName == m_WareHousingContrastRows[n]["VariableId"].ToString())
+                                    for (int n = 0; n < m_WareHousingContrastRows.Length; n++)
                                     {
-                                        m_InventoryDataTable.Rows.Add(new object[]
+                                        if (m_InventoryDataTableTemp.Columns[m].ColumnName == m_WareHousingContrastRows[n]["VariableId"].ToString())
+                                        {
+                                            m_InventoryDataTable.Rows.Add(new object[]
                                               {
                                               myOrganizationId, 
                                               m_WareHousingContrastRows[n]["WarehouseId"].ToString(),
-                                              (decimal)m_InventoryDataTableTemp.Rows[0][m_InventoryDataTableTemp.Columns[m].ColumnName],
+                                              (decimal)m_InventoryDataTableTemp.Rows[0][m_InventoryDataTableTemp.Columns[m].ColumnName]* (decimal)m_WareHousingContrastRows[n]["Multiple"] + (decimal)m_WareHousingContrastRows[n]["Offset"],
                                               m_WareHousingContrastRows[n]["VariableId"].ToString(),
                                               m_WareHousingContrastRows[n]["WarehousingType"].ToString(),
                                               m_Type
                                               });
+                                        }
                                     }
                                 }
-                            }
 
+                            }
                         }
                     }
                 }
@@ -871,14 +935,14 @@ namespace Monitor_OverView.Service.OverView
             object m_InputValue = myInventoryDataTable.Compute("sum(Value)", string.Format("OrganizationId = '{0}' and WarehouseId = '{1}' and WarehousingType = '{2}' and Type = '{3}'",
                                                      myCheckWarehouseTableRow["OrganizationId"].ToString()
                                                      , myCheckWarehouseTableRow["WarehouseId"].ToString()
-                                                     ,"Input"
-                                                     ,myCheckWarehouseTableRow["Type"].ToString()));
+                                                     , "Input"
+                                                     , myCheckWarehouseTableRow["Type"].ToString()));
             object m_OutputValue = myInventoryDataTable.Compute("sum(Value)", string.Format("OrganizationId = '{0}' and WarehouseId = '{1}' and WarehousingType = '{2}' and Type = '{3}'",
                                                      myCheckWarehouseTableRow["OrganizationId"].ToString()
                                                      , myCheckWarehouseTableRow["WarehouseId"].ToString()
                                                      , "Output"
                                                      , myCheckWarehouseTableRow["Type"].ToString()));
-            decimal m_ReturnValue = (decimal)myCheckWarehouseTableRow["CheckWarehouseValue"] + (m_InputValue != DBNull.Value ? (decimal)m_InputValue : 0.0m) - (m_OutputValue != DBNull.Value ? (decimal)m_OutputValue : 0.0m);
+            decimal m_ReturnValue = (decimal)myCheckWarehouseTableRow["Value"] + (m_InputValue != DBNull.Value ? (decimal)m_InputValue : 0.0m) - (m_OutputValue != DBNull.Value ? (decimal)m_OutputValue : 0.0m);
             string m_ReturnString = m_ReturnValue.ToString("0.00");
 
             return m_ReturnString;
@@ -1104,7 +1168,7 @@ namespace Monitor_OverView.Service.OverView
         }
 
         public static string GetElectricitiyConsumptionChartData(string myVariableIdList, string myOrganizationId, string myOrganizationTypeList, string myStartMonth, string myEndMonth)
-        {        
+        {
 
             DataTable m_SourceData = GetElectricitiyConsumptionChartSourceData(myVariableIdList, myOrganizationId, myOrganizationTypeList, myStartMonth, myEndMonth);
             DataTable m_auxiliaryProductionElectricitiyQuantity = GetAuxiliaryProductionElectricitiyQuantity(myOrganizationId, myOrganizationTypeList, myStartMonth, myEndMonth);
@@ -1137,14 +1201,14 @@ namespace Monitor_OverView.Service.OverView
                             if (m_TotalElectricityQuantity > 0.0m)          //当用电总和大于0,按比例均摊辅助电量
                             {
                                 m_SharedElectricityQuantity = m_SharedElectricityQuantity + m_auxiliaryProductionElectricitiyQuantityData * (decimal)m_ShareProcessRow[j]["Value"] / m_TotalElectricityQuantity;
-                                m_ShareProcessRow[j]["Value"] = (decimal)m_ShareProcessRow[j]["Value"] + m_auxiliaryProductionElectricitiyQuantityData * (decimal)m_ShareProcessRow[j]["Value"] / m_TotalElectricityQuantity;                             
+                                m_ShareProcessRow[j]["Value"] = (decimal)m_ShareProcessRow[j]["Value"] + m_auxiliaryProductionElectricitiyQuantityData * (decimal)m_ShareProcessRow[j]["Value"] / m_TotalElectricityQuantity;
                             }
                             else                                            //当用电总和等于0,平分辅助电量
                             {
                                 m_SharedElectricityQuantity = m_SharedElectricityQuantity + m_auxiliaryProductionElectricitiyQuantityData / m_ShareProcessRow.Length;
                                 m_ShareProcessRow[j]["Value"] = m_auxiliaryProductionElectricitiyQuantityData / m_ShareProcessRow.Length;
                             }
-                            
+
                         }
                         else            //当最后一行时,应该是总量减去已分配的量
                         {
@@ -1198,7 +1262,7 @@ namespace Monitor_OverView.Service.OverView
                 for (int i = 0; i < m_ElectricitiyConsumptionTable.Rows.Count; i++)
                 {
                     string m_VariableNameTemp = m_ElectricitiyConsumptionTable.Rows[i]["VariableName"].ToString();
-                   
+
                     m_ElectricitiyConsumptionTable.Rows[i]["VariableName"] = m_VariableNameTemp.Substring(0, m_VariableNameTemp.Length - 2);
                 }
                 string m_ReturnValue = EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_ElectricitiyConsumptionTable);
@@ -1515,6 +1579,80 @@ namespace Monitor_OverView.Service.OverView
             {
                 return null;
             }
+        }
+
+        ///////////////////////增加动态查询并生成html库存信息///////////////////////
+        public static DataTable GetMaterialStorageInfo(string myOrganizationId)
+        {
+            string m_Sql = @"SELECT A.Name
+                                  ,A.MaterialId
+                                  ,A.HighLimit
+                                  ,A.LowLimit
+                                  ,A.AlarmEnabled
+                              FROM inventory_Warehouse A
+                              where A.Enabled = 1
+                              and A.OrganizationID = '{0}'
+                              and len(LevelCode) = 3
+                              and A.MaterialId not in ('MixtureMaterials','PulverizedCoal','MixedRawMaterial')
+                              order by LevelCode";
+            try
+            {
+                m_Sql = string.Format(m_Sql, myOrganizationId);
+                DataTable m_MaterialStorageInfoTable = _dataFactory.Query(m_Sql);
+                return m_MaterialStorageInfoTable;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public static string GetMaterialStorageHtml(DataTable myMaterialStorageInfoTable)
+        {
+            string m_MaterialStorageHtml = "";
+            if (myMaterialStorageInfoTable != null)
+            {
+                m_MaterialStorageHtml = "<table>";
+                m_MaterialStorageHtml = m_MaterialStorageHtml + "<tr><td class = \"MaterialWeightFirstTitleRowTd\">库存(t)</td><td class = \"MaterialWeightTitleRowTd\">月初库存</td><td class = \"MaterialWeightTitleRowTd\">当日入库</td><td class = \"MaterialWeightTitleRowTd\">当日出库</td><td class = \"MaterialWeightTitleRowTd\">动态库存</td></tr>";
+                for (int i = 0; i < myMaterialStorageInfoTable.Rows.Count; i++)
+                {
+                    string m_HighLimit = "";
+                    string m_LowLimit = "";
+                    if (myMaterialStorageInfoTable.Rows[i]["HighLimit"] != DBNull.Value && (bool)myMaterialStorageInfoTable.Rows[i]["AlarmEnabled"] == true)
+                    {
+                        m_HighLimit = myMaterialStorageInfoTable.Rows[i]["HighLimit"].ToString();
+                    }
+                    else
+                    {
+                        m_HighLimit = "null";
+                    }
+                    if (myMaterialStorageInfoTable.Rows[i]["LowLimit"] != DBNull.Value && (bool)myMaterialStorageInfoTable.Rows[i]["AlarmEnabled"] == true)
+                    {
+                        m_LowLimit = myMaterialStorageInfoTable.Rows[i]["LowLimit"].ToString();
+                    }
+                    else
+                    {
+                        m_LowLimit = "null";
+                    }
+                    string m_MaterialStorageHtmlItemTemp = "<tr><td class = \"MaterialWeightFristRowTd\">◎{0}</td><td id = \"{1}_Inventory_MonthF\" class = \"MaterialWeightRowTd\">0.00</td><td id = \"{1}_Input_Day\" class = \"MaterialWeightRowTd\">0.00</td><td id = \"{1}_Output_Day\" class = \"MaterialWeightRowTd\">0.00</td><td id = \"{1}_Inventory_DayL\" class = \"MaterialWeightRowTd\"  data-options = {\"HighLimit\":{2},\"LowLimit\":{3}}>0.00</td></tr>";
+                    m_MaterialStorageHtmlItemTemp = m_MaterialStorageHtmlItemTemp.Replace("{0}", myMaterialStorageInfoTable.Rows[i]["Name"].ToString());
+                    m_MaterialStorageHtmlItemTemp = m_MaterialStorageHtmlItemTemp.Replace("{1}", myMaterialStorageInfoTable.Rows[i]["MaterialId"].ToString());
+                    m_MaterialStorageHtmlItemTemp = m_MaterialStorageHtmlItemTemp.Replace("{2}", m_HighLimit);
+                    m_MaterialStorageHtmlItemTemp = m_MaterialStorageHtmlItemTemp.Replace("{3}", m_LowLimit);
+                    m_MaterialStorageHtml = m_MaterialStorageHtml + m_MaterialStorageHtmlItemTemp;
+                }
+            }
+            return m_MaterialStorageHtml;
+
+
+            //var m_MaterialStorage = 
+            //m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFirstTitleRowTd">库存(t)</td><td class = "MaterialWeightTitleRowTd">月初库存</td><td class = "MaterialWeightTitleRowTd">当日期初</td><td class = "MaterialWeightTitleRowTd">当日期末</td><td class = "MaterialWeightTitleRowTd">当日入库</td><td class = "MaterialWeightTitleRowTd">当日出库</td></tr>';
+            //m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristRowTd">◎石灰石</td><td id = "Limestone_Inventory_MonthF" class = "MaterialWeightRowTd">0.00</td><td id = "Limestone_Inventory_DayF" class = "MaterialWeightRowTd">0.00</td><td id = "Limestone_Inventory_DayL" class = "MaterialWeightRowTd">0.00</td><td id = "Limestone_Input_Day" class = "MaterialWeightRowTd">0.00</td><td id = "Limestone_Output_Day" class = "MaterialWeightRowTd">0.00</td></tr>';
+            //m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristRowTd">◎原煤</td><td id = "RawCoal_Inventory_MonthF" class = "MaterialWeightRowTd">0.00</td><td id = "RawCoal_Inventory_DayF" class = "MaterialWeightRowTd">0.00</td><td id = "RawCoal_Inventory_DayL" class = "MaterialWeightRowTd">0.00</td><td id = "RawCoal_Input_Day" class = "MaterialWeightRowTd">0.00</td><td id = "RawCoal_Output_Day" class = "MaterialWeightRowTd">0.00</td></tr>';
+            //m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristRowTd">◎石膏</td><td id = "Gypsum_Inventory_MonthF" class = "MaterialWeightRowTd">0.00</td><td id = "Gypsum_Inventory_DayF" class = "MaterialWeightRowTd">0.00</td><td id = "Gypsum_Inventory_DayL" class = "MaterialWeightRowTd">0.00</td><td id = "Gypsum_Input_Day" class = "MaterialWeightRowTd">0.00</td><td id = "Gypsum_Output_Day" class = "MaterialWeightRowTd">0.00</td></tr>';
+            //m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristRowTd">◎砂岩</td><td id = "Sandstone_Inventory_MonthF" class = "MaterialWeightRowTd">0.00</td><td id = "Sandstone_Inventory_DayF" class = "MaterialWeightRowTd">0.00</td><td id = "Sandstone_Inventory_DayL" class = "MaterialWeightRowTd">0.00</td><td id = "Sandstone_Input_Day" class = "MaterialWeightRowTd">0.00</td><td id = "Sandstone_Output_Day" class = "MaterialWeightRowTd">0.00</td></tr>';
+            //m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristRowTd">◎熟料</td><td id = "Clinker_Inventory_MonthF" class = "MaterialWeightRowTd">0.00</td><td id = "Clinker_Inventory_DayF" class = "MaterialWeightRowTd">0.00</td><td id = "Clinker_Inventory_DayL" class = "MaterialWeightRowTd">0.00</td><td id = "Clinker_Input_Day" class = "MaterialWeightRowTd">0.00</td><td id = "Clinker_Output_Day" class = "MaterialWeightRowTd">0.00</td></tr>';
+            //m_MaterialStorage = m_MaterialStorage + '<tr><td class = "MaterialWeightFristLastRowTd">◎水泥</td><td id = "Cement_Inventory_MonthF" class = "MaterialWeightLastRowTd">0.00</td><td id = "Cement_Inventory_DayF" class = "MaterialWeightLastRowTd">0.00</td><td id = "Cement_Inventory_DayL" class = "MaterialWeightLastRowTd">0.00</td><td id = "Cement_Input_Day" class = "MaterialWeightLastRowTd">0.00</td><td id = "Cement_Output_Day" class = "MaterialWeightLastRowTd">0.00</td></tr>';
+            //m_MaterialStorage = m_MaterialStorage + '</table>';
         }
         /*
         public static DataTable GetFactoryByCompany(string myCompanyOrganizationId, string[] myLevelCodes)

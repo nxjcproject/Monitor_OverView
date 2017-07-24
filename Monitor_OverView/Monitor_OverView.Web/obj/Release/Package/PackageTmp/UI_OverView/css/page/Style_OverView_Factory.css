@@ -364,8 +364,8 @@ ul, li, div {
 }
 /*中间部分*/
 .MaterialWeightFirstTitleRowTd {
-    width: 64px;
-    height: 27px;
+    width: 124px;
+    height: 24px;
     font-size: 9pt;
     font-family: SimSun;
     color: #cc0000;
@@ -374,8 +374,8 @@ ul, li, div {
 }
 
 .MaterialWeightTitleRowTd {
-    width: 70px;
-    height: 27px;
+    width: 75px;
+    height: 24px;
     font-size: 9pt;
     font-family: SimSun;
     color: #cc0000;
@@ -384,8 +384,8 @@ ul, li, div {
 }
 
 .MaterialWeightTitleRowForcusTd {
-    width: 70px;
-    height: 27px;
+    width: 85px;
+    height: 24px;
     font-size: 9pt;
     font-family: SimSun;
     color: #cc0000;
@@ -400,7 +400,7 @@ ul, li, div {
     }
 
 .MaterialWeightFristRowTd {
-    height: 27px;
+    height: 24px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -409,7 +409,7 @@ ul, li, div {
 }
 
 .MaterialWeightForcusRowTd {
-    height: 27px;
+    height: 24px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -424,7 +424,7 @@ ul, li, div {
     }
 
 .MaterialWeightFristLastRowTd {
-    height: 27px;
+    height: 24px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -434,7 +434,7 @@ ul, li, div {
 }
 
 .MaterialWeightForcusLastRowTd {
-    height: 27px;
+    height: 24px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -450,7 +450,7 @@ ul, li, div {
     }
 
 .MaterialWeightRowTd {
-    height: 27px;
+    height: 24px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;
@@ -459,7 +459,7 @@ ul, li, div {
 }
 
 .MaterialWeightLastRowTd {
-    height: 27px;
+    height: 24px;
     font-size: 9pt;
     font-family: SimSun;
     color: black;

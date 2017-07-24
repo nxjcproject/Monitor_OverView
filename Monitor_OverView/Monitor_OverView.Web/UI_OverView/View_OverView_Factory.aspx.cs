@@ -327,7 +327,7 @@ namespace Monitor_OverView.Web.UI_OverView
             return m_OrganizationInfoValue;
         }
         [WebMethod]
-        public static string GetInventoryData(string myMaterialList, string myOrganizationId, string myDatetime)
+        public static string GetInventoryData(string myOrganizationId, string myDatetime)
         {
             DateTime m_TodayDateTime;
             if (myDatetime != "")
@@ -339,42 +339,40 @@ namespace Monitor_OverView.Web.UI_OverView
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
             string m_ReturnValue = "";
-            if (myMaterialList != "")
+            string[] m_NotStaticsWareHouseMaterialIds = new string[] { "MixtureMaterials", "PulverizedCoal", "MixedRawMaterial" };
+            DataTable m_WareHouseQueryInfoTable = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHouseQueryInfo(myOrganizationId, m_TodayDateTime, m_NotStaticsWareHouseMaterialIds);
+            DataTable m_WareHousingContrastTable = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHousingContrast(m_WareHouseQueryInfoTable, myOrganizationId, m_TodayDateTime);
+            List<string> m_InventoryDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetInventoryData(m_WareHouseQueryInfoTable, myOrganizationId, m_WareHousingContrastTable, m_TodayDateTime);
+            List<string> m_WareHousingValue = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHousingData(m_WareHouseQueryInfoTable, myOrganizationId, m_WareHousingContrastTable, m_TodayDateTime);
+            for (int i = 0; i < m_InventoryDataValue.Count; i++)
             {
-                string[] m_MaterialArray = myMaterialList.Split(',');
-                DataTable m_WareHousingContrastTable = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHousingContrast(m_MaterialArray, myOrganizationId);
-                List<string> m_InventoryDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetInventoryData(m_MaterialArray, myOrganizationId, m_WareHousingContrastTable, m_TodayDateTime);
-                List<string> m_WareHousingValue = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHousingData(m_MaterialArray, myOrganizationId, m_WareHousingContrastTable, m_TodayDateTime);
-                for (int i = 0; i < m_InventoryDataValue.Count; i++)
-                {
-                    if (m_ReturnValue == "")
-                    {
-                        m_ReturnValue = m_InventoryDataValue[i];
-                    }
-                    else
-                    {
-                        m_ReturnValue = m_ReturnValue + "," + m_InventoryDataValue[i];
-                    }
-                }
-                for (int i = 0; i < m_WareHousingValue.Count; i++)
-                {
-                    if (m_ReturnValue == "")
-                    {
-                        m_ReturnValue = m_WareHousingValue[i];
-                    }
-                    else
-                    {
-                        m_ReturnValue = m_ReturnValue + "," + m_WareHousingValue[i];
-                    }
-                }
                 if (m_ReturnValue == "")
                 {
-                    m_ReturnValue = "[]";
+                    m_ReturnValue = m_InventoryDataValue[i];
                 }
                 else
                 {
-                    m_ReturnValue = "{" + m_ReturnValue + "}";
+                    m_ReturnValue = m_ReturnValue + "," + m_InventoryDataValue[i];
                 }
+            }
+            for (int i = 0; i < m_WareHousingValue.Count; i++)
+            {
+                if (m_ReturnValue == "")
+                {
+                    m_ReturnValue = m_WareHousingValue[i];
+                }
+                else
+                {
+                    m_ReturnValue = m_ReturnValue + "," + m_WareHousingValue[i];
+                }
+            }
+            if (m_ReturnValue == "")
+            {
+                m_ReturnValue = "[]";
+            }
+            else
+            {
+                m_ReturnValue = "{" + m_ReturnValue + "}";
             }
             return m_ReturnValue;
         }
@@ -530,6 +528,17 @@ namespace Monitor_OverView.Web.UI_OverView
         {
             string m_QuickContentValue = Monitor_OverView.Service.OverView.OverView_Factory.GetQuickContent(myGroupKey, mUserId, mRoleId);
             return m_QuickContentValue;
+        }
+
+
+        //////////////////////////////动态的增加仓库//////////////////////////////
+        [WebMethod]
+        public static string GetMaterialStorageInfo(string myFactoryOrganizationId)
+        {
+            DataTable m_MaterialStorageInfo = Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialStorageInfo(myFactoryOrganizationId);
+            string m_MaterialStorageHtml = Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialStorageHtml(m_MaterialStorageInfo);
+
+            return m_MaterialStorageHtml;
         }
     }
 }
