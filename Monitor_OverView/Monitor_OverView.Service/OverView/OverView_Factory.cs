@@ -658,7 +658,7 @@ namespace Monitor_OverView.Service.OverView
 	                            (Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId,C.MaterialId, 'DayL' as Type, D.Value, C.TimeStamp as StartTime, convert(datetime,'{2}') as EndTime
 	                            from
 	                                (Select B.OrganizationID, A.WarehouseId, MAX(A.TimeStamp) as TimeStamp, B.MaterialId from inventory_CheckWarehouse A, inventory_Warehouse B
-	                                    where A.TimeStamp < '{2}'
+	                                    where A.TimeStamp <= '{3}'
 			                            and A.WarehouseId = B.Id
 			                            and B.MaterialId in ({1})
 			                            and B.OrganizationID = '{0}'
@@ -666,10 +666,10 @@ namespace Monitor_OverView.Service.OverView
 	                                 where C.WarehouseId = D.WarehouseId
 	                                    and C.TimeStamp = D.TimeStamp 
                                 union all
-                                Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId, C.MaterialId, 'MonthF' as Type, D.Value, C.TimeStamp as StartTime, convert(datetime,'{3}') as EndTime
+                                Select C.OrganizationID, C.WarehouseId, C.MaterialId + '_Inventory' as ElementId, C.MaterialId, 'MonthF' as Type, D.Value, C.TimeStamp as StartTime, C.TimeStamp as EndTime
 	                            from
 	                                (Select B.OrganizationID, A.WarehouseId, MAX(A.TimeStamp) as TimeStamp, B.MaterialId from inventory_CheckWarehouse A, inventory_Warehouse B
-	                                    where A.TimeStamp < '{3}'
+	                                    where A.TimeStamp <= '{3}'
 			                            and A.WarehouseId = B.Id
 			                            and B.MaterialId in ({1})
 			                            and B.OrganizationID = '{0}'
@@ -689,6 +689,7 @@ namespace Monitor_OverView.Service.OverView
                     m_MaterialIdArray = m_MaterialIdArray + ",'" + myWarehouseInfo.Rows[i]["MaterialId"] + "'";
                 }
             }
+            //m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray, myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"), myTodayTime.ToString("yyyy-MM-01 00:00:00"));
             m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray, myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"), myTodayTime.ToString("yyyy-MM-01 00:00:00"));
             try
             {
@@ -977,7 +978,7 @@ namespace Monitor_OverView.Service.OverView
                                     case when D.MonthPlanValue > 0 then B.MonthValue / D.MonthPlanValue else D.MonthPlanValue end as MonthCompletionRate,
                                     case when D.YearPlanValue > 0 then C.YearValue / D.YearPlanValue else D.YearPlanValue end as YearCompletionRate
                                 from
-                                    (Select M.ConstrastVariableId as VariableId, sum(CASE WHEN M.sales_gblx = 'DE' THEN M.Value WHEN M.sales_gblx = 'RD' THEN -M.Value end) as YearValue from 
+                                    (Select M.ConstrastVariableId as VariableId, sum(M.Value) as YearValue from 
                                         VWB_WeightNYGL M
                                         where M.StatisticalTime >= '{8}'
                                         and M.StatisticalTime < '{9}'
@@ -989,7 +990,7 @@ namespace Monitor_OverView.Service.OverView
                                     (Select substring(N.QuotasID,1, len(N.QuotasID) - 5) as VariableId, N.{10} as MonthPlanValue, N.Totals as YearPlanValue from tz_Plan M, plan_PurchaseSalesYearlyPlan N
                                         where M.OrganizationID = '{2}' and M.Date = '{3}' and M.PlanType = '{11}' and M.KeyID = N.KeyID and N.QuotasID in ({1})) D on C.VariableId = D.VariableId
                                     left join 
-                                    (Select M.ConstrastVariableId as VariableId, sum(CASE WHEN M.sales_gblx = 'DE' THEN M.Value WHEN M.sales_gblx = 'RD' THEN -M.Value end) as DayValue from 
+                                    (Select M.ConstrastVariableId as VariableId, sum(M.Value) as DayValue from 
                                         VWB_WeightNYGL M
                                         where M.StatisticalTime >= '{4}'
                                         and M.StatisticalTime < '{5}'
@@ -998,7 +999,7 @@ namespace Monitor_OverView.Service.OverView
 		                                and M.Type = 3
                                     group by M.ConstrastVariableId) A on A.VariableId = C.VariableId
                                     left join
-                                    (Select M.ConstrastVariableId as VariableId, sum(CASE WHEN M.sales_gblx = 'DE' THEN M.Value WHEN M.sales_gblx = 'RD' THEN -M.Value end) as MonthValue from 
+                                    (Select M.ConstrastVariableId as VariableId, sum(M.Value) as MonthValue from 
                                         VWB_WeightNYGL M
                                         where M.StatisticalTime >= '{6}'
                                         and M.StatisticalTime < '{7}'

@@ -1226,7 +1226,6 @@ function RefreshFactoryOrganiztion(myOrganizationId) {
         GetEquipmentHaltAlarm();          //报警记录
         GetWorkingTeamShiftLog();         //交接班记录
 
-
         GetElectricitiyConsumptionChart("rawMaterialsPreparation,clinkerPreparation,cementPreparation", "熟料,水泥磨");
         GetReliabilityChart("MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");
         GetHaltRateChart("MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");

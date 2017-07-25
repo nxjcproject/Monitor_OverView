@@ -1211,27 +1211,27 @@ function RefreshFactoryOrganiztion(myOrganizationId) {
     if (myOrganizationId != "" && myOrganizationId != undefined) {
         FactoryOrganizationId = $('#Select_SelectStation').combobox('getValue');
 
-        //GetElectricityQuantityData("rawMaterialsHomogenize,rawMaterialsGrind,coalPreparation,clinkerBurning,kilnSystem,hybridMaterialsPreparation,clinkerTransport,cementGrind", "熟料,水泥磨", "ElectricPercentageChart");
-        //GetElectricityQuantityData("limestoneMine,auxiliaryProduction,cementPacking", "分厂", "ElectricPercentageChart");
-        //GetElectricityQuantityData("clinkerElectricityGeneration,electricityOutput,electricityOwnDemand", "余热发电");
-        //GetElectricityConsumptionData("clinkerElectricityGeneration", "clinker_ClinkerOutput", "熟料");       //余热发电吨熟料发电量
-        //GetElectricityConsumptionData("rawMaterialsHomogenize,rawMaterialsGrind,coalPreparation,clinkerBurning,kilnSystem,hybridMaterialsPreparation,clinkerTransport,cementGrind,limestoneMine,auxiliaryProduction,cementPacking",
-        //                              "clinker_MixtureMaterialsOutput,clinker_MixtureMaterialsOutput,clinker_PulverizedCoalOutput,clinker_ClinkerOutput,clinker_ClinkerOutput,cement_CementOutput,cement_CementOutput,cement_CementOutput,clinker_MixtureMaterialsOutput,cement_CementOutput,cement_CementOutput", "熟料,水泥磨");
-        //GetElectricityConsumptionCData();      //计算综合电耗
-        //GetMaterialWeightData("clinker_ClinkerOutput,cement_CementOutput,clinker_PulverizedCoalOutput,clinker_MixtureMaterialsOutput,clinker_LimestoneInput,clinker_MixtureMaterialsInput,clinker_PulverizedCoalInput,clinker_ClinkerInput", "熟料,水泥磨");
+        GetElectricityQuantityData("rawMaterialsHomogenize,rawMaterialsGrind,coalPreparation,clinkerBurning,kilnSystem,hybridMaterialsPreparation,clinkerTransport,cementGrind", "熟料,水泥磨", "ElectricPercentageChart");
+        GetElectricityQuantityData("limestoneMine,auxiliaryProduction,cementPacking", "分厂", "ElectricPercentageChart");
+        GetElectricityQuantityData("clinkerElectricityGeneration,electricityOutput,electricityOwnDemand", "余热发电");
+        GetElectricityConsumptionData("clinkerElectricityGeneration", "clinker_ClinkerOutput", "熟料");       //余热发电吨熟料发电量
+        GetElectricityConsumptionData("rawMaterialsHomogenize,rawMaterialsGrind,coalPreparation,clinkerBurning,kilnSystem,hybridMaterialsPreparation,clinkerTransport,cementGrind,limestoneMine,auxiliaryProduction,cementPacking",
+                                      "clinker_MixtureMaterialsOutput,clinker_MixtureMaterialsOutput,clinker_PulverizedCoalOutput,clinker_ClinkerOutput,clinker_ClinkerOutput,cement_CementOutput,cement_CementOutput,cement_CementOutput,clinker_MixtureMaterialsOutput,cement_CementOutput,cement_CementOutput", "熟料,水泥磨");
+        GetElectricityConsumptionCData();      //计算综合电耗
+        GetMaterialWeightData("clinker_ClinkerOutput,cement_CementOutput,clinker_PulverizedCoalOutput,clinker_MixtureMaterialsOutput,clinker_LimestoneInput,clinker_MixtureMaterialsInput,clinker_PulverizedCoalInput,clinker_ClinkerInput", "熟料,水泥磨");
 
-        //GetRunIndictorsData("台时产量,运转率,可靠性,故障率,运转时间", "MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");                            //运转率等指标
-        //GetEquipmentHaltDataFunction();           //设备停机记录
+        GetRunIndictorsData("台时产量,运转率,可靠性,故障率,运转时间", "MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");                            //运转率等指标
+        GetEquipmentHaltDataFunction();           //设备停机记录
 
-        //GetEquipmentHaltAlarm();          //报警记录
-        //GetWorkingTeamShiftLog();         //交接班记录
+        GetEquipmentHaltAlarm();          //报警记录
+        GetWorkingTeamShiftLog();         //交接班记录
 
 
-        //GetElectricitiyConsumptionChart("rawMaterialsPreparation,clinkerPreparation,cementPreparation", "熟料,水泥磨");
-        //GetReliabilityChart("MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");
-        //GetHaltRateChart("MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");
-        //GetRunningRateChart("MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");
-        //GetProductSaleData("Clinker,Cement");               //产品销售
+        GetElectricitiyConsumptionChart("rawMaterialsPreparation,clinkerPreparation,cementPreparation", "熟料,水泥磨");
+        GetReliabilityChart("MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");
+        GetHaltRateChart("MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");
+        GetRunningRateChart("MineCrusher,RawMaterialsGrind,CoalGrind,RotaryKiln,CementGrind,CementPacker");
+        GetProductSaleData("Clinker,Cement");               //产品销售
         GetInventoryData();                         //库存记录
     }
     else {
