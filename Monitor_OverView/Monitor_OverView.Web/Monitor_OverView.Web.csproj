@@ -72,8 +72,6 @@
     <Content Include="css\common\charts.css" />
     <Content Include="css\common\NormalPage.css" />
     <Content Include="UI_OverView\css\page\Style_OverView_Factory.css" />
-    <Content Include="UI_OverView\css\page\Style_OverView_FactoryTest.css" />
-    <Content Include="UI_OverView\GeneralDrawingTest.aspx" />
     <Content Include="UI_OverView\images\page\DataZoneBG.png" />
     <Content Include="js\common\components\Charts.js" />
     <Content Include="js\common\components\DataGrid.js" />
@@ -1601,7 +1599,7 @@
     <Content Include="UI_OverView\View_OverView_Factory.aspx" />
     <Content Include="UI_OverView\View_OverView_nxjc.aspx" />
     <Content Include="UI_OverView\View_ProductionData.aspx" />
-    <Content Include="UI_SystemStatus\css\page\View_NetworkStatus.css" />
+    <Content Include="UI_SystemStatus\images\View_NetworkStatus.css" />
     <Content Include="UI_SystemStatus\images\page\Ammeter.png" />
     <Content Include="UI_SystemStatus\images\page\Collector.png" />
     <Content Include="UI_SystemStatus\images\page\DataComputer.png" />
@@ -1639,13 +1637,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI_OverView\GeneralDrawingTest.aspx.cs">
-      <DependentUpon>GeneralDrawingTest.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI_OverView\GeneralDrawingTest.aspx.designer.cs">
-      <DependentUpon>GeneralDrawingTest.aspx</DependentUpon>
-    </Compile>
     <Compile Include="UI_OverView\View_EnergyData.aspx.cs">
       <DependentUpon>View_EnergyData.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1711,6 +1702,7 @@
     <Folder Include="UI_OverView\images\common\" />
     <Folder Include="UI_OverView\js\common\" />
     <Folder Include="UI_SystemStatus\css\common\" />
+    <Folder Include="UI_SystemStatus\css\page\" />
     <Folder Include="UI_SystemStatus\images\common\" />
     <Folder Include="UI_SystemStatus\js\common\" />
   </ItemGroup>
@@ -1727,7 +1719,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>20769</DevelopmentServerPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2459/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

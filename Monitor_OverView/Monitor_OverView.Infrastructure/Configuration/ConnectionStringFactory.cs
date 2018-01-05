@@ -18,5 +18,12 @@ namespace Monitor_OverView.Infrastruture.Configuration
                 return ConfigurationManager.AppSettings["StationId"] != null ? ConfigurationManager.AppSettings["StationId"].ToString() : "";
             }
         }
+        public static string MonthStatisticalDay
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["MonthStatisticalDay"] != null ? ConfigurationManager.AppSettings["MonthStatisticalDay"].ToString() : "1,0";
+            }
+        }
     }
 }

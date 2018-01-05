@@ -68,15 +68,43 @@
                     <td id="MainTablePosizionLeft"></td>
                     <td class="MainTableLeft">
                         <table>
-                            <tr style="height:5px;"></tr>                           
+                            <tr>
+                                <td id="ChartDataTd" class="LeftTableTd">
+                                    <div id="ChartDataTabs" class="easyui-tabs" data-options="fit:false, tabPosition:'top'">
+                                        <div title="运转率">
+                                            <div id="chartTab01_Content" class="DataChartContent">
+                                            </div>
+                                            <div id="chartTab01_Legend" class="DataChartLegend">
+                                            </div>
+                                        </div>
+                                        <div title="故障率">
+                                            <div id="chartTab02_Content" class="DataChartContent">
+                                            </div>
+                                            <div id="chartTab02_Legend" class="DataChartLegend">
+                                            </div>
+                                        </div>
+                                        <div title="可靠性">
+                                            <div id="chartTab03_Content" class="DataChartContent">
+                                            </div>
+                                            <div id="chartTab03_Legend" class="DataChartLegend">
+                                            </div>
+                                        </div>
+                                        <div title="分步电耗">
+                                            <div id="chartTab04_Content" class="DataChartContent">
+                                            </div>
+                                            <div id="chartTab04_Legend" class="DataChartLegend">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="LeftTableTd">
                                     <table>
                                         <tr>
                                             <td class="LeftMiddleZoneTitleText">生产
                                             </td>
-                                            <td class="LeftMiddleZoneTitleLine"><span class="ExtendPageDetail" onclick="GetQuickMenuDetail('Production');">More>>&nbsp;&nbsp;</span>
-                                            </td>
+                                            <td class="LeftMiddleZoneTitleLine"><span class="ExtendPageDetail" onclick="GetQuickMenuDetail('Production');">More>>&nbsp;&nbsp;</span></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -85,10 +113,9 @@
                                 <td id="MaterialWeightOutputTd" class="LeftTableTd"></td>
                             </tr>
                             <tr>
-                                <td id="MaterialStorageTd" class="LeftTableBigTd"></td>
+                                <td id="MaterialStorageTd" class="LeftTableTd"></td>
                             </tr>
-                            <tr style="height:10px;"></tr>
-                            <tr>
+                             <tr>
                                 <td id="Td1" class="MiddleTableTd">
                                     <table>
                                         <tr>
@@ -100,13 +127,12 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td id="EquipmentRunIndicatorsTd" class="MiddleTableTd1"></td>
+                                <td id="EquipmentRunIndicatorsTd" class="MiddleTableTd"></td>
                             </tr>
                         </table>
                     </td>
                     <td class="MainTableMiddle">
                         <table>
-                            <tr style="height:5px;"></tr>
                             <tr>
                                 <td id="EnergyZoneTitle" class="MiddleTableTd">
                                     <table>
@@ -126,7 +152,27 @@
                             </tr>
                             <tr>
                                 <td id="EnergyConsumptionComprehensiveInfoTd" class="MiddleTableTd"></td>
-                            </tr>                                              
+                            </tr>
+                            <tr>
+                                <td id="CogenerationInfoTd" class="MiddleTableTd"></td>
+                            </tr>
+                            <tr>
+                                <td id="EnergyAlarmTd" class="MiddleTableTd"></td>
+                            </tr>
+                            <tr>
+                                <td id="EquipmentZoneTitle" class="MiddleTableTd"">
+                                    <table>
+                                        <tr>
+                                            <td class="LeftMiddleZoneTitleText" >设备</td>
+                                            <td class="LeftMiddleZoneTitleLine"><span class="ExtendPageDetail" onclick="GetQuickMenuDetail('Equipment');">More>>&nbsp;&nbsp;</span></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td id="MachineHaltRecordTd" class="MiddleTableTd"></td>
+                            </tr>
+
                         </table>
                     </td>
                     <td class="MainTableRight">
@@ -168,7 +214,22 @@
                                                 </thead>
                                             </table>
                                         </div>
-                                    </div>                                  
+                                    </div>
+                                    <div class="easyui-accordion" style="width: 250px;">
+                                        <div title="交接班记录" data-options="iconCls:'ext-icon-note',selected:true" style="height: 250px;">
+                                            <table id="datagrid_WorkingTeamShiftLogList" class="easyui-datagrid" data-options="fit:true,striped:true, singleSelect:true, border:false, onDblClickRow:function(myRowIndex, myRowData){GetWorkingTeamShiftLogDetail(myRowData);}">
+                                                <thead>
+                                                    <tr>
+                                                        <th data-options="field:'WorkingTeamShiftLogId', width:58, hidden:true">Id</th>
+                                                        <th data-options="field:'Shifts',width:38">班次</th>
+                                                        <th data-options="field:'WorkingTeam',width:38">班组</th>
+                                                        <th data-options="field:'WorkingTeamShiftMonitor',width:52">提交人</th>
+                                                        <th data-options="field:'UpdateDate',width:120">提交时间</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </table>

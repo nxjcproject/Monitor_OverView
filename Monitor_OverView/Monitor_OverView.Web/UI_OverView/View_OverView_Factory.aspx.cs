@@ -11,13 +11,14 @@ namespace Monitor_OverView.Web.UI_OverView
 {
     public partial class View_OverView_Factory : WebStyleBaseForEnergy.webToolsStyleBase
     {
+        private static readonly int[] MonthStatisticalDay = Monitor_OverView.Service.OverView.OverView_Factory.GetMonthStatisticalDay();
         protected void Page_Load(object sender, EventArgs e)
         {
             base.InitComponts();
             if (!IsPostBack)
             {
 #if DEBUG
-                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx", "zc_nxjc_byc" ,"zc_nxjc_klqc","zc_nxjc_znc","zc_nxjc_tsc", "zc_nxjc_lpsc", "zc_nxjc_ychc"};
+                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx", "zc_nxjc_byc", "zc_nxjc_klqc", "zc_nxjc_znc", "zc_nxjc_tsc", "zc_nxjc_lpsc", "zc_nxjc_ychc" };
                 AddDataValidIdGroup("ProductionOrganization", m_DataValidIdItems);
 
 #endif
@@ -42,19 +43,26 @@ namespace Monitor_OverView.Web.UI_OverView
         public static string GetElectricityQuantitiyDetail(string myVariableId, string myOrganizationId, string myOrganizationType, string myDatetime)
         {
             DateTime m_TodayDateTime;
+
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
+            string m_StartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_StartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
+
             string m_ReturnJson = "{\"rows\":[],\"total\":0}";
             if (myOrganizationId != "")
             {
                 DataTable m_ElectricityQuantityTable = null;
-                m_ReturnJson = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
+                m_ReturnJson = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
             }
             return m_ReturnJson;
         }
@@ -64,17 +72,24 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
+
+            string m_StartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_StartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
+
             string m_ReturnJson = "{\"rows\":[],\"total\":0}";
             if (myOrganizationId != "")
             {
                 DataTable m_ElectricityQuantityTable = null;
-                m_ReturnJson = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiy(myVariableIdList, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
+                m_ReturnJson = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiy(myVariableIdList, myOrganizationId, myOrganizationType, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
             }
             return m_ReturnJson;
         }
@@ -85,19 +100,24 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_StartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_StartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
             }
             string m_ReturnJson = "{\"rows\":[],\"total\":0}";
             if (myOrganizationId != "")
             {
                 DataTable m_ElectricityQuantityTable = null;
                 DataTable m_MartieialWeightTable = null;
-                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
-                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myOutputVariableId, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myOutputVariableId, myOrganizationId, myOrganizationType, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
                 if (m_ElectricityQuantityTable != null && m_MartieialWeightTable != null)
                 {
                     m_ElectricityQuantityTable.Columns.Add(m_MartieialWeightTable.Columns["DayMaterialWeight"].ToString(), m_MartieialWeightTable.Columns["DayMaterialWeight"].DataType);
@@ -106,18 +126,20 @@ namespace Monitor_OverView.Web.UI_OverView
                     m_ElectricityQuantityTable.Columns.Add("MonthElectricityConsumption", m_MartieialWeightTable.Columns["DayMaterialWeight"].DataType);
                     for (int i = 0; i < m_ElectricityQuantityTable.Rows.Count; i++)
                     {
+                        decimal m_DayMaterialWeight = 0.0m;
+                        decimal m_MonthMaterialWeight = 0.0m;
                         for (int j = 0; j < m_MartieialWeightTable.Rows.Count; j++)
                         {
                             if (m_ElectricityQuantityTable.Rows[i]["OrganizationID"].ToString() == m_MartieialWeightTable.Rows[j]["OrganizationID"].ToString())
                             {
-                                decimal m_DayMaterialWeight = (decimal)m_MartieialWeightTable.Rows[j]["DayMaterialWeight"];
-                                decimal m_MonthMaterialWeight = (decimal)m_MartieialWeightTable.Rows[j]["MonthMaterialWeight"];
-                                m_ElectricityQuantityTable.Rows[i]["DayMaterialWeight"] = m_MartieialWeightTable.Rows[j]["DayMaterialWeight"];
-                                m_ElectricityQuantityTable.Rows[i]["MonthMaterialWeight"] = m_MartieialWeightTable.Rows[j]["MonthMaterialWeight"];
-                                m_ElectricityQuantityTable.Rows[i]["DayElectricityConsumption"] = m_DayMaterialWeight > 0 ? (decimal)m_ElectricityQuantityTable.Rows[i]["DayElectricityQuantity"] / m_DayMaterialWeight : 0;
-                                m_ElectricityQuantityTable.Rows[i]["MonthElectricityConsumption"] = m_MonthMaterialWeight > 0 ? (decimal)m_ElectricityQuantityTable.Rows[i]["MonthElectricityQuantity"] / m_MonthMaterialWeight : 0;
+                                m_DayMaterialWeight = m_DayMaterialWeight + (decimal)m_MartieialWeightTable.Rows[j]["DayMaterialWeight"];
+                                m_MonthMaterialWeight = m_MonthMaterialWeight + (decimal)m_MartieialWeightTable.Rows[j]["MonthMaterialWeight"];
                             }
                         }
+                        m_ElectricityQuantityTable.Rows[i]["DayMaterialWeight"] = m_DayMaterialWeight;
+                        m_ElectricityQuantityTable.Rows[i]["MonthMaterialWeight"] = m_MonthMaterialWeight;
+                        m_ElectricityQuantityTable.Rows[i]["DayElectricityConsumption"] = m_DayMaterialWeight > 0 ? (decimal)m_ElectricityQuantityTable.Rows[i]["DayElectricityQuantity"] / m_DayMaterialWeight : 0;
+                        m_ElectricityQuantityTable.Rows[i]["MonthElectricityConsumption"] = m_MonthMaterialWeight > 0 ? (decimal)m_ElectricityQuantityTable.Rows[i]["MonthElectricityQuantity"] / m_MonthMaterialWeight : 0;
                     }
                     m_ReturnJson = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityConsumptionDetailData(m_ElectricityQuantityTable);
                 }
@@ -140,11 +162,16 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_StartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_StartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
             }
             string m_ReturnJson = "{\"rows\":[],\"total\":0}";
             if (myOrganizationId != "")
@@ -152,8 +179,8 @@ namespace Monitor_OverView.Web.UI_OverView
                 DataTable m_OrganizationIdYR = Monitor_OverView.Service.OverView.OverView_Factory.GetOrganizationIdByClinckerContrast(myOrganizationId, myOrganizationType);
                 DataTable m_ElectricityQuantityTable = null;
                 DataTable m_MartieialWeightTable = null;
-                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
-                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myOutputVariableId, myOrganizationId, "熟料", m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiyDetail(myVariableId, myOrganizationId, myOrganizationType, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myOutputVariableId, myOrganizationId, "熟料", m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
 
 
                 if (m_ElectricityQuantityTable != null && m_MartieialWeightTable != null && m_OrganizationIdYR != null)
@@ -210,11 +237,16 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
+            }
+            string m_StartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_StartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
             }
             string m_ReturnJson = "{\"rows\":[],\"total\":0}";
             if (myOrganizationId != "")
@@ -226,8 +258,8 @@ namespace Monitor_OverView.Web.UI_OverView
 
                 DataTable m_ElectricityQuantityTable = null;
                 DataTable m_MartieialWeightTable = null;
-                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiy(myVariableIdList, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
-                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeight(myOutputVariableIdList, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetElectricityQuantitiy(myVariableIdList, myOrganizationId, myOrganizationType, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_ElectricityQuantityTable);
+                Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeight(myOutputVariableIdList, myOrganizationId, myOrganizationType, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
                 if (m_ElectricityQuantityTable != null && m_MartieialWeightTable != null)
                 {
 
@@ -270,13 +302,18 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
-            string m_GetEnergyConsumptionComprehensiveValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEnergyConsumptionComprehensiveDetail(myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"));
+            string m_StartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_StartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
+            string m_GetEnergyConsumptionComprehensiveValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEnergyConsumptionComprehensiveDetail(myOrganizationId, myOrganizationType, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_GetEnergyConsumptionComprehensiveValue;
         }
         [WebMethod]
@@ -285,13 +322,18 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
-            string m_GetEnergyConsumptionComprehensiveValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEnergyConsumptionComprehensive(myOrganizationId, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"));
+            string m_StartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_StartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
+            string m_GetEnergyConsumptionComprehensiveValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEnergyConsumptionComprehensive(myOrganizationId, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_GetEnergyConsumptionComprehensiveValue;
         }
         [WebMethod]
@@ -300,14 +342,19 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
+            string m_StartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_StartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
             DataTable m_MartieialWeightTable = null;
-            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myVariableId, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
+            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeightDetail(myVariableId, myOrganizationId, myOrganizationType, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
             return m_OrganizationInfoValue;
         }
         [WebMethod]
@@ -316,14 +363,19 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
+            string m_StartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_StartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
             DataTable m_MartieialWeightTable = null;
-            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeight(myVariableIdList, myOrganizationId, myOrganizationType, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
+            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMaterialWeight(myVariableIdList, myOrganizationId, myOrganizationType, m_StartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), ref m_MartieialWeightTable);
             return m_OrganizationInfoValue;
         }
         [WebMethod]
@@ -338,11 +390,16 @@ namespace Monitor_OverView.Web.UI_OverView
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
+            string m_MonthStartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_MonthStartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
             string m_ReturnValue = "";
             string[] m_NotStaticsWareHouseMaterialIds = new string[] { "MixtureMaterials", "PulverizedCoal", "MixedRawMaterial" };
             DataTable m_WareHouseQueryInfoTable = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHouseQueryInfo(myOrganizationId, m_TodayDateTime, m_NotStaticsWareHouseMaterialIds);
             DataTable m_WareHousingContrastTable = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHousingContrast(m_WareHouseQueryInfoTable, myOrganizationId, m_TodayDateTime);
-            List<string> m_InventoryDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetInventoryData(m_WareHouseQueryInfoTable, myOrganizationId, m_WareHousingContrastTable, m_TodayDateTime);
+            List<string> m_InventoryDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetInventoryData(m_WareHouseQueryInfoTable, myOrganizationId, m_WareHousingContrastTable, m_TodayDateTime, m_MonthStartTime);
             List<string> m_WareHousingValue = Monitor_OverView.Service.OverView.OverView_Factory.GetWareHousingData(m_WareHouseQueryInfoTable, myOrganizationId, m_WareHousingContrastTable, m_TodayDateTime);
             for (int i = 0; i < m_InventoryDataValue.Count; i++)
             {
@@ -382,13 +439,19 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
-            string m_ProductSaleDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetProductSaleData(myOrganizationId, myMaterialIds, m_TodayDateTime);
+            DateTime m_MonthStartTime = DateTime.Parse(m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00"));
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_MonthStartTime = DateTime.Parse(m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00"));
+            }
+            DateTime m_YearStartTime = DateTime.Parse((m_TodayDateTime.ToString("yyyy-01-") + MonthStatisticalDay[0].ToString("00"))).AddMonths(MonthStatisticalDay[1]);
+            string m_ProductSaleDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetProductSaleData(myOrganizationId, myMaterialIds, m_TodayDateTime, m_MonthStartTime, m_YearStartTime);
             return m_ProductSaleDataValue;
         }
         [WebMethod]
@@ -403,13 +466,18 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
-            string m_RunIndictorsDetailValue = Monitor_OverView.Service.OverView.OverView_Factory.GetRunIndictorsDetail(myEquipmentCommonId, myFactoryOrganizationId, myRunIndictorsList, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"));
+            string m_MonthStartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_MonthStartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
+            string m_RunIndictorsDetailValue = Monitor_OverView.Service.OverView.OverView_Factory.GetRunIndictorsDetail(myEquipmentCommonId, myFactoryOrganizationId, myRunIndictorsList, m_MonthStartTime, m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_RunIndictorsDetailValue;
         }
         [WebMethod]
@@ -418,13 +486,18 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
-            string m_RunIndictorsValue = Monitor_OverView.Service.OverView.OverView_Factory.GetRunIndictors(myRunIndictorsList, myEquipmentCommonIdList, myFactoryOrganizationId, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"));
+            string m_MonthStartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_MonthStartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
+            string m_RunIndictorsValue = Monitor_OverView.Service.OverView.OverView_Factory.GetRunIndictors(myRunIndictorsList, myEquipmentCommonIdList, myFactoryOrganizationId, m_MonthStartTime, m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_RunIndictorsValue;
         }
         [WebMethod]
@@ -433,13 +506,18 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
-            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEquipmentHaltDetail(myEquipmentCommonId, myFactoryOrganizationId, myStatisticalRange, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"));
+            string m_MonthStartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_MonthStartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
+            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEquipmentHaltDetail(myEquipmentCommonId, myFactoryOrganizationId, myStatisticalRange, m_MonthStartTime, m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_OrganizationInfoValue;
         }
         [WebMethod]
@@ -448,13 +526,18 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
-            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEquipmentHalt(myEquipmentCommonIdList, myFactoryOrganizationId, m_TodayDateTime.ToString("yyyy-MM") + "-01", m_TodayDateTime.ToString("yyyy-MM-dd"), myStatisticalRange);
+            string m_MonthStartTime = m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_MonthStartTime = m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00");
+            }
+            string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetEquipmentHalt(myEquipmentCommonIdList, myFactoryOrganizationId, m_MonthStartTime, m_TodayDateTime.ToString("yyyy-MM-dd"), myStatisticalRange);
             return m_OrganizationInfoValue;
         }
         [WebMethod]
@@ -463,12 +546,13 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
+
             string m_OrganizationInfoValue = Monitor_OverView.Service.OverView.OverView_Factory.GetWorkingTeamShiftLog(myOrganizationId, m_TodayDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
             return m_OrganizationInfoValue;
         }
@@ -485,12 +569,13 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
+
             string m_MonthLineChartDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetMonthLineChartData(myRunIndictors, myEquipmentCommonIdList, myOrganizationId, m_TodayDateTime.AddMonths(-6).ToString("yyyy-MM-01"), m_TodayDateTime.ToString("yyyy-MM-dd"));
             return m_MonthLineChartDataValue;
         }
@@ -500,13 +585,22 @@ namespace Monitor_OverView.Web.UI_OverView
             DateTime m_TodayDateTime;
             if (myDatetime != "")
             {
-                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59");      //DateTime.Now.AddDays(-1);
+                m_TodayDateTime = DateTime.Parse(myDatetime + " 23:59:59.999");      //DateTime.Now.AddDays(-1);
             }
             else
             {
                 m_TodayDateTime = DateTime.Now.AddDays(-1);
             }
-            string m_MonthElectricitiyConsumptionChartDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricitiyConsumptionChartData(myVariableIdList, myOrganizationId, myOrganizationTypeList, m_TodayDateTime.AddMonths(-6).ToString("yyyy-MM"), m_TodayDateTime.ToString("yyyy-MM"));
+            DateTime m_DayStartTime = DateTime.Parse(m_TodayDateTime.ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00"));
+            string m_MonthStartTime = m_DayStartTime.AddMonths(-6).ToString("yyyy-MM");
+            string m_MonthEndTime = m_DayStartTime.AddMonths(-1).ToString("yyyy-MM");
+            if (m_TodayDateTime.Day < MonthStatisticalDay[0])   //当选择的日期小于设定的日期,则取上月日期
+            {
+                m_DayStartTime = DateTime.Parse(m_TodayDateTime.AddMonths(-1).ToString("yyyy-MM-") + MonthStatisticalDay[0].ToString("00"));
+                m_MonthStartTime = m_DayStartTime.AddMonths(-5).ToString("yyyy-MM");
+                m_MonthEndTime = m_DayStartTime.ToString("yyyy-MM");
+            }
+            string m_MonthElectricitiyConsumptionChartDataValue = Monitor_OverView.Service.OverView.OverView_Factory.GetElectricitiyConsumptionChartData(myVariableIdList, myOrganizationId, myOrganizationTypeList, m_DayStartTime, m_TodayDateTime, m_MonthStartTime, m_MonthEndTime);
             return m_MonthElectricitiyConsumptionChartDataValue;
         }
         //private static DataTable GetFactoryByCompany(string myCompanyOrganizationId)

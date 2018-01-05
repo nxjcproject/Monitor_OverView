@@ -11,6 +11,16 @@ namespace Monitor_OverView.Service.OverView
     {
         private static readonly ISqlServerDataFactory _dataFactory = new SqlServerDataFactory(Monitor_OverView.Infrastruture.Configuration.ConnectionStringFactory.NXJCConnectionString);
         private static readonly AutoSetParameters.AutoGetEnergyConsumption_V1 _AutoGetEnergyConsumption_V1 = new AutoSetParameters.AutoGetEnergyConsumption_V1(_dataFactory);
+        public static int[] GetMonthStatisticalDay()
+        {
+            string[] MonthStatisticalDayString = Monitor_OverView.Infrastruture.Configuration.ConnectionStringFactory.MonthStatisticalDay.Replace(" ", "").Split(',');
+            int[] MonthStatisticalDay = new int[2];
+            for (int i = 0; i < 2; i++)
+            {
+                MonthStatisticalDay[i] = Int32.Parse(MonthStatisticalDayString[i]);
+            }
+            return MonthStatisticalDay;
+        }
         public static string GetFactoryStationList(string myOrganizationId, List<string> myOrganizationIdList)
         {
             ////////////////////////
@@ -539,11 +549,11 @@ namespace Monitor_OverView.Service.OverView
             string m_ReturnString = EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_RunIndictorsDetailTable);
             return m_ReturnString;
         }
-        public static List<string> GetInventoryData(DataTable myWareHouseQueryInfoTable, string myOrganizationId, DataTable myWareHousingContrastTable, DateTime myTodayTime)
+        public static List<string> GetInventoryData(DataTable myWareHouseQueryInfoTable, string myOrganizationId, DataTable myWareHousingContrastTable, DateTime myTodayTime, string myMonthStartTime)
         {
             List<string> m_ReturnString = new List<string>();
             //string[] m_MaterialArray = myMaterialList.Split(',');
-            DataTable m_CheckWarehouseTable = GetCheckWarehouseInfo(myWareHouseQueryInfoTable, myOrganizationId, myTodayTime);     //找到相应的盘库值
+            DataTable m_CheckWarehouseTable = GetCheckWarehouseInfo(myWareHouseQueryInfoTable, myOrganizationId, myTodayTime, myMonthStartTime);     //找到相应的盘库值
             //DataTable m_WareHousingContrastTable = GetWareHousingContrast(m_MaterialArray,myOrganizationId);
             if (m_CheckWarehouseTable != null && myWareHousingContrastTable != null)
             {
@@ -644,7 +654,7 @@ namespace Monitor_OverView.Service.OverView
                 return null;
             }
         }
-        private static DataTable GetCheckWarehouseInfo(DataTable myWarehouseInfo, string myOrganizationId, DateTime myTodayTime)
+        private static DataTable GetCheckWarehouseInfo(DataTable myWarehouseInfo, string myOrganizationId, DateTime myTodayTime, string myMonthStartTime)
         {
             string m_Sql = @"Select M.OrganizationID as OrganizationId, 
                                 M.WarehouseId,
@@ -690,7 +700,7 @@ namespace Monitor_OverView.Service.OverView
                 }
             }
             //m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray, myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"), myTodayTime.ToString("yyyy-MM-01 00:00:00"));
-            m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray, myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"), myTodayTime.ToString("yyyy-MM-01 00:00:00"));
+            m_Sql = string.Format(m_Sql, myOrganizationId, m_MaterialIdArray, myTodayTime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"), myMonthStartTime);
             try
             {
                 DataTable m_WareHousingContrastTable = _dataFactory.Query(m_Sql);
@@ -961,7 +971,7 @@ namespace Monitor_OverView.Service.OverView
             return m_ReturnString;
         }
         //右边区域的数据查询
-        public static string GetProductSaleData(string myOrganizationId, string myMaterialIds, DateTime myDatetime)
+        public static string GetProductSaleData(string myOrganizationId, string myMaterialIds, DateTime myDatetime, DateTime myMonthStartTime, DateTime myYearStartTime)
         {
             if (myMaterialIds != "" && myOrganizationId != "")
             {
@@ -1026,10 +1036,10 @@ namespace Monitor_OverView.Service.OverView
                 m_Sql = m_Sql.Replace("{3}", myDatetime.Year.ToString());
                 m_Sql = m_Sql.Replace("{4}", myDatetime.ToString("yyyy-MM-dd 00:00:00"));
                 m_Sql = m_Sql.Replace("{5}", myDatetime.AddDays(1).ToString("yyyy-MM-dd 00:00:00"));
-                m_Sql = m_Sql.Replace("{6}", myDatetime.ToString("yyyy-MM-01 00:00:00"));
-                m_Sql = m_Sql.Replace("{7}", myDatetime.AddMonths(1).ToString("yyyy-MM-01 00:00:00"));
-                m_Sql = m_Sql.Replace("{8}", myDatetime.ToString("yyyy-01-01 00:00:00"));
-                m_Sql = m_Sql.Replace("{9}", myDatetime.AddYears(1).ToString("yyyy-01-01 00:00:00"));
+                m_Sql = m_Sql.Replace("{6}", myMonthStartTime.ToString("yyyy-MM-dd 00:00:00"));
+                m_Sql = m_Sql.Replace("{7}", myMonthStartTime.AddMonths(1).ToString("yyyy-MM-dd 00:00:00"));
+                m_Sql = m_Sql.Replace("{8}", myYearStartTime.ToString("yyyy-MM-dd 00:00:00"));
+                m_Sql = m_Sql.Replace("{9}", myYearStartTime.AddYears(1).ToString("yyyy-MM-dd 00:00:00"));
                 m_Sql = m_Sql.Replace("{10}", m_MonthName[myDatetime.Month - 1]);
                 m_Sql = m_Sql.Replace("{11}", "PurchaseSales");
                 //string m_DayStartTime = myDatetime.ToString("yyyy-MM-dd 00:00:00");
@@ -1168,11 +1178,11 @@ namespace Monitor_OverView.Service.OverView
             return m_ReturnValue;
         }
 
-        public static string GetElectricitiyConsumptionChartData(string myVariableIdList, string myOrganizationId, string myOrganizationTypeList, string myStartMonth, string myEndMonth)
+        public static string GetElectricitiyConsumptionChartData(string myVariableIdList, string myOrganizationId, string myOrganizationTypeList, DateTime myDayStartTime, DateTime myDayEndTime, string myMonthStartTime, string myMonthEndTime)
         {
 
-            DataTable m_SourceData = GetElectricitiyConsumptionChartSourceData(myVariableIdList, myOrganizationId, myOrganizationTypeList, myStartMonth, myEndMonth);
-            DataTable m_auxiliaryProductionElectricitiyQuantity = GetAuxiliaryProductionElectricitiyQuantity(myOrganizationId, myOrganizationTypeList, myStartMonth, myEndMonth);
+            DataTable m_SourceData = GetElectricitiyConsumptionChartSourceData(myVariableIdList, myOrganizationId, myOrganizationTypeList, myDayStartTime, myDayEndTime, myMonthStartTime, myMonthEndTime);
+            DataTable m_auxiliaryProductionElectricitiyQuantity = GetAuxiliaryProductionElectricitiyQuantity(myOrganizationId, myOrganizationTypeList, myDayStartTime, myDayEndTime, myMonthStartTime, myMonthEndTime);
             if (m_auxiliaryProductionElectricitiyQuantity != null)  //分步电耗均摊辅助用电
             {
                 for (int i = 0; i < m_auxiliaryProductionElectricitiyQuantity.Rows.Count; i++)
@@ -1226,12 +1236,11 @@ namespace Monitor_OverView.Service.OverView
                 m_PerMonthSourceTable.Columns.Add("VariableName", typeof(string));
 
                 List<string> m_MonthList = new List<string>();
-                DateTime m_StartTime = DateTime.Parse(myStartMonth);
-                DateTime m_EndMonth = DateTime.Parse(myEndMonth);
                 int m_MonthIndex = 0;
-                while (m_StartTime.AddMonths(m_MonthIndex) <= m_EndMonth)
+                DateTime m_MonthStartTime = DateTime.Parse(myMonthStartTime);
+                while (m_MonthStartTime.AddMonths(m_MonthIndex) <= myDayEndTime)
                 {
-                    string m_MonthName = m_StartTime.AddMonths(m_MonthIndex).ToString("yyyy-MM");
+                    string m_MonthName = m_MonthStartTime.AddMonths(m_MonthIndex).ToString("yyyy-MM");
                     m_MonthList.Add(m_MonthName);
                     m_PerMonthSourceTable.Columns.Add(m_MonthName, typeof(decimal));
                     m_MonthIndex = m_MonthIndex + 1;
@@ -1275,10 +1284,8 @@ namespace Monitor_OverView.Service.OverView
             }
 
         }
-        private static DataTable GetAuxiliaryProductionElectricitiyQuantity(string myOrganizationId, string myOrganizationTypeList, string myStartMonth, string myEndMonth)
+        private static DataTable GetAuxiliaryProductionElectricitiyQuantity(string myOrganizationId, string myOrganizationTypeList, DateTime myDayStartTime, DateTime myDayEndTime, string myMonthStartTime, string myMonthEndTime)
         {
-            DateTime m_LastMonth = DateTime.Parse(myEndMonth + "-01").AddMonths(-1);
-            DateTime m_EndTime = DateTime.Parse(myEndMonth + "-01").AddMonths(1).AddDays(-1);
             string[] m_OrganizationTypeList = myOrganizationTypeList.Split(',');
             string m_OrganizationType = "";
             for (int i = 0; i < m_OrganizationTypeList.Length; i++)
@@ -1293,17 +1300,17 @@ namespace Monitor_OverView.Service.OverView
                 }
             }
             string m_Sql = @"Select M.TimeStamp, M.VariableId, M.Value, M.ValueType from
-                                (Select substring('{0}',0, 8) as TimeStamp, B.VariableId, B.ValueType, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
+                                (Select '{4}' as TimeStamp, B.VariableId, B.ValueType, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
                                 where A.TimeStamp >='{0}'
                                 and A.TimeStamp <='{1}'
                                 and A.StaticsCycle = 'day'
-                                and A.OrganizationID = '{4}'
+                                and A.OrganizationID = '{5}'
                                 and A.BalanceId = B.KeyId
                                 and B.ValueType = 'ElectricityQuantity'
-                                and B.VariableId = '{6}'
+                                and B.VariableId = '{7}'
                                 and D.OrganizationID = A.OrganizationID
                                 and C.LevelCode like D.LevelCode + '%'
-                                and C.Type in ({5})
+                                and C.Type in ({6})
                                 and B.OrganizationID = C.OrganizationID
                                 group by B.VariableId, B.ValueType
                              union all
@@ -1311,17 +1318,17 @@ namespace Monitor_OverView.Service.OverView
                                 where A.TimeStamp >='{2}'
                                 and A.TimeStamp <='{3}'
                                 and A.StaticsCycle = 'month'
-                                and A.OrganizationID = '{4}'
+                                and A.OrganizationID = '{5}'
                                 and A.BalanceId = B.KeyId
                                 and B.ValueType = 'ElectricityQuantity'
-                                and B.VariableId = '{6}'
+                                and B.VariableId = '{7}'
                                 and D.OrganizationID = A.OrganizationID
                                 and C.LevelCode like D.LevelCode + '%'
-                                and C.Type in ({5})
+                                and C.Type in ({6})
                                 and B.OrganizationID = C.OrganizationID
                                 group by A.TimeStamp, B.VariableId, B.ValueType) M
                                 order by M.VariableId, M.TimeStamp";
-            m_Sql = string.Format(m_Sql, myEndMonth + "-01", m_EndTime.ToString("yyyy-MM-dd"), myStartMonth, m_LastMonth.ToString("yyyy-MM"), myOrganizationId, m_OrganizationType, "auxiliaryProduction_ElectricityQuantity");
+            m_Sql = string.Format(m_Sql, myDayStartTime.ToString("yyyy-MM-dd"), myDayEndTime.ToString("yyyy-MM-dd"), myMonthStartTime, myMonthEndTime, myDayEndTime.ToString("yyyy-MM"), myOrganizationId, m_OrganizationType, "auxiliaryProduction_ElectricityQuantity");
             try
             {
                 DataTable m_ElectricityQuantityTable = _dataFactory.Query(m_Sql);
@@ -1379,10 +1386,8 @@ namespace Monitor_OverView.Service.OverView
             }
         }
 
-        private static DataTable GetElectricitiyConsumptionChartSourceData(string myVariableIdList, string myOrganizationId, string myOrganizationTypeList, string myStartMonth, string myEndMonth)
+        private static DataTable GetElectricitiyConsumptionChartSourceData(string myVariableIdList, string myOrganizationId, string myOrganizationTypeList, DateTime myDayStartTime, DateTime myDayEndTime, string myMonthStartTime, string myMonthEndTime)
         {
-            DateTime m_LastMonth = DateTime.Parse(myEndMonth + "-01").AddMonths(-1);
-            DateTime m_EndTime = DateTime.Parse(myEndMonth + "-01").AddMonths(1).AddDays(-1);
             string[] m_VariableIdList = myVariableIdList.Split(',');
             string m_VariableId = "";
             for (int i = 0; i < m_VariableIdList.Length; i++)
@@ -1410,17 +1415,17 @@ namespace Monitor_OverView.Service.OverView
                 }
             }
             string m_Sql = @"Select M.TimeStamp, M.VariableId, M.Value,M.ValueType from
-                                (Select substring('{0}',0, 8) as TimeStamp, B.VariableId, B.ValueType, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
+                                (Select '{4}' as TimeStamp, B.VariableId, B.ValueType, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
                                 where A.TimeStamp >='{0}'
                                 and A.TimeStamp <='{1}'
                                 and A.StaticsCycle = 'day'
-                                and A.OrganizationID = '{4}'
+                                and A.OrganizationID = '{5}'
                                 and A.BalanceId = B.KeyId
                                 and ((B.ValueType = 'ElectricityQuantity'
-                                and B.VariableId in ({6})) or B.ValueType = 'MaterialWeight')
+                                and B.VariableId in ({7})) or B.ValueType = 'MaterialWeight')
                                 and D.OrganizationID = A.OrganizationID
                                 and C.LevelCode like D.LevelCode + '%'
-                                and C.Type in ({5})
+                                and C.Type in ({6})
                                 and B.OrganizationID = C.OrganizationID
                                 group by B.VariableId,B.ValueType
                              union all
@@ -1428,17 +1433,17 @@ namespace Monitor_OverView.Service.OverView
                                 where A.TimeStamp >='{2}'
                                 and A.TimeStamp <='{3}'
                                 and A.StaticsCycle = 'month'
-                                and A.OrganizationID = '{4}'
+                                and A.OrganizationID = '{5}'
                                 and A.BalanceId = B.KeyId
                                 and ((B.ValueType = 'ElectricityQuantity'
-                                and B.VariableId in ({6})) or B.ValueType = 'MaterialWeight')
+                                and B.VariableId in ({7})) or B.ValueType = 'MaterialWeight')
                                 and D.OrganizationID = A.OrganizationID
                                 and C.LevelCode like D.LevelCode + '%'
-                                and C.Type in ({5})
+                                and C.Type in ({6})
                                 and B.OrganizationID = C.OrganizationID
                                 group by A.TimeStamp, B.VariableId, B.ValueType) M
                                 order by M.VariableId, M.TimeStamp";
-            m_Sql = string.Format(m_Sql, myEndMonth + "-01", m_EndTime.ToString("yyyy-MM-dd"), myStartMonth, m_LastMonth.ToString("yyyy-MM"), myOrganizationId, m_OrganizationType, m_VariableId);
+            m_Sql = string.Format(m_Sql, myDayStartTime.ToString("yyyy-MM-dd"), myDayEndTime.ToString("yyyy-MM-dd"), myMonthStartTime, myMonthEndTime, myDayEndTime.ToString("yyyy-MM"), myOrganizationId, m_OrganizationType, m_VariableId);
             try
             {
                 DataTable m_ElectricityQuantityTable = _dataFactory.Query(m_Sql);
@@ -1450,61 +1455,59 @@ namespace Monitor_OverView.Service.OverView
                 return null;
             }
         }
-        private static DataTable GetElectricitiyConsumptionChart_MaterialWeight(string myOrganizationId, string myOrganizationTypeList, string myStartMonth, string myEndMonth)
-        {
-            DateTime m_LastMonth = DateTime.Parse(myEndMonth + "-01").AddMonths(-1);
-            DateTime m_EndTime = DateTime.Parse(myEndMonth + "-01").AddMonths(1).AddDays(-1);
-            string[] m_OrganizationTypeList = myOrganizationTypeList.Split(',');
-            string m_OrganizationType = "";
-            for (int i = 0; i < m_OrganizationTypeList.Length; i++)
-            {
-                if (i == 0)
-                {
-                    m_OrganizationType = "'" + m_OrganizationTypeList[i] + "'";
-                }
-                else
-                {
-                    m_OrganizationType = m_OrganizationType + ",'" + m_OrganizationTypeList[i] + "'";
-                }
-            }
-            string m_Sql = @"Select M.VariableId, M.Value + N.Value as Value from 
-                                (Select B.VariableId, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
-                                where A.TimeStamp >='{0}'
-                                and A.TimeStamp <='{1}'
-                                and A.StaticsCycle = 'day'
-                                and A.OrganizationID = '{4}'
-                                and A.BalanceId = B.KeyId
-                                and B.ValueType = 'MaterialWeight'
-                                and D.OrganizationID = A.OrganizationID
-                                and C.LevelCode like D.LevelCode + '%'
-                                and C.Type in ({5})
-                                and B.OrganizationID = C.OrganizationID
-                                group by B.VariableId) M,
-                                (Select B.VariableId, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
-                                where A.TimeStamp >='{2}'
-                                and A.TimeStamp <='{3}'
-                                and A.StaticsCycle = 'month'
-                                and A.OrganizationID = '{4}'
-                                and A.BalanceId = B.KeyId
-                                and B.ValueType = 'MaterialWeight'
-                                and D.OrganizationID = A.OrganizationID
-                                and C.LevelCode like D.LevelCode + '%'
-                                and C.Type in ({5})
-                                and B.OrganizationID = C.OrganizationID
-                                group by B.VariableId) N
-                                where M.VariableId = N.VariableId";
-            m_Sql = string.Format(m_Sql, myEndMonth + "-01", m_EndTime.ToString("yyyy-MM-dd"), myStartMonth, m_LastMonth.ToString("yyyy-MM"), myOrganizationId, m_OrganizationType);
-            try
-            {
-                DataTable m_ElectricityQuantityTable = _dataFactory.Query(m_Sql);
-                return m_ElectricityQuantityTable;
+//        private static DataTable GetElectricitiyConsumptionChart_MaterialWeight(string myOrganizationId, string myOrganizationTypeList, DateTime myTodayDateTime, DateTime myMonthStartTime, DateTime myMonthEndTime)
+//        {
+//            string[] m_OrganizationTypeList = myOrganizationTypeList.Split(',');
+//            string m_OrganizationType = "";
+//            for (int i = 0; i < m_OrganizationTypeList.Length; i++)
+//            {
+//                if (i == 0)
+//                {
+//                    m_OrganizationType = "'" + m_OrganizationTypeList[i] + "'";
+//                }
+//                else
+//                {
+//                    m_OrganizationType = m_OrganizationType + ",'" + m_OrganizationTypeList[i] + "'";
+//                }
+//            }
+//            string m_Sql = @"Select M.VariableId, M.Value + N.Value as Value from 
+//                                (Select B.VariableId, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
+//                                where A.TimeStamp >='{0}'
+//                                and A.TimeStamp <='{1}'
+//                                and A.StaticsCycle = 'day'
+//                                and A.OrganizationID = '{4}'
+//                                and A.BalanceId = B.KeyId
+//                                and B.ValueType = 'MaterialWeight'
+//                                and D.OrganizationID = A.OrganizationID
+//                                and C.LevelCode like D.LevelCode + '%'
+//                                and C.Type in ({5})
+//                                and B.OrganizationID = C.OrganizationID
+//                                group by B.VariableId) M,
+//                                (Select B.VariableId, sum(B.TotalPeakValleyFlatB) as Value from tz_Balance A, balance_Energy B, system_Organization C, system_Organization D
+//                                where A.TimeStamp >='{2}'
+//                                and A.TimeStamp <='{3}'
+//                                and A.StaticsCycle = 'month'
+//                                and A.OrganizationID = '{4}'
+//                                and A.BalanceId = B.KeyId
+//                                and B.ValueType = 'MaterialWeight'
+//                                and D.OrganizationID = A.OrganizationID
+//                                and C.LevelCode like D.LevelCode + '%'
+//                                and C.Type in ({5})
+//                                and B.OrganizationID = C.OrganizationID
+//                                group by B.VariableId) N
+//                                where M.VariableId = N.VariableId";
+//            m_Sql = string.Format(m_Sql, myMonthEndTime.ToString("yyyy-MM-dd"), myTodayDateTime.ToString("yyyy-MM-dd"), myMonthStartTime.ToString("yyyy-MM"), myMonthEndTime.ToString("yyyy-MM"), myOrganizationId, m_OrganizationType);
+//            try
+//            {
+//                DataTable m_ElectricityQuantityTable = _dataFactory.Query(m_Sql);
+//                return m_ElectricityQuantityTable;
 
-            }
-            catch
-            {
-                return null;
-            }
-        }
+//            }
+//            catch
+//            {
+//                return null;
+//            }
+//        }
         public static string GetQuickContent(string myGroupKey, string myUserId, string myRoleId)
         {
             string m_ReturnValue = "{\"rows\":[],\"total\":0}";

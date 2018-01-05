@@ -36,6 +36,52 @@ namespace Monitor_OverView.Web.UI_SystemStatus
              */
         }
         [WebMethod]
+        public void SetGroupNetworkStatus(string myOrganizationId, string myTimeStamp, byte[] myStatusBuffer)
+        {
+            if (m_StatusBuffer == null)
+            {
+                m_StatusBuffer = new Dictionary<string, List<string>>();
+            }
+            if (myStatusBuffer != null)
+            {
+                string[] m_StatusArray = Monitor_OverView.Service.SystemStatus.NetworkStatus.GetStatusString(myStatusBuffer);
+                if (m_StatusArray != null)
+                {
+                    if (!m_StatusBuffer.ContainsKey(myOrganizationId))            //如果不包括该组织机构
+                    {
+                        List<string> m_StatusArrayTemp = new List<string>();
+                        for (int i = 0; i < m_StatusArray.Length; i++)
+                        {
+                            m_StatusArrayTemp.Add(m_StatusArray[i]);
+                        }
+                        m_StatusBuffer.Add(myOrganizationId, m_StatusArrayTemp);
+                    }
+                    else
+                    {
+                        if (m_StatusBuffer[myOrganizationId] != null)
+                        {
+                            //m_StatusBuffer[myOrganizationId].Clear();
+                            for (int i = 0; i < m_StatusArray.Length; i++)
+                            {
+                                m_StatusBuffer[myOrganizationId].Add(m_StatusArray[i]);
+                            }
+                        }
+                        else
+                        {
+                            List<string> m_StatusArrayTemp = new List<string>();
+                            for (int i = 0; i < m_StatusArray.Length; i++)
+                            {
+                                m_StatusArrayTemp.Add(m_StatusArray[i]);
+                            }
+                            m_StatusBuffer[myOrganizationId] = m_StatusArrayTemp;
+                        }
+
+                    }
+
+                }
+            }
+        }
+        [WebMethod]
         public void SetNetworkStatus(string myOrganizationId, string myTimeStamp, byte[] myStatusBuffer)
         {
             if (m_StatusBuffer == null)
@@ -115,6 +161,47 @@ namespace Monitor_OverView.Web.UI_SystemStatus
             else
             {
                 m_TimeStampBuffer[myOrganizationId] = myTimeStamp;
+            }
+        }
+        /// <summary>
+        /// /////////////////////////获得更新时间戳///////////////
+        /// </summary>
+        /// <returns>所有分厂的时间戳用逗号和分号分开</returns>
+        [WebMethod]
+        public string GetTimeStampGroup()
+        {
+            string m_TimeStampGroup = "";
+            if (m_TimeStampBuffer != null)
+            {
+                foreach (string myKey in m_TimeStampBuffer.Keys)
+                {
+                    if (m_TimeStampGroup == "")
+                    {
+                        m_TimeStampGroup = myKey + "," + m_TimeStampBuffer[myKey];
+                    }
+                    else
+                    {
+                        m_TimeStampGroup = m_TimeStampGroup + ";" + myKey + "," + m_TimeStampBuffer[myKey];
+                    }
+                }
+            }
+            return m_TimeStampGroup;
+        }
+        /// <summary>
+        /// 获得某个分厂的更新时间戳
+        /// </summary>
+        /// <param name="myOrganizationId">组织机构ID</param>
+        /// <returns>某分厂的时间戳</returns>
+        [WebMethod]
+        public string GetTimeStamp(string myOrganizationId)
+        {
+            if (m_TimeStampBuffer != null && m_TimeStampBuffer.ContainsKey(myOrganizationId))
+            {
+                return m_TimeStampBuffer[myOrganizationId];
+            }
+            else
+            {
+                return "";
             }
         }
         [WebMethod]
