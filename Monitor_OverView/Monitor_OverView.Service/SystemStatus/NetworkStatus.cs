@@ -26,7 +26,8 @@ namespace Monitor_OverView.Service.SystemStatus
             {
                 m_Condition = "and A.OrganizationID = E.OrganizationID";
             }
-            string m_Sql = @"Select A.OrganizationID as OrganizationId, C.Name + A.Name as Name, B.MeterDatabase, D.NodeId, D.NodeType, D.IpAddress from system_Organization A
+            string m_Sql = @"Select A.OrganizationID as OrganizationId, case when C.Name is null then '' else C.Name end + case when A.Name is null then '' else A.Name end as Name
+                                    , B.MeterDatabase, D.NodeId, D.NodeType, D.IpAddress from system_Organization A
                                 left join system_Organization C on C.LevelCode = substring(A.LevelCode, 1,len(A.LevelCode) - 2)
                                 ,system_Database B, net_DataCollectionNet D, system_Organization E
                                 where A.LevelType = 'Factory'
