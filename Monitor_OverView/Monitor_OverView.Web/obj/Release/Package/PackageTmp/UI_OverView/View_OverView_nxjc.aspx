@@ -45,8 +45,7 @@
                 <td class="DataZoneTd">
                     <table id ="DataZoneTable1" class="DataZoneTable" data-options ='{"name":""}'>
                         <tr>
-                            <td id="DataZoneTitle1" class="DataZoneTitleTd1"></td>
-                            <td class="DataZoneTitleTd2"></td>
+                            <td id="DataZoneTitle1" class="DataZoneTitleTd1" colspan="2"></td>
                         </tr>
                         <tr>
                             <td class="DataTitleTd">熟料日销售量:</td>
@@ -90,8 +89,7 @@
                 <td class="DataZoneTd">
                     <table id ="DataZoneTable2" class="DataZoneTable" data-options ='{"name":""}'>
                         <tr>
-                            <td id="DataZoneTitle2" class="DataZoneTitleTd1"></td>
-                            <td class="DataZoneTitleTd2"></td>
+                            <td id="DataZoneTitle2" class="DataZoneTitleTd1" colspan="2"></td>
                         </tr>
                         <tr>
                             <td class="DataTitleTd">熟料日销售量:</td>
@@ -135,8 +133,7 @@
                 <td class="DataZoneTd">
                     <table id ="DataZoneTable3" class="DataZoneTable" data-options ='{"name":""}'>
                         <tr>
-                            <td id="DataZoneTitle3" class="DataZoneTitleTd1"></td>
-                            <td class="DataZoneTitleTd2"></td>
+                            <td id="DataZoneTitle3" class="DataZoneTitleTd1" colspan="2"></td>
                         </tr>
                         <tr>
                             <td class="DataTitleTd">熟料日销售量:</td>
@@ -180,8 +177,7 @@
                 <td class="DataZoneTd">
                     <table id ="DataZoneTable4" class="DataZoneTable" data-options ='{"name":""}'>
                         <tr>
-                            <td id="DataZoneTitle4" class="DataZoneTitleTd1"></td>
-                            <td class="DataZoneTitleTd2"></td>
+                            <td id="DataZoneTitle4" class="DataZoneTitleTd1" colspan="2"></td>
                         </tr>
                         <tr>
                             <td class="DataTitleTd">熟料日销售量:</td>
@@ -225,8 +221,7 @@
                 <td class="DataZoneTd">
                     <table id ="DataZoneTable5" class="DataZoneTable" data-options ='{"name":""}'>
                         <tr>
-                            <td id="DataZoneTitle5" class="DataZoneTitleTd1"></td>
-                            <td class="DataZoneTitleTd2"></td>
+                            <td id="DataZoneTitle5" class="DataZoneTitleTd1" colspan="2"></td>
                         </tr>
                         <tr>
                             <td class="DataTitleTd">熟料日销售量:</td>
@@ -286,8 +281,7 @@
                 <td class="DataZoneTd">
                     <table id ="DataZoneTable6" class="DataZoneTable" data-options ='{"name":""}'>
                         <tr>
-                            <td id="DataZoneTitle6" class="DataZoneTitleTd1"></td>
-                            <td class="DataZoneTitleTd2"></td>
+                            <td id="DataZoneTitle6" class="DataZoneTitleTd1" colspan="2"></td>
                         </tr>
                         <tr>
                             <td class="DataTitleTd">熟料日销售量:</td>
@@ -331,8 +325,7 @@
                 <td class="DataZoneTd">
                     <table id ="DataZoneTable7" class="DataZoneTable" data-options ='{"name":""}'>
                         <tr>
-                            <td id="DataZoneTitle7" class="DataZoneTitleTd1"></td>
-                            <td class="DataZoneTitleTd2"></td>
+                            <td id="DataZoneTitle7" class="DataZoneTitleTd1" colspan="2"></td>
                         </tr>
                         <tr>
                             <td class="DataTitleTd">熟料日销售量:</td>
@@ -376,8 +369,7 @@
                 <td class="DataZoneTd">
                     <table id ="DataZoneTable8" class="DataZoneTable" data-options ='{"name":""}'>
                         <tr>
-                            <td id="DataZoneTitle8" class="DataZoneTitleTd1"></td>
-                            <td class="DataZoneTitleTd2"></td>
+                            <td id="DataZoneTitle8" class="DataZoneTitleTd1" colspan="2"></td>
                         </tr>
                         <tr>
                             <td class="DataTitleTd">熟料日销售量:</td>
@@ -421,8 +413,7 @@
                 <td class="DataZoneTd">
                     <table id ="DataZoneTable9" class="DataZoneTable" data-options ='{"name":""}'>
                         <tr>
-                            <td id="DataZoneTitle9" class="DataZoneTitleTd1"></td>
-                            <td class="DataZoneTitleTd2"></td>
+                            <td id="DataZoneTitle9" class="DataZoneTitleTd1" colspan="2"></td>
                         </tr>
                         <tr>
                             <td class="DataTitleTd">熟料日销售量:</td>
@@ -466,8 +457,7 @@
                 <td class="DataZoneTd">
                     <table id ="DataZoneTable10" class="DataZoneTable" data-options ='{"name":""}'>
                         <tr>
-                            <td id="DataZoneTitle10" class="DataZoneTitleTd1"></td>
-                            <td class="DataZoneTitleTd2"></td>
+                            <td id="DataZoneTitle10" class="DataZoneTitleTd1" colspan="2"></td>
                         </tr>
                         <tr>
                             <td class="DataTitleTd">熟料日销售量:</td>

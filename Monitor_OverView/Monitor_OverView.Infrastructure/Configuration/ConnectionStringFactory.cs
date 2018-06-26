@@ -25,5 +25,12 @@ namespace Monitor_OverView.Infrastruture.Configuration
                 return ConfigurationManager.AppSettings["MonthStatisticalDay"] != null ? ConfigurationManager.AppSettings["MonthStatisticalDay"].ToString() : "1,0";
             }
         }
+        public static string OnlyCementmil
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["OnlyCementmil"] != null ? ConfigurationManager.AppSettings["OnlyCementmil"].ToString() : "";
+            }
+        }
     }
 }

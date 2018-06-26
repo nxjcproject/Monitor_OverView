@@ -58,7 +58,7 @@
     }
 
 .DataZoneTitleTd1 {
-    width: 110px;
+    width: 220px;
     height: 42px;
     text-align: left;
     vertical-align: middle;
@@ -69,12 +69,6 @@
     font-family: SimSun;
 }
 
-.DataZoneTitleTd2 {
-    width: 115px;
-    height: 46px;
-    text-align: left;
-    vertical-align: middle;
-}
 
 .DataTitleTd {
     width: 125px;

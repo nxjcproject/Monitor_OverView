@@ -24,16 +24,16 @@ namespace Monitor_OverView.Service.OverView
             DataTable m_DisplayDataTable = GetDisplayDataTable();
             DataTable m_ProductSaleDataTable = GetProductSaleData("Clinker,Cement", m_DateTime);
             string[][] m_Organizations = new string[10][];
-            m_Organizations[0] = new string[] { "银川水泥", "zc_nxjc_ychc" };
-            m_Organizations[1] = new string[] { "青铜峡水泥", "zc_nxjc_qtx" };
-            m_Organizations[2] = new string[] { "白银水泥", "zc_nxjc_byc" };
-            m_Organizations[3] = new string[] { "天水水泥", "zc_nxjc_tsc" };
-            m_Organizations[4] = new string[] { "中宁水泥", "zc_nxjc_znc" };
-            m_Organizations[5] = new string[] { "六盘山水泥", "zc_nxjc_lpsc" };
-            m_Organizations[6] = new string[] { "乌海赛马", "zc_nxjc_whsmc" };
-            m_Organizations[7] = new string[] { "喀喇沁水泥", "zc_nxjc_klqc" };
-            m_Organizations[8] = new string[] { "石嘴山水泥", "zc_nxjc_szsc" };    
-            m_Organizations[9] = new string[] { "乌海西水", "zc_nxjc_whxsc" };           
+            m_Organizations[0] = new string[]{"宁夏赛马水泥","zc_nxjc_ychc"};
+            m_Organizations[1] = new string[]{"宁夏青铜峡水泥", "zc_nxjc_qtx" };
+            m_Organizations[2] = new string[]{"中材甘肃水泥", "zc_nxjc_byc" };
+            m_Organizations[3] = new string[]{"天水中材水泥", "zc_nxjc_tsc" };
+            m_Organizations[4] = new string[]{"宁夏中宁赛马水泥", "zc_nxjc_znc" };
+            m_Organizations[5] = new string[]{"固原市六盘山水泥", "zc_nxjc_lpsc" };
+            m_Organizations[6] = new string[]{"乌海赛马水泥", "zc_nxjc_whsmc" };
+            m_Organizations[7] = new string[]{"喀喇沁草原水泥", "zc_nxjc_klqc" };
+            m_Organizations[8] = new string[]{"宁夏石嘴山赛马水泥","zc_nxjc_szsc"};
+            m_Organizations[9] = new string[]{"乌海市西水水泥","zc_nxjc_whxsc"};
             for (int i = 0; i < 10; i++)
             {
                 object[] m_RowArray = GetFactorySaleData(m_ProductSaleDataTable, m_Organizations[i][0], m_Organizations[i][1]);
@@ -84,9 +84,9 @@ namespace Monitor_OverView.Service.OverView
                     {
                         m_SaleResultRowItemArray[4] = (decimal)m_SaleDataRows[i]["YearValue"];
                     }
-                    if (m_SaleDataRows[i]["YearCompletionRate"] != DBNull.Value)
+                    if (m_SaleDataRows[i]["MonthCompletionRate"] != DBNull.Value)
                     {
-                        m_SaleResultRowItemArray[5] = (decimal)m_SaleDataRows[i]["YearCompletionRate"];
+                        m_SaleResultRowItemArray[5] = (decimal)m_SaleDataRows[i]["MonthCompletionRate"];
                     }
                 }
                 else if (m_SaleDataRows[i]["VariableId"].ToString() == "Cement")
@@ -103,9 +103,9 @@ namespace Monitor_OverView.Service.OverView
                     {
                         m_SaleResultRowItemArray[8] = (decimal)m_SaleDataRows[i]["YearValue"];
                     }
-                    if (m_SaleDataRows[i]["YearCompletionRate"] != DBNull.Value)
+                    if (m_SaleDataRows[i]["MonthCompletionRate"] != DBNull.Value)
                     {
-                        m_SaleResultRowItemArray[9] = (decimal)m_SaleDataRows[i]["YearCompletionRate"];
+                        m_SaleResultRowItemArray[9] = (decimal)m_SaleDataRows[i]["MonthCompletionRate"];
                     }
                 }
             }

@@ -23,6 +23,8 @@ namespace Monitor_OverView.Service.OverView
         /// <returns></returns>
         public static string GetGlobalComplete(DateTime myDate, string[] myLevelCodes)
         {
+            string[] m_Month = new string[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+            string m_CurrentMonth = m_Month[myDate.Month - 1];
             string m_ReturnJsonString = "";
             string m_Sql = @"SELECT Z.* FROM (
                               SELECT A.OrganizationID as OrganizationId,A.LevelCode as LevelCode,A.Name as Name, M.VariableId + '_day' as VariableId, sum(M.TotalPeakValleyFlatB) as value
@@ -71,7 +73,26 @@ namespace Monitor_OverView.Service.OverView
 		                                GROUP BY D.LevelCode, C.VariableId) M on  M.LevelCode like A.LevelCode + '%'
                                 where (A.LevelType = 'Company')
                                 {0}
-                                group by A.OrganizationID, A.LevelCode,A.Name, M.VariableId) Z 
+                                group by A.OrganizationID, A.LevelCode,A.Name, M.VariableId
+                            union all
+                            SELECT A.OrganizationID as OrganizationId,A.LevelCode as LevelCode,A.Name as Name, M.VariableId + '_plan' as VariableId, sum(M.value) as value
+                                    FROM system_Organization AS A
+	                                left join 
+	                                (select A.LevelCode 
+							              ,D.VariableId as VariableId
+								          ,C.{6} as value
+                                        from system_Organization A, tz_Plan B, plan_ProductionYearlyPlan C, plan_ProductionPlan_Template D
+                                        where A.OrganizationID = B.OrganizationID
+								        and B.Date ='{5}'
+								        and B.PlanType = 'Production'
+								        and B.Statue = 1
+								        and B.KeyID =C.KeyID
+								        and C.QuotasID = D.QuotasID
+								        and C.QuotasID in ('产量_回转窑','产量_水泥磨')) M on  M.LevelCode like A.LevelCode + '%'
+                                where (A.LevelType = 'Company')
+                                {0}
+                                group by A.OrganizationID, A.LevelCode,A.Name, M.VariableId
+                            ) Z 
                             ORDER BY Z.LevelCode,Z.VariableId";
 
             StringBuilder levelCodesParameter = new StringBuilder();
@@ -95,7 +116,7 @@ namespace Monitor_OverView.Service.OverView
             {
                 m_levelCodesParameter = " and A.OrganizationID <> A.OrganizationID";
             }
-            m_Sql = string.Format(m_Sql, m_levelCodesParameter, myDate.ToString("yyyy-MM-dd"), myDate.ToString("yyyy-MM-01"), myDate.ToString("yyyy-MM"), myDate.ToString("yyyy-01"));
+            m_Sql = string.Format(m_Sql, m_levelCodesParameter, myDate.ToString("yyyy-MM-dd"), myDate.ToString("yyyy-MM-01"), myDate.ToString("yyyy-MM"), myDate.ToString("yyyy-01"), myDate.ToString("yyyy"), m_CurrentMonth);
             try
             {
                 DataTable result = _dataFactory.Query(m_Sql);
@@ -193,6 +214,20 @@ namespace Monitor_OverView.Service.OverView
                         decimal m_NewDataRowValueTemp = myNewDataRow["cement_CementOutput_year"] != DBNull.Value ? (decimal)myNewDataRow["cement_CementOutput_year"] : 0.0m;
 
                         myNewDataRow["cement_CementOutput_year"] = m_ValueTemp + m_NewDataRowValueTemp;
+                    }
+                    else if (myResultTable.Rows[i]["OrganizationID"].ToString() == myOrganizationId && myResultTable.Rows[i]["VariableId"].ToString() == "clinker_ClinkerOutput_plan")
+                    { //找熟料月计划
+                        decimal m_ValueTemp = myResultTable.Rows[i]["value"] != DBNull.Value ? (decimal)myResultTable.Rows[i]["value"] : 0.0m;
+                        decimal m_NewDataRowValueTemp = myNewDataRow["clinker_ClinkerOutput_plan"] != DBNull.Value ? (decimal)myNewDataRow["clinker_ClinkerOutput_plan"] : 0.0m;
+
+                        myNewDataRow["clinker_ClinkerOutput_plan"] = m_ValueTemp + m_NewDataRowValueTemp;
+                    }
+                    else if (myResultTable.Rows[i]["OrganizationID"].ToString() == myOrganizationId && myResultTable.Rows[i]["VariableId"].ToString() == "cement_CementOutput_plan")
+                    { //找水泥月计划
+                        decimal m_ValueTemp = myResultTable.Rows[i]["value"] != DBNull.Value ? (decimal)myResultTable.Rows[i]["value"] : 0.0m;
+                        decimal m_NewDataRowValueTemp = myNewDataRow["cement_CementOutput_plan"] != DBNull.Value ? (decimal)myNewDataRow["cement_CementOutput_plan"] : 0.0m;
+
+                        myNewDataRow["cement_CementOutput_plan"] = m_ValueTemp + m_NewDataRowValueTemp;
                     }
                 }
 
@@ -425,9 +460,10 @@ namespace Monitor_OverView.Service.OverView
                     {
                         for (int j = 0; j < m_ProductionPlanTable.Rows.Count; j++)
                         {
-                            if (myCompanyCompleteStructTable.Rows[i]["EquipmentId"].ToString() == m_ProductionPlanTable.Rows[j]["EquipmentId"].ToString())
+                            if (myCompanyCompleteStructTable.Rows[i]["EquipmentId"].ToString() == m_ProductionPlanTable.Rows[j]["EquipmentId"].ToString()
+                                && myCompanyCompleteStructTable.Rows[i]["DataItem"].ToString() + "_" + myCompanyCompleteStructTable.Rows[i]["ProcessName"].ToString() == m_ProductionPlanTable.Rows[j]["QuotasID"].ToString())
                             {
-                                decimal m_ResultValue = m_ProductionPlanTable.Rows[j][m_CurrentMonth] != DBNull.Value ? (decimal)m_ProductionPlanTable.Rows[j]["Value"] : 0.0m;
+                                decimal m_ResultValue = m_ProductionPlanTable.Rows[j][m_CurrentMonth] != DBNull.Value ? (decimal)m_ProductionPlanTable.Rows[j][m_CurrentMonth] : 0.0m;
                                 myCompanyCompleteStructTable.Rows[i][myColumnName] = m_ResultValue;
                             }
                         }
@@ -435,7 +471,7 @@ namespace Monitor_OverView.Service.OverView
 
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
             }
         }

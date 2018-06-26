@@ -42,8 +42,9 @@
     <Reference Include="EasyUIJsonParser">
       <HintPath>..\..\Lib\EasyUIJsonParser.dll</HintPath>
     </Reference>
-    <Reference Include="EnergyConsumption">
-      <HintPath>..\..\..\Lib\EnergyConsumption.dll</HintPath>
+    <Reference Include="EnergyConsumption, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\组件\nenghaojisuanku\EnergyConsumption\bin\Debug\EnergyConsumption.dll</HintPath>
     </Reference>
     <Reference Include="RunIndicators, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

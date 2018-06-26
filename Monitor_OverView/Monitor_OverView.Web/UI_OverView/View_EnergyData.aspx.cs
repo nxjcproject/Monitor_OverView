@@ -16,7 +16,7 @@ namespace Monitor_OverView.Web.UI_OverView
             if (!IsPostBack)
             {
 #if DEBUG
-                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx", "zc_nxjc_byc" };
+                List<string> m_DataValidIdItems = new List<string>() { "zc_nxjc_qtx", "zc_nxjc_byc", "zc_nxjc_ychc", "zc_nxjc_znc", "zc_nxjc_whsmc", "zc_nxjc_klqc", "zc_nxjc_tsc", "zc_nxjc_szsc" };
                 AddDataValidIdGroup("ProductionOrganization", m_DataValidIdItems);
 #endif
             }
@@ -24,7 +24,7 @@ namespace Monitor_OverView.Web.UI_OverView
         [WebMethod]
         public static string GetGlobalComplete(DateTime myDate)
         {
-            string m_JsonString = "1";
+            string m_JsonString = "{\"rows\":[],\"total\":0}"; ;
 
             //if (mUserId != "")
             {
@@ -38,20 +38,21 @@ namespace Monitor_OverView.Web.UI_OverView
         [WebMethod]
         public static string GetCompanyComprehensiveComplete(DateTime myDate, string myLevelCode)
         {
-            string m_JsonString = "1";
+            //string m_JsonString = "{\"rows\":[],\"total\":0}";
 
-            //if (mUserId != "")
-            {
-                List<string> m_OganizationIds = WebStyleBaseForEnergy.webStyleBase.GetDataValidIdGroup("ProductionOrganization");
-                IList<string> m_LevelCodes = WebUserControls.Service.OrganizationSelector.OrganisationTree.GetOrganisationLevelCodeById(m_OganizationIds);
-                m_JsonString = Monitor_OverView.Service.OverView.View_EnergyData.GetCompanyComprehensiveComplete(myDate, myLevelCode,m_LevelCodes.ToArray());
-            }
-            return m_JsonString;
+            ////if (mUserId != "")
+            //{
+            //    List<string> m_OganizationIds = WebStyleBaseForEnergy.webStyleBase.GetDataValidIdGroup("ProductionOrganization");
+            //    IList<string> m_LevelCodes = WebUserControls.Service.OrganizationSelector.OrganisationTree.GetOrganisationLevelCodeById(m_OganizationIds);
+            //    m_JsonString = Monitor_OverView.Service.OverView.View_EnergyData.GetCompanyComprehensiveComplete(myDate, myLevelCode,m_LevelCodes.ToArray());
+            //}
+            //return m_JsonString;
+            return "{\"rows\":[],\"total\":0}";
         }
         [WebMethod]
         public static string GetCompanyProcessComplete(DateTime myDate, string myLevelCode)
         {
-            string m_JsonString = "1";
+            string m_JsonString = "{\"rows\":[],\"total\":0}";
 
             //if (mUserId != "")
             {

@@ -92,3 +92,4 @@ C:\工作\编程\宁夏建材\三层框架V3.1\Monitor_OverView\Monitor_OverView
 C:\工作\编程\宁夏建材\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Web\obj\Debug\Monitor_OverView.Web.csprojResolveAssemblyReference.cache
 C:\工作\编程\宁夏建材\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Web\obj\Debug\Monitor_OverView.Web.dll
 C:\工作\编程\宁夏建材\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Web\obj\Debug\Monitor_OverView.Web.pdb
+C:\工作\编程\宁夏建材\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Web\bin\EnergyConsumption.pdb

@@ -34,7 +34,6 @@ C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\bin\Debug\CommonDataFunction.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\bin\Debug\DataCompression.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\bin\Debug\EasyUIJsonParser.dll
-C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\bin\Debug\EnergyConsumption.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\bin\Debug\Monitor_OverView.Infrastructure.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\bin\Debug\RunIndicators.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\bin\Debug\SqlServerDataAdapter.dll
@@ -74,3 +73,4 @@ C:\工作\编程\宁夏建材\三层框架V3.1\Monitor_OverView\Monitor_OverView
 C:\工作\编程\宁夏建材\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\obj\Debug\Monitor_OverView.Service.csprojResolveAssemblyReference.cache
 C:\工作\编程\宁夏建材\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\obj\Debug\Monitor_OverView.Service.dll
 C:\工作\编程\宁夏建材\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\obj\Debug\Monitor_OverView.Service.pdb
+C:\工作\编程\宁夏建材\三层框架V3.1\Monitor_OverView\Monitor_OverView\Monitor_OverView.Service\bin\Debug\EnergyConsumption.pdb

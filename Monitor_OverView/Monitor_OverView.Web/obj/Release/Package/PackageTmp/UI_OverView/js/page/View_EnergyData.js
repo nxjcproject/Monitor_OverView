@@ -26,15 +26,9 @@ function loadFirstCompanyData(myLoadFlag) {
             }
             else {
                 m_MsgData = jQuery.parseJSON(msg.d);
-                if (myLoadFlag == "first") {
-                    if (m_MsgData != null && m_MsgData != undefined && m_MsgData.rows.length > 0) {
-                        InitializeGlobalGrid(m_MsgData);
-                        onRowDblClick(m_MsgData.rows[0], "first");
-                    }
-                }
-                else {
+                if (m_MsgData != null && m_MsgData != undefined && m_MsgData.rows.length > 0) {
                     $('#GlobalCompleteGridId').datagrid('loadData', m_MsgData);
-                    onRowDblClick(m_MsgData.rows[0], "last");
+                    onRowDblClick(m_MsgData.rows[0]);
                 }
             }
         },
@@ -103,7 +97,7 @@ function InitializeGlobalGrid(myData) {
     });
 }
 
-function onRowDblClick(rowData, myLoadType) {
+function onRowDblClick(rowData) {
     $.messager.progress({
         title: 'Please waiting',
         msg: 'Loading data...'
@@ -111,57 +105,7 @@ function onRowDblClick(rowData, myLoadType) {
     date = $('#dateTime').datebox('getValue');
     var m_LevelCode = (rowData["LevelCode"]);
     var companyName = rowData["Name"];
-    /////////////////////////综合能耗/////////////////////////
-    $.ajax({
-        type: "POST",
-        url: "View_EnergyData.aspx/GetCompanyComprehensiveComplete",
-        data: '{myDate:"' + date + '",myLevelCode:"' + m_LevelCode + '"}',
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (msg) {
-            var m_MsgData = jQuery.parseJSON(msg.d);
-            if (m_MsgData != null && m_MsgData != undefined) {
-                if (myLoadType == "first") {
-                    InitializeCompanyGrid(m_MsgData, 'CompanyComprehensiveCompleteGridId','公司');
-                }
-                else {
-                    //InitializeCompanyGrid(m_MsgData, 'CompanyComprehensiveCompleteGridId');
-                    $('#CompanyComprehensiveCompleteGridId').datagrid('loadData', m_MsgData);
-                }
-
-                $('#CompanyComprehensiveCompleteGridId').datagrid("getPanel").panel("setTitle", companyName);
-                var m_Index = 0;
-                var m_Name = "";
-                for (var i = 0; i < m_MsgData.rows.length; i++) {
-                    if (i == 0 && m_Name != m_MsgData.rows[i]["Name"]) {
-                        m_Index = i;
-                        m_Name = m_MsgData.rows[i]["Name"];
-                    }
-                    else if (m_Name != m_MsgData.rows[i]["Name"]) {
-                        $('#CompanyComprehensiveCompleteGridId').datagrid('mergeCells', {
-                            index: m_Index,
-                            field: 'Name',
-                            rowspan: i - m_Index
-                        });
-                        m_Index = i;
-                        m_Name = m_MsgData.rows[i]["Name"];
-                    }
-
-                    if (i + 1 == m_MsgData.rows.length && m_Index != i) {
-                        $('#CompanyComprehensiveCompleteGridId').datagrid('mergeCells', {
-                            index: m_Index,
-                            field: 'Name',
-                            rowspan: i - m_Index + 1
-                        });
-                    }
-                    
-                }
-            }
-            $.messager.progress('close');
-        },
-        error: handleError
-    });
-    ///////////////////////////分步电耗////////////////////////
+    ///////////////////////////电耗////////////////////////
     $.ajax({
         type: "POST",
         url: "View_EnergyData.aspx/GetCompanyProcessComplete",
@@ -171,55 +115,96 @@ function onRowDblClick(rowData, myLoadType) {
         success: function (msg) {
             var m_MsgData = jQuery.parseJSON(msg.d);
             if (m_MsgData != null && m_MsgData != undefined) {
-                if (myLoadType == "first") {
-                    InitializeCompanyGrid(m_MsgData, 'CompanyProcessCompleteGridId','');
-                }
-                else {
-                    $('#CompanyProcessCompleteGridId').datagrid('loadData', m_MsgData);
-                }
-                var m_Index = 0;
-                var m_Name = "";
-                for (var i = 0; i < m_MsgData.rows.length; i++) {
-                    if (i == 0 && m_Name != m_MsgData.rows[i]["Name"]) {
-                        m_Index = i;
-                        m_Name = m_MsgData.rows[i]["Name"];
-                    }
-                    else if (m_Name != m_MsgData.rows[i]["Name"]) {
-                        $('#CompanyProcessCompleteGridId').datagrid('mergeCells', {
-                            index: m_Index,
-                            field: 'Name',
-                            rowspan: i - m_Index
-                        });
-                        m_Index = i;
-                        m_Name = m_MsgData.rows[i]["Name"];
-                    }
-
-                    if (i + 1 == m_MsgData.rows.length && m_Index != i) {
-                        $('#CompanyProcessCompleteGridId').datagrid('mergeCells', {
-                            index: m_Index,
-                            field: 'Name',
-                            rowspan: i - m_Index + 1
-                        });
-                    }
-
-                }
+                SetCompanyProcessGrid(m_MsgData["Process"]);                                        //计算工序电耗
+                SetCompanyComprehensiveGrid(m_MsgData["Comprehensive"], companyName);               //计算综合电耗
             }
+            $.messager.progress('close');
         },
         error: handleError
     });
 }
-function InitializeCompanyGrid(myData, myObjectId, myTitle) {
-    //data-options="idField:'id',treeField:'Name',rownumbers:true,singleSelect:true,fit:true,onDblClickRow:onRowDblClick"
-    $('#' + myObjectId).datagrid({
-        title: myTitle,
-        data: myData,
-        dataType: "json",
-        striped: true,
-        rownumbers: true,
-        singleSelect: true,
-        fit: true,
-        idField: "id"
-    });
+function SetCompanyProcessGrid(myData) {
+    $('#CompanyProcessCompleteGridId').datagrid('loadData', myData);
+    var m_Index = 0;
+    var m_Name = "";
+    var m_CompanyIndex = 0;
+    var m_CompanyName = "";
+    for (var i = 0; i < myData.rows.length; i++) {
+        ///////////////////////////////////////////////////
+        if (i == 0 && m_CompanyName != myData.rows[i]["Company"]) {
+            m_CompanyIndex = i;
+            m_CompanyName = myData.rows[i]["Company"];
+        }
+        else if (m_CompanyName != myData.rows[i]["Company"]) {
+            $('#CompanyProcessCompleteGridId').datagrid('mergeCells', {
+                index: m_CompanyIndex,
+                field: 'Company',
+                rowspan: i - m_CompanyIndex
+            });
+            m_CompanyIndex = i;
+            m_CompanyName = myData.rows[i]["Company"];
+        }
+
+        if (i + 1 == myData.rows.length && m_CompanyIndex != i) {
+            $('#CompanyProcessCompleteGridId').datagrid('mergeCells', {
+                index: m_CompanyIndex,
+                field: 'Company',
+                rowspan: i - m_CompanyIndex + 1
+            });
+        }
+        ////////////////////////////////////////////
+        if (i == 0 && m_Name != myData.rows[i]["Name"]) {
+            m_Index = i;
+            m_Name = myData.rows[i]["Name"];
+        }
+        else if (m_Name != myData.rows[i]["Name"]) {
+            $('#CompanyProcessCompleteGridId').datagrid('mergeCells', {
+                index: m_Index,
+                field: 'Name',
+                rowspan: i - m_Index
+            });
+            m_Index = i;
+            m_Name = myData.rows[i]["Name"];
+        }
+
+        if (i + 1 == myData.rows.length && m_Index != i) {
+            $('#CompanyProcessCompleteGridId').datagrid('mergeCells', {
+                index: m_Index,
+                field: 'Name',
+                rowspan: i - m_Index + 1
+            });
+        }
+    }
+}
+
+function SetCompanyComprehensiveGrid(myData, myCompanyName) {
+    $('#CompanyComprehensiveCompleteGridId').datagrid("getPanel").panel("setTitle", myCompanyName);
+    $('#CompanyComprehensiveCompleteGridId').datagrid('loadData', myData);
+    var m_Index = 0;
+    var m_Name = "";
+    for (var i = 0; i < myData.rows.length; i++) {
+        if (i == 0 && m_Name != myData.rows[i]["Name"]) {
+            m_Index = i;
+            m_Name = myData.rows[i]["Name"];
+        }
+        else if (m_Name != myData.rows[i]["Name"]) {
+            $('#CompanyComprehensiveCompleteGridId').datagrid('mergeCells', {
+                index: m_Index,
+                field: 'Name',
+                rowspan: i - m_Index
+            });
+            m_Index = i;
+            m_Name = myData.rows[i]["Name"];
+        }
+
+        if (i + 1 == myData.rows.length && m_Index != i) {
+            $('#CompanyComprehensiveCompleteGridId').datagrid('mergeCells', {
+                index: m_Index,
+                field: 'Name',
+                rowspan: i - m_Index + 1
+            });
+        }
+    }
 }
 function handleError() {
     $('#gridMain_ReportTemplate').datagrid('loadData', []);

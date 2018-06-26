@@ -72,25 +72,35 @@
                         <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
                             onclick="QueryReportFun();">查询</a>
                     </div>
-                    <table id="GlobalCompleteGridId" class="easyui-datagrid" data-options="fit:true,border:true">
+                    <table id="GlobalCompleteGridId" class="easyui-datagrid" data-options="fit:true,border:true,title: '', striped: true, rownumbers: true, singleSelect: true, toolbar: '#QueryTools'
+                        ,onDblClickRow: function (rowIndex, rowData) {onRowDblClick(rowData);}">
                         <thead data-options="frozen:true">
                             <tr>
                                 <th data-options="field:'OrganizationId',width:120,hidden: true">组织机构</th>
                                 <th data-options="field:'LevelCode',width:100,hidden: true">层次码</th>
-                                <th data-options="field:'Name',width:100,fit:true,align:'center',headalign:'center'">名称</th>
+                                <th data-options="field:'Name',width:100,fit:true,align:'center',headalign:'center'" rowspan="2">名称</th>
+                            </tr>
+                            <tr>
+                                <th data-options="field:'OrganizationId',width:120,hidden: true"></th>
+                                <th data-options="field:'LevelCode',width:100,hidden: true"></th>
                             </tr>
                         </thead>
                         <thead>
                             <tr>
-
-                                <th data-options="field:'Company_ElectricityQuantity',width:85, align:'right',headalign:'center'">总用电量(kWh)</th>
-                                <th data-options="field:'clinkerElectricityGeneration_ElectricityQuantity',width:100, align:'right',headalign:'center'">余热发电量(kWh)</th>
-                                <th data-options="field:'auxiliaryProduction_ElectricityQuantity',width:100, align:'right',headalign:'center'">辅助电量(kWh)</th>
-                                <th data-options="field:'clinkerBurning_ElectricityQuantity',width:110, align:'right',headalign:'center'">熟料烧成电量(kWh)</th>
-                                <th data-options="field:'rawMaterialsPreparation_ElectricityQuantity',width:85, align:'right',headalign:'center'">生料制备电量(kWh)</th>
-                                <th data-options="field:'coalPreparation_ElectricityQuantity',width:100, align:'right',headalign:'center'">煤粉制备电量(kWh)</th>
-                                <th data-options="field:'cementPreparation_ElectricityQuantity',width:100, align:'right',headalign:'center'">水泥制备电量(kWh)</th>
-                                <th data-options="field:'cementPacking_ElectricityQuantity',width:110, align:'right',headalign:'center'">水泥包装电量(kWh)</th>
+                                <th data-options="align:'right',headalign:'center'," colspan="7">电量(kWh)</th>
+                                <th data-options="align:'right',headalign:'center'" colspan="3">分步电耗(kWh/t)</th>
+                            </tr>
+                            <tr>
+                                <th data-options="field:'Company_ElectricityQuantity',width:80, align:'right',headalign:'center'">总用电量</th>
+                                <th data-options="field:'clinkerElectricityGeneration_ElectricityQuantity',width:80, align:'right',headalign:'center'">余热发电量</th>
+                                <th data-options="field:'auxiliaryProduction_ElectricityQuantity',width:80, align:'right',headalign:'center'">辅助电量</th>
+                                <th data-options="field:'cementPacking_ElectricityQuantity',width:80, align:'right',headalign:'center'">水泥包装</th>
+                                <th data-options="field:'rawMaterialsPreparation_ElectricityQuantity',width:80, align:'right',headalign:'center'">生料制备</th>
+                                <th data-options="field:'clinkerPreparation_ElectricityQuantity',width:80, align:'right',headalign:'center'">熟料制备</th>
+                                <th data-options="field:'cementPreparation_ElectricityQuantity',width:80, align:'right',headalign:'center'">水泥制备</th>
+                                <th data-options="field:'rawMaterialsPreparation_ElectricityConsumption',width:70, align:'right',headalign:'center'">生料制备</th>
+                                <th data-options="field:'clinkerPreparation_ElectricityConsumption',width:70, align:'right',headalign:'center'">熟料制备</th>
+                                <th data-options="field:'cementPreparation_ElectricityConsumption',width:70, align:'right',headalign:'center'">水泥制备</th>
                             </tr>
                         </thead>
                     </table>
@@ -129,35 +139,36 @@
         <div data-options="region:'east',border:false" style="width: 440px; padding-left: 5px;">
             <div class="easyui-layout" data-options="fit:true,border:false">
                 <div data-options="region:'north',border:false" style="height: 230px;">
-                    <table id="CompanyComprehensiveCompleteGridId" data-options="fit:true,border:true" class="easyui-datagrid">
+                    <table id="CompanyComprehensiveCompleteGridId" data-options="fit:true,border:true, title: '公司名称',striped: true, rownumbers: true, singleSelect: true, idField: 'id'" class="easyui-datagrid">
                         <thead>
                             <tr>
-                                <th data-options="width:70, align:'center',headalign:'center'" colspan="2">能源消耗</th>
-                                <th data-options="field:'Value_Day',width:60, align:'right',headalign:'center'" rowspan="2">日完成</th>
-                                <th data-options="field:'Value_Month',width:60, align:'right',headalign:'center'" rowspan="2">月完成</th>
-                                <th data-options="field:'Value_Plan',width:60, align:'right',headalign:'center'" rowspan="2">月计划</th>
-                                <th data-options="field:'Value_Deviation',width:60, align:'right',headalign:'center'" rowspan="2">月差值</th>
+                                <th data-options="width:165, align:'center',headalign:'center'" colspan="2">能源消耗</th>
+                                <th data-options="field:'Value_Day',width:55, align:'right',headalign:'center'" rowspan="2">日完成</th>
+                                <th data-options="field:'Value_Month',width:55, align:'right',headalign:'center'" rowspan="2">月完成</th>
+                                <th data-options="field:'Value_Plan',width:55, align:'right',headalign:'center'" rowspan="2">月计划</th>
+                                <th data-options="field:'Value_Deviation',width:55, align:'right',headalign:'center'" rowspan="2">月差值</th>
                             </tr>
                             <tr>
                                 <th data-options="field:'Name',width:70,align:'center',headalign:'center'">产品</th>
-                                <th data-options="field:'DataItem',width:70,align:'center',headalign:'center'">项目</th>
+                                <th data-options="field:'DataItem',width:95,align:'center',headalign:'center'">项目</th>
                             </tr>
                         </thead>
                     </table>
                 </div>
                 <div data-options="region:'center',border:false" style="padding-top: 5px">
-                    <table id="CompanyProcessCompleteGridId" data-options="fit:true,border:true" class="easyui-datagrid">
+                    <table id="CompanyProcessCompleteGridId" data-options="fit:true,border:true, title: '',striped: true, rownumbers: true, singleSelect: true" class="easyui-datagrid">
                         <thead>
                             <tr>
-                                <th data-options="width:70, align:'center',headalign:'center'" colspan="2">分步电耗</th>
-                                <th data-options="field:'Value_Day',width:60, align:'right',headalign:'center'" rowspan="2">日完成</th>
-                                <th data-options="field:'Value_Month',width:60, align:'right',headalign:'center'" rowspan="2">月完成</th>
-                                <th data-options="field:'Value_Plan',width:60, align:'right',headalign:'center'" rowspan="2">月计划</th>
-                                <th data-options="field:'Value_Deviation',width:60, align:'right',headalign:'center'" rowspan="2">月差值</th>
+                                <th data-options="width:165, align:'center',headalign:'center'" colspan="3">工序电耗</th>
+                                <th data-options="field:'Value_Day',width:55, align:'right',headalign:'center'" rowspan="2">日完成</th>
+                                <th data-options="field:'Value_Month',width:55, align:'right',headalign:'center'" rowspan="2">月完成</th>
+                                <th data-options="field:'Value_Plan',width:55, align:'right',headalign:'center'" rowspan="2">月计划</th>
+                                <th data-options="field:'Value_Deviation',width:55, align:'right',headalign:'center'" rowspan="2">月差值</th>
                             </tr>
                             <tr>
-                                <th data-options="field:'Name',width:70,align:'center',headalign:'center'">名称</th>
-                                <th data-options="field:'DataItem',width:70,align:'center',headalign:'center'">项目</th>
+                                <th data-options="field:'Company',width:70,align:'center',headalign:'center'">公司</th>
+                                <th data-options="field:'Name',width:35,align:'center',headalign:'center'">产线</th>
+                                <th data-options="field:'DataItem',width:60,align:'center',headalign:'center'">项目</th>
                             </tr>
                         </thead>
                     </table>
