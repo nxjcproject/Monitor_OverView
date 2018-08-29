@@ -23,18 +23,18 @@ namespace Monitor_OverView.Service.OverView
             DateTime m_DateTime = DateTime.Parse(myDateTime);
             DataTable m_DisplayDataTable = GetDisplayDataTable();
             DataTable m_ProductSaleDataTable = GetProductSaleData("Clinker,Cement", m_DateTime);
-            string[][] m_Organizations = new string[10][];
+            string[][] m_Organizations = new string[9][];
             m_Organizations[0] = new string[]{"宁夏赛马水泥","zc_nxjc_ychc"};
             m_Organizations[1] = new string[]{"宁夏青铜峡水泥", "zc_nxjc_qtx" };
             m_Organizations[2] = new string[]{"中材甘肃水泥", "zc_nxjc_byc" };
             m_Organizations[3] = new string[]{"天水中材水泥", "zc_nxjc_tsc" };
             m_Organizations[4] = new string[]{"宁夏中宁赛马水泥", "zc_nxjc_znc" };
-            m_Organizations[5] = new string[]{"固原市六盘山水泥", "zc_nxjc_lpsc" };
-            m_Organizations[6] = new string[]{"乌海赛马水泥", "zc_nxjc_whsmc" };
-            m_Organizations[7] = new string[]{"喀喇沁草原水泥", "zc_nxjc_klqc" };
-            m_Organizations[8] = new string[]{"宁夏石嘴山赛马水泥","zc_nxjc_szsc"};
-            m_Organizations[9] = new string[]{"乌海市西水水泥","zc_nxjc_whxsc"};
-            for (int i = 0; i < 10; i++)
+            //m_Organizations[5] = new string[]{"固原市六盘山水泥", "zc_nxjc_lpsc" };//分厂已拆除
+            m_Organizations[5] = new string[]{"乌海赛马水泥", "zc_nxjc_whsmc" };
+            m_Organizations[6] = new string[]{"喀喇沁草原水泥", "zc_nxjc_klqc" };
+            m_Organizations[7] = new string[]{"宁夏石嘴山赛马水泥","zc_nxjc_szsc"};
+            m_Organizations[8] = new string[]{"乌海西水水泥","zc_nxjc_whxsc"};
+            for (int i = 0; i < 9; i++)
             {
                 object[] m_RowArray = GetFactorySaleData(m_ProductSaleDataTable, m_Organizations[i][0], m_Organizations[i][1]);
                 //m_DisplayDataTable.Rows.Add(m_Organizations[i][0], m_Organizations[i][1], 0.0m, 0.0m, 0.0m, 0.0m, 0.0m, 0.0m, 0.0m, 0.0m);
